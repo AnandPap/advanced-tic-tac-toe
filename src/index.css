@@ -48,3 +48,35 @@
     background-color: #f9f9f9;
   }
 }
+
+/* CSS for game board */
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 4px;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+/* CSS for cells */
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  font-weight: bold;
+  color: #333;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.cell:hover {
+  background-color: #e0e0e0;
+}
+
+.cell.clicked {
+  cursor: not-allowed;
+}

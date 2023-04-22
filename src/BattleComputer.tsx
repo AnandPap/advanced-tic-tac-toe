@@ -1,16 +1,20 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const BattleComputer = () => {
   const navigate = useNavigate();
+  const { difficulty } = useParams();
 
-  return (
-    <div>
-      Choose difficulty:
-      <button onClick={() => navigate("/vs-computer/easy")}>Easy</button>
-      <button onClick={() => navigate("/vs-computer/medium")}>Medium</button>
-      <button onClick={() => navigate("/vs-computer/hard")}>Hard</button>
-    </div>
-  );
+  useEffect(() => {
+    if (
+      difficulty !== "easy" &&
+      difficulty !== "medium" &&
+      difficulty !== "hard"
+    )
+      navigate("/vs-computer", { replace: true });
+  }, []);
+
+  return <div>{difficulty}</div>;
 };
 
 export default BattleComputer;

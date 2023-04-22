@@ -7,6 +7,8 @@ import PlayerProfile from "./PlayerProfile";
 import BattleComputer from "./BattleComputer";
 import BattlePlayer from "./BattlePlayer";
 import tictactoePng from "./assets/tic-tac-toe.png";
+import ChooseComputerDifficulty from "./ChooseComputerDifficulty";
+import ChoosePlayers from "./ChoosePlayers";
 
 const MainRouter = () => {
   return (
@@ -32,8 +34,9 @@ const MainRouter = () => {
       </header>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/vs-computer" element={<BattleComputer />} />
-        <Route path="/vs-player" element={<BattlePlayer />} />
+        <Route path="/vs-computer" element={<ChooseComputerDifficulty />} />
+        <Route path="/vs-computer/:difficulty" element={<BattleComputer />} />
+        <Route path="/vs-player" element={<ChoosePlayers />} />
         <Route path="/scoreboard" element={<Scoreboard />} />
         <Route path="/scoreboard/:id" element={<PlayerProfile />} />
         <Route
