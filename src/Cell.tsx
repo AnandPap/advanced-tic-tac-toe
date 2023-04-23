@@ -8,6 +8,8 @@ type CellType = {
   setPlayer1Moves: React.Dispatch<React.SetStateAction<number[]>>;
   setPlayer2Moves: React.Dispatch<React.SetStateAction<number[]>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  errorTimeoutId: number | undefined;
+  setErrorTimeoutId: React.Dispatch<React.SetStateAction<number | undefined>>;
 };
 
 const Cell = ({
@@ -17,10 +19,14 @@ const Cell = ({
   setPlayer1Moves,
   setPlayer2Moves,
   setErrorMessage,
+  errorTimeoutId,
+  setErrorTimeoutId,
 }: CellType) => {
   const [cellInput, setCellInput] = useState<string | null>(null);
   const [tempCellInput, setTempCellInput] = useState<string | null>(null);
-  const [timeoutId, setTimeoutId] = useState<number | undefined>(undefined);
+  const [cellTimeoutId, setCellTimeoutId] = useState<number | undefined>(
+    undefined
+  );
   const border =
     i === 2 || i === 8
       ? "border-right-left"
@@ -36,6 +42,7 @@ const Cell = ({
   }, [gameResult]);
 
   function handleClick() {
+    clearTimeout(errorTimeoutId);
     if (!cellInput && !gameResult) {
       if (currentSymbol === "X") {
         setPlayer1Moves((s) => [...s, i]);
@@ -45,7 +52,11 @@ const Cell = ({
         setCellInput("O");
       }
       setErrorMessage("");
-    } else if (!gameResult) setErrorMessage("Choose unoccupied cell!");
+    } else if (!gameResult) {
+      setErrorMessage("Choose unoccupied cell!");
+      const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
+      setErrorTimeoutId(timeoutId);
+    }
   }
 
   return (
@@ -59,16 +70,16 @@ const Cell = ({
             const timeoutId = setTimeout(() => {
               setTempCellInput(currentSymbol);
             }, 50);
-            setTimeoutId(timeoutId);
+            setCellTimeoutId(timeoutId);
           }
         }}
         onMouseLeave={() => {
           setTempCellInput(null);
-          clearTimeout(timeoutId);
+          clearTimeout(cellTimeoutId);
         }}
-        className={`${
+        className={`board-cell ${theme} ${
           !gameResult && !cellInput && "hoverable-board-cell"
-        } board-cell ${theme}`}
+        }`}
       >
         {tempCellInput || cellInput}
       </button>

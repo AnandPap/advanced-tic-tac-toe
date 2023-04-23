@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Board from "./Board";
 import Cell from "./Cell";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "./redux/hooks";
@@ -26,6 +25,9 @@ const BattlePlayer = ({ players, setPlayers }: BattlePlayerType) => {
   const [player1Moves, setPlayer1Moves] = useState<number[]>([]);
   const [player2Moves, setPlayer2Moves] = useState<number[]>([]);
   const [firstMove, setFirstMove] = useState("");
+  const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
+    undefined
+  );
   const navigate = useNavigate();
   const theme = useAppSelector((s) => s.tictactoe.theme);
   const winningPatterns = [
@@ -134,13 +136,15 @@ const BattlePlayer = ({ players, setPlayers }: BattlePlayerType) => {
               setPlayer1Moves={setPlayer1Moves}
               setPlayer2Moves={setPlayer2Moves}
               setErrorMessage={setErrorMessage}
+              errorTimeoutId={errorTimeoutId}
+              setErrorTimeoutId={setErrorTimeoutId}
             />
           ))}
         </div>
       </div>
       {gameResult && (
         <div className="endgame">
-          <div className="endgame-button-wrapper">
+          <div className="endgame-buttons-wrapper">
             <button className="button" onClick={gameReset}>
               New Round
             </button>

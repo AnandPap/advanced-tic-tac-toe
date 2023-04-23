@@ -6,9 +6,9 @@ const HomePage = () => {
   const theme = useAppSelector((s) => s.tictactoe.theme);
 
   return (
-    <div className={`${theme} home-page`}>
+    <div className={`home-page ${theme}`}>
       <p>Play against:</p>
-      <div className="button-wrapper">
+      <div className="home-page-buttons-wrapper">
         <button className="button" onClick={() => navigate("/vs-computer")}>
           Computer
         </button>

@@ -4,8 +4,8 @@
   box-sizing: border-box;
 }
 :root {
-  --small-size-text: 1.25rem;
-  --medium-size-text: 1.75rem;
+  --small-size-text: 1.75rem;
+  --medium-size-text: 2rem;
   --big-size-text: 2.5rem;
   --board-cell-text: 5rem;
   height: 100%;
@@ -22,20 +22,96 @@ p {
   margin: 0;
 }
 
+.button {
+  border: none;
+  background-color: royalblue;
+  color: white;
+  border-radius: 5px;
+  padding: 7px 20px;
+  font-size: var(--small-size-text);
+  cursor: pointer;
+  transition: all 0.2s ease 0.03s;
+}
+.button:not(.easy, .medium, .hard):hover {
+  background-color: rgb(20, 75, 240);
+  transform: scale(1.03);
+}
+
 .home-page,
 .on-empty-page,
 .players-form-wrapper,
-.game-screen {
+.game-screen,
+.choose-difficulty {
   padding-top: 30px;
   min-height: calc(100vh - 75px);
   text-align: center;
+}
+.home-page-buttons-wrapper {
+  margin-top: 30px;
+}
+.home-page-buttons-wrapper > :first-child {
+  margin-right: 20px;
+}
+.choose-difficulty > p {
+  margin-bottom: 30px;
+}
+.choose-difficulty-buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+.choose-difficulty-buttons-wrapper > *,
+.play-as-buttons-wrapper > * {
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0px 0px 4px -1px black;
+  font-size: calc(var(--small-size-text) * 0.8);
+  transition: all 0.2s ease 0.03s;
+}
+.easy {
+  background-color: green;
+}
+.medium {
+  background-color: orangered;
+}
+.hard {
+  background-color: red;
+}
+.easy:hover,
+.medium:hover,
+.hard:hover {
+  transform: scale(1.05);
+}
+.play-as {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+.play-as-buttons-wrapper {
+  display: flex;
+  gap: 10px;
+  margin-left: 20px;
+  position: relative;
+}
+.play-as-buttons-wrapper > * {
+  color: black;
+  background-color: hsl(0, 0%, 50%);
+}
+.play-as-buttons-wrapper > *:hover:not(.O, .Random, .X) {
+  background-color: hsl(0, 0%, 85%);
+}
+.O,
+.Random,
+.X {
+  background-color: hsl(0, 0%, 100%);
 }
 
 .players-form {
   width: fit-content;
   margin: 0 auto;
-}
-.players-form {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -43,10 +119,11 @@ p {
 }
 .players-form > p {
   margin-bottom: 10px;
+  font-size: calc(var(--big-size-text) * 0.9);
   align-self: flex-start;
 }
 .players-form > input {
-  font-size: var(--big-size-text);
+  font-size: var(--medium-size-text);
   width: 400px;
   box-shadow: 0px 0px 4px -1px black;
   padding: 5px 10px;
@@ -63,11 +140,6 @@ p {
 }
 .players-form.dark > input:focus {
   box-shadow: 0px 0px 7px 0px lightcoral, 0px 0px 7px 0px lightcoral;
-}
-.players-form > *:not(:first-child) {
-}
-.players-form > p {
-  font-size: calc(var(--big-size-text) * 0.9);
 }
 
 .players-turn,
@@ -88,8 +160,6 @@ p {
   width: 350px;
   height: 350px;
 }
-.board-cell-wrapper {
-}
 .board-cell {
   font-family: inherit;
   border: none;
@@ -107,8 +177,6 @@ p {
   cursor: pointer;
   opacity: 0.5;
 }
-.hoverable-board-cell:hover.dark {
-}
 .border-top-bottom {
   border-top: 3px solid black;
   border-bottom: 3px solid black;
@@ -124,17 +192,13 @@ p {
 .endgame {
   margin-top: 30px;
 }
-.endgame-button-wrapper {
+.endgame-buttons-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.endgame-button-wrapper > :first-child,
-.button-wrapper > :first-child {
+.endgame-buttons-wrapper > :first-child {
   margin-right: 20px;
-}
-.button-wrapper {
-  margin-top: 30px;
 }
 
 .error-message {
@@ -145,28 +209,82 @@ p {
   color: lightcoral;
 }
 
-.button {
-  border: none;
-  background-color: royalblue;
-  color: white;
-  border-radius: 5px;
-  padding: 7px 20px;
-  font-size: calc(var(--big-size-text) * 0.7);
-  cursor: pointer;
-  transition: all 0.15s ease 0.03s;
-}
-.button:hover {
-  background-color: rgb(20, 75, 240);
-  transform: scale(1.01);
-}
-
 .dark {
   background-color: hsl(0, 0%, 30%);
   color: white;
 }
 
 @media only screen and (max-width: 425px) {
-  .players-form > input {
+  .home-page-buttons-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .home-page-buttons-wrapper > :first-child {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .players-turn,
+  .winner-text,
+  .choose-difficulty {
+    font-size: calc(var(--big-size-text) * 0.9);
+  }
+  .choose-difficulty {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .choose-difficulty > p {
+    margin-bottom: 10px;
+  }
+  .choose-difficulty-buttons-wrapper {
+    flex-direction: column;
+    margin: 0 auto;
+    width: 80%;
+  }
+  .play-as {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .play-as-buttons-wrapper {
+    margin-top: 20px;
+    margin-left: 0;
+    flex-direction: column;
+  }
+  .play-as-buttons-wrapper > * {
+    font-size: calc(var(--small-size-text) * 0.7);
+  }
+  .players-form {
     width: 90%;
+  }
+  .players-form > p {
+    font-size: var(--small-size-text);
+  }
+  .players-form > input {
+    width: 100%;
+    font-size: var(--small-size-text);
+  }
+
+  .board-container {
+    width: 300px;
+    height: 300px;
+  }
+  .board-cell {
+    font-size: calc(var(--board-cell-text) * 0.85);
+  }
+
+  .endgame-buttons-wrapper {
+    flex-direction: column;
+  }
+  .endgame-buttons-wrapper > :first-child {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  .button {
+    font-size: calc(var(--small-size-text) * 0.8);
+    padding: 7px 15px;
   }
 }

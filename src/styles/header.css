@@ -28,9 +28,10 @@
   cursor: pointer;
   align-self: center;
   margin-left: 10px;
+  transition: all 0.2s ease 0.03s;
 }
 .back-button:hover {
-  background-color: hsl(0, 0%, 70%);
+  background-color: hsl(0, 0%, 60%);
 }
 .back-button-arrow {
   border: solid black;
