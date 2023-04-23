@@ -1,22 +1,11 @@
 import { useEffect, useState } from "react";
 import Cell from "./Cell";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppSelector } from "./redux/hooks";
+import { useDispatch } from "react-redux";
+import { setPlayers } from "./redux/tictactoe";
 
-type BattlePlayerType = {
-  players: {
-    player1: string;
-    player2: string;
-  };
-  setPlayers: React.Dispatch<
-    React.SetStateAction<{
-      player1: string;
-      player2: string;
-    }>
-  >;
-};
-
-const BattlePlayer = ({ players, setPlayers }: BattlePlayerType) => {
+const BattlePlayer = () => {
   const [currentSymbol, setCurrentSymbol] = useState("X");
   const [gameId, setGameId] = useState(1);
   const [results, setResults] = useState({ wins1: 0, wins2: 0, ties: 0 });
@@ -28,8 +17,16 @@ const BattlePlayer = ({ players, setPlayers }: BattlePlayerType) => {
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
   );
-  const navigate = useNavigate();
   const theme = useAppSelector((s) => s.tictactoe.theme);
+  const players = useAppSelector((s) => s.tictactoe.players);
+  const dispach = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams({
+    player1: "",
+    player2: "",
+  });
+  const player1Name = searchParams.get("player1");
+  const player2Name = searchParams.get("player2");
+  const navigate = useNavigate();
   const winningPatterns = [
     [1, 4, 7],
     [2, 5, 8],
@@ -52,6 +49,24 @@ const BattlePlayer = ({ players, setPlayers }: BattlePlayerType) => {
       setPlayer2Moves([]);
     }
   }, [gameResult]);
+
+  useEffect(() => {
+    if (
+      player1Name &&
+      player2Name &&
+      player1Name.length > 1 &&
+      player2Name.length > 1
+    ) {
+      dispach(setPlayers({ player1: player1Name, player2: player2Name }));
+    } else if (players.player1.length > 1 && players.player2.length > 1) {
+      setSearchParams(
+        { player1: players.player1, player2: players.player2 },
+        { replace: true }
+      );
+    } else {
+      navigate("/vs-player", { replace: true });
+    }
+  }, []);
 
   function gameReset() {
     setCurrentSymbol("X");

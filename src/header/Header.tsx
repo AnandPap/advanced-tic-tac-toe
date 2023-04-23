@@ -16,6 +16,7 @@ const Header = () => {
   const location = useLocation();
 
   useEffect(() => {
+    if (screenWidth === undefined) setScreenWidth(ref.current?.clientWidth);
     window.addEventListener("resize", () =>
       setScreenWidth(ref.current?.clientWidth)
     );
@@ -24,8 +25,7 @@ const Header = () => {
   return (
     <header className={`${theme}-header header`} ref={ref}>
       <img className="app-icon" alt="App Icon" src={tictactoePng} />
-      {screenWidth ? screenWidth > 400 ? <h1>Tic-Tac-Toe</h1> : null : null}
-
+      {screenWidth && screenWidth > 400 ? <h1>Tic-Tac-Toe</h1> : null}
       <div
         className={`header-buttons-wrapper hamburger-menu-content ${
           displayHamburgerContent ? "hamburger-open" : "hamburger-close"

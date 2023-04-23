@@ -7,6 +7,7 @@ import BattleComputer from "../BattleComputer";
 import ChooseDifficulty from "../ChooseDifficulty";
 import ChoosePlayers from "../ChoosePlayers";
 import Header from "../header/Header";
+import BattlePlayer from "../BattlePlayer";
 
 const MainRouter = () => {
   return (
@@ -17,7 +18,7 @@ const MainRouter = () => {
         <Route path="/vs-computer" element={<ChooseDifficulty />} />
         <Route path="/vs-computer/:difficulty" element={<BattleComputer />} />
         <Route path="/vs-player" element={<ChoosePlayers />} />
-        <Route path="/vs-player/battle" element={<ChoosePlayers />} />
+        <Route path="/vs-player/battle" element={<BattlePlayer />} />
         <Route path="/scoreboard" element={<Scoreboard />} />
         <Route path="/scoreboard/:id" element={<PlayerProfile />} />
         <Route

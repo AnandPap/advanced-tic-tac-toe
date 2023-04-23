@@ -38,7 +38,10 @@ const Cell = ({
   const theme = useAppSelector((s) => s.tictactoe.theme);
 
   useEffect(() => {
-    if (!gameResult) setCellInput(null);
+    if (!gameResult) {
+      setCellInput(null);
+      setTempCellInput(null);
+    }
   }, [gameResult]);
 
   function handleClick() {
