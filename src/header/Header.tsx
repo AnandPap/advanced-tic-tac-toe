@@ -32,7 +32,11 @@ const Header = () => {
         }`}
       >
         {location.pathname !== "/" && (
-          <BackButton onClick={() => navigate(-1)} />
+          <BackButton
+            className="back-button"
+            text="Back"
+            onClick={() => navigate(-1)}
+          />
         )}
         <LottieDarkModeSwitch />
       </div>

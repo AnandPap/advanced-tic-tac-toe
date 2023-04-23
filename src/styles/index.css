@@ -38,14 +38,19 @@ p {
   transform: scale(1.03);
 }
 
-.home-page,
-.on-empty-page,
+.game-screen-wrapper,
 .players-form-wrapper,
-.game-screen,
-.choose-difficulty {
+.on-empty-page-wrapper,
+.choose-difficulty-wrapper,
+.home-page-wrapper {
   padding-top: 30px;
   min-height: calc(100vh - 75px);
   text-align: center;
+}
+
+.game-screen {
+  width: fit-content;
+  margin: 0 auto;
 }
 .home-page-buttons-wrapper {
   display: flex;
@@ -54,13 +59,21 @@ p {
   gap: 20px;
   margin-top: 30px;
 }
-.choose-difficulty > p {
-  margin-bottom: 30px;
+.choose-difficulty,
+.play-as {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.choose-difficulty-buttons-wrapper {
+.play-as {
+  margin-top: 30px;
+}
+.choose-difficulty-buttons-wrapper,
+.play-as-buttons-wrapper {
   display: flex;
   justify-content: center;
   gap: 15px;
+  margin-left: 20px;
 }
 .choose-difficulty-buttons-wrapper > *,
 .play-as-buttons-wrapper > * {
@@ -86,17 +99,6 @@ p {
 .medium:hover,
 .hard:hover {
   transform: scale(1.05);
-}
-.play-as {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-}
-.play-as-buttons-wrapper {
-  display: flex;
-  gap: 10px;
-  margin-left: 20px;
-  position: relative;
 }
 .play-as-buttons-wrapper > * {
   color: black;
@@ -144,6 +146,9 @@ p {
   box-shadow: 0px 0px 7px 0px lightcoral, 0px 0px 7px 0px lightcoral;
 }
 
+.game-status-bar {
+  display: flex;
+}
 .players-turn,
 .winner-text {
   text-align: center;
@@ -210,23 +215,17 @@ p {
 .error-message.dark {
   color: lightcoral;
 }
+.on-empty-page {
+  opacity: 0.7;
+  margin: 0 auto;
+}
 
 .dark {
   background-color: hsl(0, 0%, 30%);
   color: white;
 }
 
-@media only screen and (max-width: 425px) {
-  .home-page-buttons-wrapper {
-    flex-direction: column;
-  }
-
-  .players-turn,
-  .winner-text,
-  .choose-difficulty,
-  .home-page > p {
-    font-size: calc(var(--big-size-text) * 0.9);
-  }
+@media only screen and (max-width: 675px) {
   .choose-difficulty {
     display: flex;
     flex-direction: column;
@@ -239,7 +238,23 @@ p {
     flex-direction: column;
     margin: 0 auto;
     width: 80%;
+    max-width: 300px;
   }
+}
+
+@media only screen and (max-width: 425px) {
+  .home-page-buttons-wrapper {
+    flex-direction: column;
+  }
+
+  .players-turn,
+  .winner-text,
+  .choose-difficulty,
+  .home-page > p,
+  .play-as > p {
+    font-size: calc(var(--medium-size-text) * 1.1);
+  }
+
   .play-as {
     flex-direction: column;
     align-items: center;
@@ -256,7 +271,8 @@ p {
   .players-form {
     width: 90%;
   }
-  .players-form > p {
+  .players-form > p,
+  .error-message {
     font-size: var(--small-size-text);
   }
   .players-form > input {
@@ -282,5 +298,9 @@ p {
   .button {
     font-size: calc(var(--small-size-text) * 0.8);
     padding: 7px 15px;
+  }
+
+  .on-empty-page {
+    font-size: var(--big-size-text);
   }
 }

@@ -1,12 +1,14 @@
 type BackButtonType = {
+  className: string;
+  text: string;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-const BackButton = ({ onClick }: BackButtonType) => {
+const BackButton = ({ className, text, onClick }: BackButtonType) => {
   return (
-    <button className={`back-button`} onClick={onClick}>
-      <div className="back-button-arrow"></div>
-      <p className="back-button-text">Back</p>
+    <button className={`${className}`} onClick={onClick}>
+      <div className={`${className}-arrow`}></div>
+      <p className={`${className}-text`}>{text}</p>
     </button>
   );
 };

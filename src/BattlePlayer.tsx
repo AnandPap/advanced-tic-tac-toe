@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppSelector } from "./redux/hooks";
 import { useDispatch } from "react-redux";
 import { setPlayers } from "./redux/tictactoe";
+import BackButton from "./header/BackButton";
 
 const BattlePlayer = () => {
   const [currentSymbol, setCurrentSymbol] = useState("X");
@@ -11,9 +12,10 @@ const BattlePlayer = () => {
   const [results, setResults] = useState({ wins1: 0, wins2: 0, ties: 0 });
   const [errorMessage, setErrorMessage] = useState("");
   const [gameResult, setGameResult] = useState<string | null>(null);
-  const [player1Moves, setPlayer1Moves] = useState<number[]>([]);
-  const [player2Moves, setPlayer2Moves] = useState<number[]>([]);
+  const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
+  const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [firstMove, setFirstMove] = useState("");
+  const [removedCell, setRemovedCell] = useState<number | undefined>(undefined);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
   );
@@ -39,14 +41,15 @@ const BattlePlayer = () => {
   ];
 
   useEffect(() => {
-    if (player1Moves.length > 0 || player2Moves.length > 0) checkWinner();
-  }, [player1Moves, player2Moves]);
+    if ((playerXMoves.length > 0 || playerOMoves.length > 0) && !removedCell)
+      checkWinner();
+  }, [playerXMoves, playerOMoves]);
 
   useEffect(() => {
     setFirstMove(gameId % 2 === 1 ? `player1` : `player2`);
     if (!gameResult) {
-      setPlayer1Moves([]);
-      setPlayer2Moves([]);
+      setPlayerXMoves([]);
+      setPlayerOMoves([]);
     }
   }, [gameResult]);
 
@@ -68,29 +71,12 @@ const BattlePlayer = () => {
     }
   }, []);
 
-  function gameReset() {
-    setCurrentSymbol("X");
-    setGameResult(null);
-  }
-
-  function handlePlayerReset() {
-    navigate("/vs-player", { replace: true });
-    // setPlayers({
-    //   player1: "",
-    //   player2: "",
-    // });
-    // setGameId(1);
-    // setGameResult(null);
-    // setCurrentSymbol("X");
-    // setResults({ wins1: 0, wins2: 0, ties: 0 });
-  }
-
   function checkWinner() {
     for (let i = 0; i < winningPatterns.length; i++) {
       let winningPattern = winningPatterns[i];
       if (
-        winningPattern.every((value) => player1Moves.includes(value)) ||
-        winningPattern.every((value) => player2Moves.includes(value))
+        winningPattern.every((value) => playerXMoves.includes(value)) ||
+        winningPattern.every((value) => playerOMoves.includes(value))
       ) {
         if (
           (gameId % 2 === 1 && currentSymbol === "X") ||
@@ -106,7 +92,7 @@ const BattlePlayer = () => {
         return;
       }
     }
-    if (player1Moves.length + player2Moves.length === 9) {
+    if (playerXMoves.length + playerOMoves.length === 9) {
       setResults((s) => ({ ...s, ties: s.ties + 1 }));
       setGameResult("tie");
       setGameId((s) => s + 1);
@@ -116,62 +102,105 @@ const BattlePlayer = () => {
     else setCurrentSymbol("X");
   }
 
+  function gameReset() {
+    setCurrentSymbol("X");
+    setGameResult(null);
+  }
+
+  function removeElementFromPlayer1() {
+    let tempArray = [...playerXMoves];
+    setRemovedCell(tempArray.pop());
+    setPlayerXMoves(tempArray);
+  }
+
+  function removeElementFromPlayer2() {
+    let tempArray = [...playerOMoves];
+    setRemovedCell(tempArray.pop());
+    setPlayerOMoves(tempArray);
+  }
+
+  function undoHandler() {
+    if (currentSymbol === "X") removeElementFromPlayer2();
+    else removeElementFromPlayer1();
+    if (currentSymbol === "X") setCurrentSymbol("O");
+    else setCurrentSymbol("X");
+  }
+
+  function handlePlayerReset() {
+    navigate("/vs-player", { replace: true });
+  }
+
   return (
-    <div className={`${theme} game-screen`}>
-      {!gameResult ? (
-        <p className="players-turn">
-          It's
-          {firstMove === "player1" &&
-            (currentSymbol === "X"
-              ? ` ${players.player1}`
-              : ` ${players.player2}`)}
-          {firstMove === "player2" &&
-            (currentSymbol === "X"
-              ? ` ${players.player2}`
-              : ` ${players.player1}`)}
-          's turn.
-        </p>
-      ) : (
-        <p className="winner-text">
-          {gameResult === "tie"
-            ? "It's a Tie!"
-            : gameResult === "player1 won"
-            ? `${players.player1} wins!`
-            : `${players.player2} wins!`}
-        </p>
-      )}
-      <div className="board-wrapper">
-        <div className="board-container">
-          {[...Array(9)].map((item, i) => (
-            <Cell
-              key={i}
-              i={i + 1}
-              gameResult={gameResult}
-              currentSymbol={currentSymbol}
-              setPlayer1Moves={setPlayer1Moves}
-              setPlayer2Moves={setPlayer2Moves}
-              setErrorMessage={setErrorMessage}
-              errorTimeoutId={errorTimeoutId}
-              setErrorTimeoutId={setErrorTimeoutId}
-            />
-          ))}
-        </div>
-      </div>
-      {gameResult && (
-        <div className="endgame">
-          <div className="endgame-buttons-wrapper">
-            <button className="button" onClick={gameReset}>
-              New Round
-            </button>
-            <button className="button" onClick={handlePlayerReset}>
-              Reset Players
-            </button>
+    <div className={`${theme} game-screen-wrapper`}>
+      <div className="game-screen">
+        {!gameResult ? (
+          <div className="game-status-bar">
+            <p className="players-turn">
+              It's
+              {firstMove === "player1" &&
+                (currentSymbol === "X"
+                  ? ` ${players.player1}`
+                  : ` ${players.player2}`)}
+              {firstMove === "player2" &&
+                (currentSymbol === "X"
+                  ? ` ${players.player2}`
+                  : ` ${players.player1}`)}
+              's turn.
+            </p>
+            {playerXMoves.length + playerOMoves.length > 0 && (
+              <div className="undo-button-wrapper">
+                <BackButton
+                  className={`${theme} undo-button`}
+                  text="Undo"
+                  onClick={undoHandler}
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          <p className="winner-text">
+            {gameResult === "tie"
+              ? "It's a Tie!"
+              : gameResult === "player1 won"
+              ? `${players.player1} wins!`
+              : `${players.player2} wins!`}
+          </p>
+        )}
+        <div className="board-wrapper">
+          <div className="board-container">
+            {[...Array(9)].map((item, i) => (
+              <Cell
+                key={i}
+                i={i + 1}
+                gameResult={gameResult}
+                currentSymbol={currentSymbol}
+                setPlayerXMoves={setPlayerXMoves}
+                setPlayerOMoves={setPlayerOMoves}
+                setErrorMessage={setErrorMessage}
+                errorTimeoutId={errorTimeoutId}
+                setErrorTimeoutId={setErrorTimeoutId}
+                removedCell={removedCell}
+                setRemovedCell={setRemovedCell}
+              />
+            ))}
           </div>
         </div>
-      )}
-      {errorMessage && (
-        <p className={`error-message ${theme}`}>{errorMessage}</p>
-      )}
+        {gameResult && (
+          <div className="endgame">
+            <div className="endgame-buttons-wrapper">
+              <button className="button" onClick={gameReset}>
+                New Round
+              </button>
+              <button className="button" onClick={handlePlayerReset}>
+                Reset Players
+              </button>
+            </div>
+          </div>
+        )}
+        {errorMessage && (
+          <p className={`error-message ${theme}`}>{errorMessage}</p>
+        )}
+      </div>
     </div>
   );
 };

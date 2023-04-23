@@ -5,22 +5,26 @@ type CellType = {
   i: number;
   gameResult: string | null;
   currentSymbol: string;
-  setPlayer1Moves: React.Dispatch<React.SetStateAction<number[]>>;
-  setPlayer2Moves: React.Dispatch<React.SetStateAction<number[]>>;
+  setPlayerXMoves: React.Dispatch<React.SetStateAction<number[]>>;
+  setPlayerOMoves: React.Dispatch<React.SetStateAction<number[]>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   errorTimeoutId: number | undefined;
   setErrorTimeoutId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  removedCell: number | undefined;
+  setRemovedCell: React.Dispatch<React.SetStateAction<number | undefined>>;
 };
 
 const Cell = ({
   i,
   gameResult,
   currentSymbol,
-  setPlayer1Moves,
-  setPlayer2Moves,
+  setPlayerXMoves,
+  setPlayerOMoves,
   setErrorMessage,
   errorTimeoutId,
   setErrorTimeoutId,
+  removedCell,
+  setRemovedCell,
 }: CellType) => {
   const [cellInput, setCellInput] = useState<string | null>(null);
   const [tempCellInput, setTempCellInput] = useState<string | null>(null);
@@ -44,14 +48,19 @@ const Cell = ({
     }
   }, [gameResult]);
 
+  useEffect(() => {
+    if (removedCell === i) setCellInput("");
+  }, [removedCell]);
+
   function handleClick() {
     clearTimeout(errorTimeoutId);
+    setRemovedCell(undefined);
     if (!cellInput && !gameResult) {
       if (currentSymbol === "X") {
-        setPlayer1Moves((s) => [...s, i]);
+        setPlayerXMoves((s) => [...s, i]);
         setCellInput("X");
       } else if (currentSymbol === "O") {
-        setPlayer2Moves((s) => [...s, i]);
+        setPlayerOMoves((s) => [...s, i]);
         setCellInput("O");
       }
       setErrorMessage("");

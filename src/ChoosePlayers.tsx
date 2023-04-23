@@ -27,43 +27,41 @@ const ChoosePlayers = () => {
   };
 
   return (
-    <div>
-      <div className={`${theme} players-form-wrapper`}>
-        <form
-          className={`${theme} players-form`}
-          onSubmit={(e) => handleSubmit(e)}
-          action="submit"
+    <div className={`${theme} players-form-wrapper`}>
+      <form
+        className={`${theme} players-form`}
+        onSubmit={(e) => handleSubmit(e)}
+        action="submit"
+      >
+        <p>Enter player 1 name:</p>
+        <input
+          type="text"
+          value={players.player1}
+          onChange={(e) => {
+            dispatch(setPlayers({ player1: e.target.value }));
+            setErrorMessage("");
+          }}
+        />
+        <p>Enter player 2 name:</p>
+        <input
+          type="text"
+          value={players.player2}
+          onChange={(e) => {
+            dispatch(setPlayers({ player2: e.target.value }));
+            setErrorMessage("");
+          }}
+        />
+        <button
+          //   disabled={players.player1.length < 2 || players.player2.length < 2}
+          type="submit"
+          className="button"
         >
-          <p>Enter player 1 name:</p>
-          <input
-            type="text"
-            value={players.player1}
-            onChange={(e) => {
-              dispatch(setPlayers({ player1: e.target.value }));
-              setErrorMessage("");
-            }}
-          />
-          <p>Enter player 2 name:</p>
-          <input
-            type="text"
-            value={players.player2}
-            onChange={(e) => {
-              dispatch(setPlayers({ player2: e.target.value }));
-              setErrorMessage("");
-            }}
-          />
-          <button
-            //   disabled={players.player1.length < 2 || players.player2.length < 2}
-            type="submit"
-            className="button"
-          >
-            Start battle
-          </button>
-        </form>
-        {errorMessage && (
-          <p className={`error-message ${theme}`}>{errorMessage}</p>
-        )}
-      </div>
+          Start battle
+        </button>
+      </form>
+      {errorMessage && (
+        <p className={`error-message ${theme}`}>{errorMessage}</p>
+      )}
     </div>
   );
 };

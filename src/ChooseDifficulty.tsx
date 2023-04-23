@@ -17,20 +17,22 @@ const ChooseDifficulty = () => {
   }, []);
 
   return (
-    <div className={`choose-difficulty ${theme}`}>
-      <p>Choose difficulty:</p>
-      <div className="choose-difficulty-buttons-wrapper">
-        {levelsOfDifficulty.map((difficulty, i) => {
-          return (
-            <button
-              className={`${difficulty}`}
-              key={i}
-              onClick={() => navigate(`/vs-computer/${difficulty}`)}
-            >
-              {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
-            </button>
-          );
-        })}
+    <div className={`choose-difficulty-wrapper ${theme}`}>
+      <div className="choose-difficulty">
+        <p>Choose difficulty:</p>
+        <div className="choose-difficulty-buttons-wrapper">
+          {levelsOfDifficulty.map((difficulty, i) => {
+            return (
+              <button
+                className={`${difficulty}`}
+                key={i}
+                onClick={() => navigate(`/vs-computer/${difficulty}`)}
+              >
+                {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+              </button>
+            );
+          })}
+        </div>
       </div>
       <div className="play-as">
         <p>Play as:</p>
