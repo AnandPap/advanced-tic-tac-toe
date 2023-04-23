@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { NavigateOptions, URLSearchParamsInit } from "react-router-dom";
+import { useAppSelector } from "./redux/hooks";
 
 type SetURLSearchParams = (
   nextInit?:
@@ -28,11 +29,12 @@ const PlayersForm = ({
   setSearchParams,
 }: PlayersFormType) => {
   const [errorMessage, setErrorMessage] = useState("");
+  const theme = useAppSelector((s) => s.tictactoe.theme);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (players.player1.length < 2 && players.player2.length < 2)
-      setErrorMessage("Please enter player names.");
+      setErrorMessage("Please enter both player names.");
     else if (players.player1.length < 2)
       setErrorMessage("Please enter player1 name.");
     else if (players.player2.length < 2)
@@ -45,9 +47,9 @@ const PlayersForm = ({
     }
   };
   return (
-    <>
+    <div className={`${theme} players-form-wrapper`}>
       <form
-        className="players-form"
+        className={`${theme} players-form`}
         onSubmit={(e) => handleSubmit(e)}
         action="submit"
       >
@@ -78,11 +80,13 @@ const PlayersForm = ({
           type="submit"
           className="button"
         >
-          Submit
+          Start battle
         </button>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </form>
-    </>
+      {errorMessage && (
+        <p className={`error-message ${theme}`}>{errorMessage}</p>
+      )}
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useAppSelector } from "./redux/hooks";
 
 type CellType = {
   i: number;
@@ -18,6 +19,8 @@ const Cell = ({
   setErrorMessage,
 }: CellType) => {
   const [cellInput, setCellInput] = useState<string | null>(null);
+  const [tempCellInput, setTempCellInput] = useState<string | null>(null);
+  const [timeoutId, setTimeoutId] = useState<number | undefined>(undefined);
   const border =
     i === 2 || i === 8
       ? "border-right-left"
@@ -26,6 +29,7 @@ const Cell = ({
       : i === 5
       ? "border-all-around"
       : "";
+  const theme = useAppSelector((s) => s.tictactoe.theme);
 
   useEffect(() => {
     if (!gameResult) setCellInput(null);
@@ -45,13 +49,28 @@ const Cell = ({
   }
 
   return (
-    <div className={`board-cell-wrapper ${border}`} onClick={handleClick}>
+    <div
+      className={`board-cell-wrapper ${border} ${theme}`}
+      onClick={handleClick}
+    >
       <button
+        onMouseEnter={() => {
+          if (!cellInput && !gameResult) {
+            const timeoutId = setTimeout(() => {
+              setTempCellInput(currentSymbol);
+            }, 50);
+            setTimeoutId(timeoutId);
+          }
+        }}
+        onMouseLeave={() => {
+          setTempCellInput(null);
+          clearTimeout(timeoutId);
+        }}
         className={`${
           !gameResult && !cellInput && "hoverable-board-cell"
-        } board-cell`}
+        } board-cell ${theme}`}
       >
-        {cellInput}
+        {tempCellInput || cellInput}
       </button>
     </div>
   );

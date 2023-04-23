@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Board from "./Board";
 import Cell from "./Cell";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "./redux/hooks";
 
 type BattlePlayerType = {
   players: {
@@ -26,6 +27,7 @@ const BattlePlayer = ({ players, setPlayers }: BattlePlayerType) => {
   const [player2Moves, setPlayer2Moves] = useState<number[]>([]);
   const [firstMove, setFirstMove] = useState("");
   const navigate = useNavigate();
+  const theme = useAppSelector((s) => s.tictactoe.theme);
   const winningPatterns = [
     [1, 4, 7],
     [2, 5, 8],
@@ -55,7 +57,7 @@ const BattlePlayer = ({ players, setPlayers }: BattlePlayerType) => {
   }
 
   function handlePlayerReset() {
-    navigate("/vs-player");
+    navigate("/vs-player", { replace: true });
     // setPlayers({
     //   player1: "",
     //   player2: "",
@@ -98,7 +100,7 @@ const BattlePlayer = ({ players, setPlayers }: BattlePlayerType) => {
   }
 
   return (
-    <div className="game-screen">
+    <div className={`${theme} game-screen`}>
       {!gameResult ? (
         <p className="players-turn">
           It's
@@ -140,15 +142,17 @@ const BattlePlayer = ({ players, setPlayers }: BattlePlayerType) => {
         <div className="endgame">
           <div className="endgame-button-wrapper">
             <button className="button" onClick={gameReset}>
-              New Round?
+              New Round
             </button>
             <button className="button" onClick={handlePlayerReset}>
-              Reset Players?
+              Reset Players
             </button>
           </div>
         </div>
       )}
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {errorMessage && (
+        <p className={`error-message ${theme}`}>{errorMessage}</p>
+      )}
     </div>
   );
 };

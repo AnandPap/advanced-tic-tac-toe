@@ -11,6 +11,7 @@
 body {
   margin: 0;
   height: 100%;
+  font-size: var(--big-size-text);
 }
 #root {
   height: 100%;
@@ -21,8 +22,14 @@ p {
 
 .header {
   display: flex;
-  background-color: hsl(0, 0%, 90%);
+  background-color: hsl(0, 0%, 80%);
   padding: 0 1rem;
+}
+.header > h1 {
+  font-weight: 400;
+  font-size: var(--big-size-text);
+  margin: 0;
+  align-self: center;
 }
 .app-icon {
   width: 75px;
@@ -40,39 +47,57 @@ p {
 }
 
 .home-page,
-.on-empty-page {
+.on-empty-page,
+.players-form-wrapper,
+.game-screen {
   padding-top: 30px;
   min-height: calc(100vh - 75px);
-  font-size: var(--big-size-text);
   text-align: center;
 }
-.home-page > p {
-}
 
-.game-screen,
 .players-form {
   width: fit-content;
   margin: 0 auto;
 }
 .players-form {
-  font-size: 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+.players-form > p {
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
 .players-form > input {
-  font-size: 2.5rem;
+  font-size: var(--big-size-text);
   width: 400px;
+  box-shadow: 0px 0px 4px -1px black;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  outline: 1px solid black;
+  margin-bottom: 30px;
+}
+.players-form > input:focus {
+  box-shadow: 0px 0px 7px 0px black;
+}
+.players-form.dark > input {
+  box-shadow: none;
+}
+.players-form.dark > input:focus {
+  box-shadow: 0px 0px 7px 0px lightcoral, 0px 0px 7px 0px lightcoral;
+}
+.players-form > *:not(:first-child) {
 }
 .players-form > p {
+  font-size: calc(var(--big-size-text) * 0.9);
 }
 
 .players-turn,
 .winner-text {
   text-align: center;
   margin: 0;
-  font-size: var(--big-size-text);
 }
 .board-wrapper {
   margin-top: 30px;
@@ -99,10 +124,14 @@ p {
   height: 100%;
   text-align: center;
 }
-.hoverable-board-cell:hover {
-  background-color: whitesmoke;
-  border-radius: 3rem;
+.board-cell-wrapper.dark {
+  border-color: white;
+}
+.hoverable-board-cell {
   cursor: pointer;
+  opacity: 0.5;
+}
+.hoverable-board-cell:hover.dark {
 }
 .border-top-bottom {
   border-top: 3px solid black;
@@ -116,7 +145,6 @@ p {
   border: 3px solid black;
 }
 
-.error-message,
 .endgame {
   margin-top: 30px;
 }
@@ -127,12 +155,18 @@ p {
 }
 .endgame-button-wrapper > :first-child,
 .button-wrapper > :first-child {
-  margin-right: 10px;
+  margin-right: 20px;
+}
+.button-wrapper {
+  margin-top: 30px;
 }
 
 .error-message {
-  font-size: 2.5rem;
-  text-align: center;
+  margin-top: 20px;
+  color: hsla(0, 100%, 50%, 0.7);
+}
+.error-message.dark {
+  color: lightcoral;
 }
 
 .button {
@@ -141,14 +175,44 @@ p {
   color: white;
   border-radius: 5px;
   padding: 7px 20px;
-  font-size: calc(var(--big-size-text) * 0.65);
+  font-size: calc(var(--big-size-text) * 0.7);
   cursor: pointer;
-  margin-top: 30px;
-  transition: all 0.25s ease 0.03s;
+  transition: all 0.15s ease 0.03s;
 }
 .button:hover {
   background-color: rgb(20, 75, 240);
   transform: scale(1.01);
+}
+
+.back-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  font-weight: 600;
+  font-size: calc(var(--big-size-text) * 0.5);
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  height: fit-content;
+  background-color: hsl(0, 0%, 80%);
+  cursor: pointer;
+  align-self: center;
+  margin-left: 10px;
+}
+.back-button:hover {
+  background-color: hsl(0, 0%, 70%);
+}
+.back-button-arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  padding: 3.5px;
+  position: relative;
+  bottom: 0px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(135deg);
+}
+.back-button-text {
+  margin: 0 5px;
 }
 
 .dark {
@@ -156,7 +220,7 @@ p {
   color: white;
 }
 .dark-header {
-  background-color: hsl(0, 0%, 70%);
+  background-color: hsl(0, 0%, 80%);
 }
 
 @media only screen and (min-width: 1000px) {

@@ -28,6 +28,11 @@ const ChoosePlayers = () => {
         });
         navigate("/vs-player", { replace: true });
       }
+    } else {
+      setPlayers({
+        player1: "",
+        player2: "",
+      });
     }
     if (!player1Name || !player2Name) {
       navigate("/vs-player", { replace: true });
