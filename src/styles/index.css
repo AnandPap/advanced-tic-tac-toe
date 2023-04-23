@@ -4,6 +4,8 @@
   box-sizing: border-box;
 }
 :root {
+  --small-size-text: 1.25rem;
+  --medium-size-text: 1.75rem;
   --big-size-text: 2.5rem;
   --board-cell-text: 5rem;
   height: 100%;
@@ -18,32 +20,6 @@ body {
 }
 p {
   margin: 0;
-}
-
-.header {
-  display: flex;
-  background-color: hsl(0, 0%, 80%);
-  padding: 0 1rem;
-}
-.header > h1 {
-  font-weight: 400;
-  font-size: var(--big-size-text);
-  margin: 0;
-  align-self: center;
-}
-.app-icon {
-  width: 75px;
-}
-.dark-mode-button-wrapper {
-  display: flex;
-  flex-grow: 1;
-  justify-content: flex-end;
-  align-items: center;
-}
-.dark-mode-button {
-  width: 100px;
-  height: 50px;
-  cursor: pointer;
 }
 
 .home-page,
@@ -184,44 +160,13 @@ p {
   transform: scale(1.01);
 }
 
-.back-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  font-weight: 600;
-  font-size: calc(var(--big-size-text) * 0.5);
-  border-radius: 0.5rem;
-  padding: 1rem 1.5rem;
-  height: fit-content;
-  background-color: hsl(0, 0%, 80%);
-  cursor: pointer;
-  align-self: center;
-  margin-left: 10px;
-}
-.back-button:hover {
-  background-color: hsl(0, 0%, 70%);
-}
-.back-button-arrow {
-  border: solid black;
-  border-width: 0 3px 3px 0;
-  padding: 3.5px;
-  position: relative;
-  bottom: 0px;
-  transform: rotate(45deg);
-  -webkit-transform: rotate(135deg);
-}
-.back-button-text {
-  margin: 0 5px;
-}
-
 .dark {
   background-color: hsl(0, 0%, 30%);
   color: white;
 }
-.dark-header {
-  background-color: hsl(0, 0%, 80%);
-}
 
-@media only screen and (min-width: 1000px) {
+@media only screen and (max-width: 425px) {
+  .players-form > input {
+    width: 90%;
+  }
 }

@@ -1,11 +1,11 @@
 import { useAppSelector } from "./redux/hooks";
 
-type ValidationMessageProps = {
+type ErrorMessageProps = {
   className?: string;
   text: string;
 };
 
-const ErrorMessage = ({ className, text }: ValidationMessageProps) => {
+const ErrorMessage = ({ className, text }: ErrorMessageProps) => {
   const theme = useAppSelector((s) => s.tictactoe.theme);
 
   return <p className={`${className} ${theme}`}>{text}</p>;

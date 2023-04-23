@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ErrorMessage from "./ErrorMessage";
-import HomePage from "./HomePage";
-import Scoreboard from "./Scoreboard";
-import PlayerProfile from "./PlayerProfile";
-import BattleComputer from "./BattleComputer";
-import ChooseComputerDifficulty from "./ChooseComputerDifficulty";
-import ChoosePlayers from "./ChoosePlayers";
-import Header from "./Header";
+import ErrorMessage from "../ErrorMessage";
+import HomePage from "../HomePage";
+import Scoreboard from "../Scoreboard";
+import PlayerProfile from "../PlayerProfile";
+import BattleComputer from "../BattleComputer";
+import ChooseComputerDifficulty from "../ChooseComputerDifficulty";
+import ChoosePlayers from "../ChoosePlayers";
+import Header from "../header/Header";
 
 const MainRouter = () => {
   return (

@@ -9,11 +9,11 @@ const HomePage = () => {
     <div className={`${theme} home-page`}>
       <p>Play against:</p>
       <div className="button-wrapper">
-        <button className="button" onClick={() => navigate("/vs-player")}>
-          Human player
-        </button>
         <button className="button" onClick={() => navigate("/vs-computer")}>
           Computer
+        </button>
+        <button className="button" onClick={() => navigate("/vs-player")}>
+          Human player
         </button>
       </div>
     </div>
