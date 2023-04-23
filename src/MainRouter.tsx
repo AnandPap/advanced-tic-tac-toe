@@ -1,37 +1,17 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ErrorMessage from "./ErrorMessage";
-import LottieDarkModeSwitch from "./LottieDarkModeSwitch";
 import HomePage from "./HomePage";
 import Scoreboard from "./Scoreboard";
 import PlayerProfile from "./PlayerProfile";
 import BattleComputer from "./BattleComputer";
-import BattlePlayer from "./BattlePlayer";
-import tictactoePng from "./assets/tic-tac-toe.png";
 import ChooseComputerDifficulty from "./ChooseComputerDifficulty";
 import ChoosePlayers from "./ChoosePlayers";
+import Header from "./Header";
 
 const MainRouter = () => {
   return (
     <BrowserRouter>
-      <header className="header">
-        <img className="app-icon" alt="App Icon" src={tictactoePng} />
-        <LottieDarkModeSwitch />
-        {/* <div>
-          {theme === "dark" ? (
-            <i
-              onClick={() => dispatch(setTheme("light"))}
-              style={{ fontSize: "105px" }}
-              className="bi bi-moon-fill"
-            ></i>
-          ) : (
-            <i
-              onClick={() => dispatch(setTheme("dark"))}
-              style={{ fontSize: "105px" }}
-              className="fa-lg bi bi-brightness-high "
-            ></i>
-          )}
-        </div> */}
-      </header>
+      <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/vs-computer" element={<ChooseComputerDifficulty />} />

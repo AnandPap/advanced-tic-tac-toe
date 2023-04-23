@@ -16,7 +16,7 @@ const ChoosePlayers = () => {
 
   useEffect(() => {
     if (player1Name && player2Name) {
-      if (player1Name?.length > 1 && player2Name?.length > 1) {
+      if (player1Name.length > 1 && player2Name.length > 1) {
         setPlayers({
           player1: player1Name,
           player2: player2Name,
@@ -26,11 +26,13 @@ const ChoosePlayers = () => {
           player1: "",
           player2: "",
         });
-        setSearchParams({ player1: "", player2: "" });
         navigate("/vs-player", { replace: true });
       }
     }
-  }, []);
+    if (!player1Name || !player2Name) {
+      navigate("/vs-player", { replace: true });
+    }
+  }, [player1Name, player2Name]);
 
   return (
     <div>
@@ -44,7 +46,7 @@ const ChoosePlayers = () => {
           setSearchParams={setSearchParams}
         />
       ) : (
-        <BattlePlayer players={players} />
+        <BattlePlayer players={players} setPlayers={setPlayers} />
       )}
     </div>
   );

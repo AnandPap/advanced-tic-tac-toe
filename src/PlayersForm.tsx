@@ -31,7 +31,6 @@ const PlayersForm = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(players.player2.length);
     if (players.player1.length < 2 && players.player2.length < 2)
       setErrorMessage("Please enter player names.");
     else if (players.player1.length < 2)
@@ -46,9 +45,13 @@ const PlayersForm = ({
     }
   };
   return (
-    <div>
-      <form onSubmit={(e) => handleSubmit(e)} action="submit">
-        <p>Player 1 name:</p>
+    <>
+      <form
+        className="players-form"
+        onSubmit={(e) => handleSubmit(e)}
+        action="submit"
+      >
+        <p>Enter player 1 name:</p>
         <input
           type="text"
           value={players.player1}
@@ -59,7 +62,7 @@ const PlayersForm = ({
             setErrorMessage("");
           }}
         />
-        <p>Player 2 name:</p>
+        <p>Enter player 2 name:</p>
         <input
           type="text"
           value={players.player2}
@@ -73,13 +76,13 @@ const PlayersForm = ({
         <button
           //   disabled={players.player1.length < 2 || players.player2.length < 2}
           type="submit"
-          className="submit-button form-element button"
+          className="button"
         >
           Submit
         </button>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </form>
-      {errorMessage && <p>{errorMessage}</p>}
-    </div>
+    </>
   );
 };
 

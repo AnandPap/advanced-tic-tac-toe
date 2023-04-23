@@ -26,9 +26,25 @@ const LottieDarkModeSwitch = () => {
         dispatch(setTheme("light"));
       }
     } else {
-      lottieRef.current.goToAndStop(moonFrame, true);
-      dispatch(setTheme("dark"));
-      localStorage.setItem("theme", "dark");
+      if (
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+      ) {
+        lottieRef.current.goToAndStop(moonFrame, true);
+        dispatch(setTheme("dark"));
+        localStorage.setItem("theme", "dark");
+      } else if (
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: light)").matches
+      ) {
+        lottieRef.current.goToAndStop(sunFrame, true);
+        dispatch(setTheme("light"));
+        localStorage.setItem("theme", "light");
+      } else {
+        lottieRef.current.goToAndStop(moonFrame, true);
+        dispatch(setTheme("dark"));
+        localStorage.setItem("theme", "dark");
+      }
     }
   }, []);
 

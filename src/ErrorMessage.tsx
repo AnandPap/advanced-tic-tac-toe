@@ -4,7 +4,7 @@ type ValidationMessageProps = {
 };
 
 const ErrorMessage = ({ className, text }: ValidationMessageProps) => {
-  return <div>ErrorMessage</div>;
+  return <p className={`${className} error-message`}>{text}</p>;
 };
 
 export default ErrorMessage;

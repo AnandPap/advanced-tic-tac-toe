@@ -1,17 +1,32 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
 }
-
+:root {
+  --big-size-text: 2.5rem;
+  --board-cell-text: 5rem;
+  height: 100%;
+}
+body {
+  margin: 0;
+  height: 100%;
+}
 #root {
+  height: 100%;
+}
+p {
+  margin: 0;
 }
 
 .header {
   display: flex;
+  background-color: hsl(0, 0%, 90%);
+  padding: 0 1rem;
 }
 .app-icon {
   width: 75px;
 }
-
 .dark-mode-button-wrapper {
   display: flex;
   flex-grow: 1;
@@ -24,59 +39,125 @@
   cursor: pointer;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.home-page,
+.on-empty-page {
+  padding-top: 30px;
+  min-height: calc(100vh - 75px);
+  font-size: var(--big-size-text);
+  text-align: center;
+}
+.home-page > p {
 }
 
-@media only screen and (min-width: 1000px) {
+.game-screen,
+.players-form {
+  width: fit-content;
+  margin: 0 auto;
+}
+.players-form {
+  font-size: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.players-form > input {
+  font-size: 2.5rem;
+  width: 400px;
+}
+.players-form > p {
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.players-turn,
+.winner-text {
+  text-align: center;
+  margin: 0;
+  font-size: var(--big-size-text);
 }
-
-/* CSS for game board */
-.game-board {
+.board-wrapper {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+.board-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 4px;
-  width: 300px;
-  height: 300px;
   margin: 0 auto;
+  width: 350px;
+  height: 350px;
+}
+.board-cell-wrapper {
+}
+.board-cell {
+  font-family: inherit;
+  border: none;
+  background-color: white;
+  font-size: var(--board-cell-text);
+  user-select: none;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.hoverable-board-cell:hover {
+  background-color: whitesmoke;
+  border-radius: 3rem;
+  cursor: pointer;
+}
+.border-top-bottom {
+  border-top: 3px solid black;
+  border-bottom: 3px solid black;
+}
+.border-right-left {
+  border-right: 3px solid black;
+  border-left: 3px solid black;
+}
+.border-all-around {
+  border: 3px solid black;
 }
 
-/* CSS for cells */
-.cell {
+.error-message,
+.endgame {
+  margin-top: 30px;
+}
+.endgame-button-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 48px;
-  font-weight: bold;
-  color: #333;
-  background-color: #f0f0f0;
+}
+.endgame-button-wrapper > :first-child,
+.button-wrapper > :first-child {
+  margin-right: 10px;
+}
+
+.error-message {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.button {
+  border: none;
+  background-color: royalblue;
+  color: white;
+  border-radius: 5px;
+  padding: 7px 20px;
+  font-size: calc(var(--big-size-text) * 0.65);
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+  margin-top: 30px;
+  transition: all 0.25s ease 0.03s;
+}
+.button:hover {
+  background-color: rgb(20, 75, 240);
+  transform: scale(1.01);
 }
 
-.cell:hover {
-  background-color: #e0e0e0;
+.dark {
+  background-color: hsl(0, 0%, 30%);
+  color: white;
+}
+.dark-header {
+  background-color: hsl(0, 0%, 70%);
 }
 
-.cell.clicked {
-  cursor: not-allowed;
+@media only screen and (min-width: 1000px) {
 }
