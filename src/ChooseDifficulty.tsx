@@ -1,13 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "./redux/hooks";
 import { useDispatch } from "react-redux";
-import { setPlayAs } from "./redux/tictactoe";
-import { useEffect } from "react";
+import { setPlayAs, setPlayers } from "./redux/tictactoe";
+import { useEffect, useState } from "react";
 
 const ChooseDifficulty = () => {
+  const [errorMessage, setErrorMessage] = useState("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
+    null
+  );
   const levelsOfDifficulty = ["easy", "medium", "hard"];
   const playAsOptions = ["O", "Random", "X"];
   const theme = useAppSelector((s) => s.tictactoe.theme);
+  const players = useAppSelector((s) => s.tictactoe.players);
   const playAs = useAppSelector((s) => s.tictactoe.playAs);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,9 +29,14 @@ const ChooseDifficulty = () => {
           {levelsOfDifficulty.map((difficulty, i) => {
             return (
               <button
-                className={`${difficulty}`}
+                disabled={selectedDifficulty === difficulty}
+                className={`${difficulty} ${
+                  selectedDifficulty === difficulty
+                    ? "selected-difficulty"
+                    : null
+                }`}
                 key={i}
-                onClick={() => navigate(`/vs-computer/${difficulty}`)}
+                onClick={() => setSelectedDifficulty(difficulty)}
               >
                 {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
               </button>
@@ -50,6 +60,32 @@ const ChooseDifficulty = () => {
           })}
         </div>
       </div>
+      <form className={`${theme} computer-form`}>
+        <p>Enter players name:</p>
+        <input
+          type="text"
+          value={players.player1}
+          onChange={(e) => {
+            dispatch(setPlayers({ player1: e.target.value }));
+            setErrorMessage("");
+          }}
+        />
+      </form>
+      <button
+        onClick={() => {
+          if (!players.player1) setErrorMessage("Please enter players name.");
+          else if (selectedDifficulty)
+            navigate(`/vs-computer/${selectedDifficulty}`);
+          else if (!selectedDifficulty)
+            setErrorMessage("Please select computer difficulty.");
+        }}
+        className="button"
+      >
+        Start battle
+      </button>
+      {errorMessage && (
+        <p className={`error-message ${theme}`}>{errorMessage}</p>
+      )}
     </div>
   );
 };

@@ -21,7 +21,7 @@ const BattlePlayer = () => {
   );
   const theme = useAppSelector((s) => s.tictactoe.theme);
   const players = useAppSelector((s) => s.tictactoe.players);
-  const dispach = useDispatch();
+  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams({
     player1: "",
     player2: "",
@@ -29,6 +29,7 @@ const BattlePlayer = () => {
   const player1Name = searchParams.get("player1");
   const player2Name = searchParams.get("player2");
   const navigate = useNavigate();
+
   const winningPatterns = [
     [1, 4, 7],
     [2, 5, 8],
@@ -60,7 +61,7 @@ const BattlePlayer = () => {
       player1Name.length > 1 &&
       player2Name.length > 1
     ) {
-      dispach(setPlayers({ player1: player1Name, player2: player2Name }));
+      dispatch(setPlayers({ player1: player1Name, player2: player2Name }));
     } else if (players.player1.length > 1 && players.player2.length > 1) {
       setSearchParams(
         { player1: players.player1, player2: players.player2 },
