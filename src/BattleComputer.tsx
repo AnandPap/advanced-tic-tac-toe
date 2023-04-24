@@ -37,7 +37,7 @@ const BattleComputer = () => {
   ];
 
   useEffect(() => {
-    if (playAs === "random") {
+    if (playAs === "Random") {
       const number = Math.floor(Math.random() * 2) + 1;
       if (number % 2 === 0) setFirstMove("human");
       else {
@@ -70,11 +70,11 @@ const BattleComputer = () => {
   }, [playerXMoves, playerOMoves]);
 
   useEffect(() => {
-    if (computerThinking) {
+    if (computerThinking && !gameResult) {
       setTimeout(() => {
         if (difficulty === "easy") easyMove();
-        else if (difficulty === "medium") mediumMove();
-        else hardMove();
+        else if (difficulty === "medium") easyMove();
+        else easyMove();
         setComputerThinking(false);
       }, 2000);
     }
@@ -87,8 +87,6 @@ const BattleComputer = () => {
       if (!madeMoves.includes(i)) availableMoves.push(i);
     }
     const randomNumber = Math.floor(Math.random() * availableMoves.length);
-    console.log(availableMoves[randomNumber]);
-
     if (currentSymbol === "O")
       setPlayerOMoves((s) => [...s, availableMoves[randomNumber]]);
     else setPlayerXMoves((s) => [...s, availableMoves[randomNumber]]);
@@ -191,10 +189,10 @@ const BattleComputer = () => {
             ) : (
               <div className="computer-is-thinking-wrapper">
                 <p>Computer is thinking</p>
-                <div className="dot-elastic"></div>
+                <div className={`dot-elastic ${theme}`}></div>
               </div>
             )}
-            {playerXMoves.length + playerOMoves.length > 0 &&
+            {/* {playerXMoves.length + playerOMoves.length > 0 &&
               checkCurrentTurn() === "human" && (
                 <div className="undo-button-wrapper">
                   <BackButton
@@ -203,7 +201,7 @@ const BattleComputer = () => {
                     onClick={undoHandler}
                   />
                 </div>
-              )}
+              )} */}
           </div>
         ) : (
           <p className="winner-text">
@@ -220,6 +218,7 @@ const BattleComputer = () => {
               <Cell
                 key={i}
                 i={i + 1}
+                computerThinking={computerThinking}
                 gameResult={gameResult}
                 currentSymbol={currentSymbol}
                 playerXMoves={playerXMoves}

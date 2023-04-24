@@ -3,6 +3,7 @@ import { useAppSelector } from "./redux/hooks";
 
 type CellType = {
   i: number;
+  computerThinking: boolean;
   gameResult: string | null;
   currentSymbol: string;
   playerXMoves: number[];
@@ -18,6 +19,7 @@ type CellType = {
 
 const Cell = ({
   i,
+  computerThinking,
   gameResult,
   currentSymbol,
   playerXMoves,
@@ -64,7 +66,7 @@ const Cell = ({
   function handleClick() {
     clearTimeout(errorTimeoutId);
     setRemovedCell(undefined);
-    if (!cellInput && !gameResult) {
+    if (!cellInput && !gameResult && !computerThinking) {
       if (currentSymbol === "X") {
         setPlayerXMoves((s) => [...s, i]);
         setCellInput("X");
@@ -73,7 +75,7 @@ const Cell = ({
         setCellInput("O");
       }
       setErrorMessage("");
-    } else if (!gameResult) {
+    } else if (!gameResult && !computerThinking) {
       setErrorMessage("Choose unoccupied cell!");
       const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
       setErrorTimeoutId(timeoutId);

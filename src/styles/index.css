@@ -258,6 +258,12 @@ p {
   translate: 20px 10px;
   animation: dot-elastic 1s infinite linear;
 }
+.dot-elastic.light,
+.dot-elastic.light::before,
+.dot-elastic.light::after {
+  background-color: black;
+  color: black;
+}
 .dot-elastic::before,
 .dot-elastic::after {
   content: "";
