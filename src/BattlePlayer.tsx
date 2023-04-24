@@ -173,6 +173,7 @@ const BattlePlayer = () => {
               <Cell
                 key={i}
                 i={i + 1}
+                computerThinking={false}
                 gameResult={gameResult}
                 currentSymbol={currentSymbol}
                 playerXMoves={playerXMoves}
