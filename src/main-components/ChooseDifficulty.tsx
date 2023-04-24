@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "./redux/hooks";
+import { useAppSelector } from "../redux/hooks";
 import { useDispatch } from "react-redux";
-import { setPlayAs, setPlayers } from "./redux/tictactoe";
+import { setPlayAs, setPlayers } from "../redux/tictactoe";
 import { useEffect, useState } from "react";
 
 const ChooseDifficulty = () => {

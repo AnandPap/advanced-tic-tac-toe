@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppSelector } from "./redux/hooks";
+import { useAppSelector } from "../redux/hooks";
 import { useDispatch } from "react-redux";
-import BackButton from "./header/BackButton";
+import BackButton from "../header/BackButton";
 import Cell from "./Cell";
 
 const BattleComputer = () => {

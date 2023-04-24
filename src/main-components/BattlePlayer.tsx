@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Cell from "./Cell";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useAppSelector } from "./redux/hooks";
+import { useAppSelector } from "../redux/hooks";
 import { useDispatch } from "react-redux";
-import { setPlayers } from "./redux/tictactoe";
-import BackButton from "./header/BackButton";
+import { setPlayers } from "../redux/tictactoe";
+import BackButton from "../header/BackButton";
 
 const BattlePlayer = () => {
   const [currentSymbol, setCurrentSymbol] = useState("X");

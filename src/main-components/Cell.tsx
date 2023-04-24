@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAppSelector } from "./redux/hooks";
+import { useAppSelector } from "../redux/hooks";
 
 type CellType = {
   i: number;
@@ -89,7 +89,7 @@ const Cell = ({
     >
       <button
         onMouseEnter={() => {
-          if (!cellInput && !gameResult) {
+          if (!cellInput && !gameResult && !computerThinking) {
             const timeoutId = setTimeout(() => {
               setTempCellInput(currentSymbol);
             }, 50);
