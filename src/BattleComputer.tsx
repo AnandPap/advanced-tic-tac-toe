@@ -7,6 +7,8 @@ import Cell from "./Cell";
 
 const BattleComputer = () => {
   const [currentSymbol, setCurrentSymbol] = useState("X");
+  const [results, setResults] = useState({ human: 0, computer: 0, ties: 0 });
+  const [computerThinking, setComputerThinking] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [gameResult, setGameResult] = useState<string | null>(null);
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
@@ -38,67 +40,139 @@ const BattleComputer = () => {
     if (playAs === "random") {
       const number = Math.floor(Math.random() * 2) + 1;
       if (number % 2 === 0) setFirstMove("human");
-      else setFirstMove("computer");
+      else {
+        setFirstMove("computer");
+        setComputerThinking(true);
+      }
+    } else if (playAs === "X") {
+      setFirstMove("human");
+    } else {
+      setFirstMove("computer");
+      setComputerThinking(true);
     }
+
+    if (!gameResult) {
+      setPlayerXMoves([]);
+      setPlayerOMoves([]);
+    }
+
     if (
       difficulty !== "easy" &&
       difficulty !== "medium" &&
       difficulty !== "hard"
     )
       navigate("/vs-computer", { replace: true });
-  }, []);
+  }, [gameResult]);
+
+  useEffect(() => {
+    if ((playerXMoves.length > 0 || playerOMoves.length > 0) && !removedCell)
+      checkWinner();
+  }, [playerXMoves, playerOMoves]);
+
+  useEffect(() => {
+    if (computerThinking) {
+      setTimeout(() => {
+        if (difficulty === "easy") easyMove();
+        else if (difficulty === "medium") mediumMove();
+        else hardMove();
+        setComputerThinking(false);
+      }, 2000);
+    }
+  }, [computerThinking]);
+
+  function easyMove() {
+    const availableMoves: number[] = [];
+    const madeMoves = [...playerOMoves, ...playerXMoves];
+    for (let i = 1; i < 10; i++) {
+      if (!madeMoves.includes(i)) availableMoves.push(i);
+    }
+    const randomNumber = Math.floor(Math.random() * availableMoves.length);
+    console.log(availableMoves[randomNumber]);
+
+    if (currentSymbol === "O")
+      setPlayerOMoves((s) => [...s, availableMoves[randomNumber]]);
+    else setPlayerXMoves((s) => [...s, availableMoves[randomNumber]]);
+  }
+
+  // left to implement
+  function mediumMove() {}
+
+  // left to implement
+  function hardMove() {}
 
   function checkWinner() {
     for (let i = 0; i < winningPatterns.length; i++) {
       let winningPattern = winningPatterns[i];
-      if (
-        winningPattern.every((value) => playerXMoves.includes(value)) ||
-        winningPattern.every((value) => playerOMoves.includes(value))
-      ) {
-        if (
-          (gameId % 2 === 1 && currentSymbol === "X") ||
-          (gameId % 2 === 0 && currentSymbol === "O")
-        ) {
-          setResults((s) => ({ ...s, wins1: s.wins1 + 1 }));
-          setGameResult("player1 won");
+      if (checkWinningPattern(winningPattern)) {
+        if (checkCurrentTurn() === "human") {
+          setGameResult("human won");
+          setResults((s) => ({ ...s, wins1: s.human + 1 }));
         } else {
-          setResults((s) => ({ ...s, wins2: s.wins2 + 1 }));
-          setGameResult("player2 won");
+          setGameResult("computer won");
+          setResults((s) => ({ ...s, wins2: s.computer + 1 }));
         }
-        setGameId((s) => s + 1);
         return;
       }
     }
     if (playerXMoves.length + playerOMoves.length === 9) {
       setResults((s) => ({ ...s, ties: s.ties + 1 }));
       setGameResult("tie");
-      setGameId((s) => s + 1);
       return;
     }
     if (currentSymbol === "X") setCurrentSymbol("O");
     else setCurrentSymbol("X");
+    if (checkCurrentTurn() === "human") setComputerThinking(true);
   }
 
   function gameReset() {
     setCurrentSymbol("X");
     setGameResult(null);
+    if (playAs === "random") {
+      const number = Math.floor(Math.random() * 2) + 1;
+      if (number % 2 === 0) setFirstMove("human");
+      else {
+        setFirstMove("computer");
+        setComputerThinking(true);
+      }
+    } else if (playAs === "X") {
+      setFirstMove("human");
+    } else {
+      setFirstMove("computer");
+      setComputerThinking(true);
+    }
   }
 
   function removeElementFromPlayer1() {
     let tempArray = [...playerXMoves];
-    setRemovedCell(tempArray.pop());
     setPlayerXMoves(tempArray);
   }
 
   function removeElementFromPlayer2() {
     let tempArray = [...playerOMoves];
-    setRemovedCell(tempArray.pop());
     setPlayerOMoves(tempArray);
   }
 
   function undoHandler() {
-    removeElementFromPlayer2();
     removeElementFromPlayer1();
+    removeElementFromPlayer2();
+  }
+
+  function checkCurrentTurn() {
+    if (
+      (firstMove === "human" && currentSymbol === "X") ||
+      (firstMove === "computer" && currentSymbol === "O")
+    )
+      return "human";
+    else return "computer";
+  }
+
+  function checkWinningPattern(winningPattern: number[]) {
+    if (
+      winningPattern.every((value) => playerXMoves.includes(value)) ||
+      winningPattern.every((value) => playerOMoves.includes(value))
+    )
+      return true;
+    else return false;
   }
 
   function handlePlayerReset() {
@@ -110,29 +184,32 @@ const BattleComputer = () => {
       <div className="game-screen">
         {!gameResult ? (
           <div className="game-status-bar">
-            {(firstMove === "human" && currentSymbol === "X") ||
-            (firstMove === "computer" && currentSymbol === "O") ? (
+            {checkCurrentTurn() === "human" ? (
               <p className="players-turn">
                 It's {`${players.player1}`} 's turn.
               </p>
             ) : (
-              <p>Computer is thinking ...</p>
-            )}
-            {playerXMoves.length + playerOMoves.length > 0 && (
-              <div className="undo-button-wrapper">
-                <BackButton
-                  className={`${theme} undo-button`}
-                  text="Undo"
-                  onClick={undoHandler}
-                />
+              <div className="computer-is-thinking-wrapper">
+                <p>Computer is thinking</p>
+                <div className="dot-elastic"></div>
               </div>
             )}
+            {playerXMoves.length + playerOMoves.length > 0 &&
+              checkCurrentTurn() === "human" && (
+                <div className="undo-button-wrapper">
+                  <BackButton
+                    className={`${theme} undo-button`}
+                    text="Undo"
+                    onClick={undoHandler}
+                  />
+                </div>
+              )}
           </div>
         ) : (
           <p className="winner-text">
             {gameResult === "tie"
               ? "It's a Tie!"
-              : gameResult === "player won"
+              : gameResult === "human won"
               ? `${players.player1} wins!`
               : "Computer wins!"}
           </p>
@@ -145,6 +222,8 @@ const BattleComputer = () => {
                 i={i + 1}
                 gameResult={gameResult}
                 currentSymbol={currentSymbol}
+                playerXMoves={playerXMoves}
+                playerOMoves={playerOMoves}
                 setPlayerXMoves={setPlayerXMoves}
                 setPlayerOMoves={setPlayerOMoves}
                 setErrorMessage={setErrorMessage}

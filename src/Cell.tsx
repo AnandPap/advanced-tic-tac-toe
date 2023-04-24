@@ -5,6 +5,8 @@ type CellType = {
   i: number;
   gameResult: string | null;
   currentSymbol: string;
+  playerXMoves: number[];
+  playerOMoves: number[];
   setPlayerXMoves: React.Dispatch<React.SetStateAction<number[]>>;
   setPlayerOMoves: React.Dispatch<React.SetStateAction<number[]>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
@@ -18,6 +20,8 @@ const Cell = ({
   i,
   gameResult,
   currentSymbol,
+  playerXMoves,
+  playerOMoves,
   setPlayerXMoves,
   setPlayerOMoves,
   setErrorMessage,
@@ -51,6 +55,11 @@ const Cell = ({
   useEffect(() => {
     if (removedCell === i) setCellInput("");
   }, [removedCell]);
+
+  useEffect(() => {
+    if ((playerXMoves.includes(i) || playerOMoves.includes(i)) && !cellInput)
+      setCellInput(currentSymbol);
+  }, [playerXMoves, playerOMoves]);
 
   function handleClick() {
     clearTimeout(errorTimeoutId);

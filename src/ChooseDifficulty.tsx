@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 const ChooseDifficulty = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
-    null
+    "easy"
   );
   const levelsOfDifficulty = ["easy", "medium", "hard"];
   const playAsOptions = ["O", "Random", "X"];

@@ -175,6 +175,8 @@ const BattlePlayer = () => {
                 i={i + 1}
                 gameResult={gameResult}
                 currentSymbol={currentSymbol}
+                playerXMoves={playerXMoves}
+                playerOMoves={playerOMoves}
                 setPlayerXMoves={setPlayerXMoves}
                 setPlayerOMoves={setPlayerOMoves}
                 setErrorMessage={setErrorMessage}
