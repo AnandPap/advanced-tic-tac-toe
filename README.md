@@ -5,7 +5,7 @@ Project has been completed but with little more work to be done and that is:
 1. Implement medium and hard computer player.
 2. Implement scoreboard.
 
-> **Note** Rest of implementations and fixes are coming soon! Most likely until the end of the day. (24.04.)
+> **Note** Rest of implementations and fixes are coming soon!
 
 ## Deployed version:
 
