@@ -43,9 +43,12 @@ p {
 .on-empty-page-wrapper,
 .choose-difficulty-wrapper,
 .home-page-wrapper {
+  text-align: center;
   padding: 30px 0;
   min-height: calc(100vh - 75px);
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .game-screen {
@@ -227,6 +230,7 @@ p {
 }
 
 .error-message {
+  max-width: 350px;
   margin-top: 20px;
   color: hsla(0, 100%, 50%, 0.7);
 }
@@ -234,6 +238,7 @@ p {
   color: lightcoral;
 }
 .on-empty-page {
+  font-size: calc(var(--big-size-text) * 1.25);
   opacity: 0.7;
   margin: 0 auto;
 }
@@ -393,6 +398,9 @@ p {
   .computer-form > p,
   .error-message {
     font-size: var(--small-size-text);
+  }
+  .computer-form > p {
+    align-self: center;
   }
   .players-form > input,
   .computer-form > input {

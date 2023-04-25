@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Cell from "./Cell";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 import { useDispatch } from "react-redux";
 import { setPlayers } from "../redux/tictactoe";
+import BattlePlayerCell from "./BattlePlayerCell";
 import BackButton from "../header/BackButton";
 
 const BattlePlayer = () => {
@@ -14,7 +14,6 @@ const BattlePlayer = () => {
   const [gameResult, setGameResult] = useState<string | null>(null);
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
   const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
-  const [firstMove, setFirstMove] = useState("");
   const [removedCell, setRemovedCell] = useState<number | undefined>(undefined);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
@@ -22,13 +21,13 @@ const BattlePlayer = () => {
   const theme = useAppSelector((s) => s.tictactoe.theme);
   const players = useAppSelector((s) => s.tictactoe.players);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams({
     player1: "",
     player2: "",
   });
   const player1Name = searchParams.get("player1");
   const player2Name = searchParams.get("player2");
-  const navigate = useNavigate();
 
   const winningPatterns = [
     [1, 4, 7],
@@ -42,17 +41,19 @@ const BattlePlayer = () => {
   ];
 
   useEffect(() => {
-    if ((playerXMoves.length > 0 || playerOMoves.length > 0) && !removedCell)
-      checkWinner();
-  }, [playerXMoves, playerOMoves]);
-
-  useEffect(() => {
-    setFirstMove(gameId % 2 === 1 ? `player1` : `player2`);
     if (!gameResult) {
       setPlayerXMoves([]);
       setPlayerOMoves([]);
     }
   }, [gameResult]);
+
+  useEffect(() => {
+    if (playerXMoves.length > 0 && !removedCell) {
+      checkWinner();
+      if (currentSymbol === "X") setCurrentSymbol("O");
+      else setCurrentSymbol("X");
+    }
+  }, [playerXMoves, playerOMoves]);
 
   useEffect(() => {
     if (
@@ -75,14 +76,8 @@ const BattlePlayer = () => {
   function checkWinner() {
     for (let i = 0; i < winningPatterns.length; i++) {
       let winningPattern = winningPatterns[i];
-      if (
-        winningPattern.every((value) => playerXMoves.includes(value)) ||
-        winningPattern.every((value) => playerOMoves.includes(value))
-      ) {
-        if (
-          (gameId % 2 === 1 && currentSymbol === "X") ||
-          (gameId % 2 === 0 && currentSymbol === "O")
-        ) {
+      if (checkWinningPattern(winningPattern)) {
+        if (checkCurrentTurn() === "player1") {
           setResults((s) => ({ ...s, wins1: s.wins1 + 1 }));
           setGameResult("player1 won");
         } else {
@@ -99,13 +94,24 @@ const BattlePlayer = () => {
       setGameId((s) => s + 1);
       return;
     }
-    if (currentSymbol === "X") setCurrentSymbol("O");
-    else setCurrentSymbol("X");
   }
 
-  function gameReset() {
-    setCurrentSymbol("X");
-    setGameResult(null);
+  function checkCurrentTurn() {
+    if (
+      (gameId % 2 === 1 && currentSymbol === "X") ||
+      (gameId % 2 === 0 && currentSymbol === "O")
+    )
+      return "player1";
+    else return "player2";
+  }
+
+  function checkWinningPattern(winningPattern: number[]) {
+    if (
+      winningPattern.every((value) => playerXMoves.includes(value)) ||
+      winningPattern.every((value) => playerOMoves.includes(value))
+    )
+      return true;
+    else return false;
   }
 
   function removeElementFromPlayer1() {
@@ -121,10 +127,16 @@ const BattlePlayer = () => {
   }
 
   function undoHandler() {
+    setErrorMessage("");
     if (currentSymbol === "X") removeElementFromPlayer2();
     else removeElementFromPlayer1();
     if (currentSymbol === "X") setCurrentSymbol("O");
     else setCurrentSymbol("X");
+  }
+
+  function gameReset() {
+    setCurrentSymbol("X");
+    setGameResult(null);
   }
 
   function handlePlayerReset() {
@@ -138,14 +150,9 @@ const BattlePlayer = () => {
           <div className="game-status-bar">
             <p className="players-turn">
               It's
-              {firstMove === "player1" &&
-                (currentSymbol === "X"
-                  ? ` ${players.player1}`
-                  : ` ${players.player2}`)}
-              {firstMove === "player2" &&
-                (currentSymbol === "X"
-                  ? ` ${players.player2}`
-                  : ` ${players.player1}`)}
+              {checkCurrentTurn() === "player1"
+                ? ` ${players.player1}`
+                : ` ${players.player2}`}
               's turn.
             </p>
             {playerXMoves.length + playerOMoves.length > 0 && (
@@ -170,10 +177,9 @@ const BattlePlayer = () => {
         <div className="board-wrapper">
           <div className="board-container">
             {[...Array(9)].map((item, i) => (
-              <Cell
+              <BattlePlayerCell
                 key={i}
                 i={i + 1}
-                computerThinking={false}
                 gameResult={gameResult}
                 currentSymbol={currentSymbol}
                 playerXMoves={playerXMoves}

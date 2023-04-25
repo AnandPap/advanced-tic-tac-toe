@@ -3,7 +3,6 @@ import { useAppSelector } from "../redux/hooks";
 
 type CellType = {
   i: number;
-  computerThinking: boolean;
   gameResult: string | null;
   currentSymbol: string;
   playerXMoves: number[];
@@ -19,7 +18,6 @@ type CellType = {
 
 const Cell = ({
   i,
-  computerThinking,
   gameResult,
   currentSymbol,
   playerXMoves,
@@ -37,6 +35,7 @@ const Cell = ({
   const [cellTimeoutId, setCellTimeoutId] = useState<number | undefined>(
     undefined
   );
+  const theme = useAppSelector((s) => s.tictactoe.theme);
   const border =
     i === 2 || i === 8
       ? "border-right-left"
@@ -45,7 +44,6 @@ const Cell = ({
       : i === 5
       ? "border-all-around"
       : "";
-  const theme = useAppSelector((s) => s.tictactoe.theme);
 
   useEffect(() => {
     if (!gameResult) {
@@ -66,20 +64,29 @@ const Cell = ({
   function handleClick() {
     clearTimeout(errorTimeoutId);
     setRemovedCell(undefined);
-    if (!cellInput && !gameResult && !computerThinking) {
-      if (currentSymbol === "X") {
-        setPlayerXMoves((s) => [...s, i]);
-        setCellInput("X");
-      } else if (currentSymbol === "O") {
-        setPlayerOMoves((s) => [...s, i]);
-        setCellInput("O");
-      }
+    if (!cellInput && !gameResult) {
+      if (currentSymbol === "X") setPlayerXMoves((s) => [...s, i]);
+      else if (currentSymbol === "O") setPlayerOMoves((s) => [...s, i]);
       setErrorMessage("");
-    } else if (!gameResult && !computerThinking) {
+    } else if (!gameResult) {
       setErrorMessage("Choose unoccupied cell!");
       const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
       setErrorTimeoutId(timeoutId);
     }
+  }
+
+  function handleSettingTempCellInput() {
+    if (!cellInput && !gameResult) {
+      const timeoutId = setTimeout(() => {
+        setTempCellInput(currentSymbol);
+      }, 50);
+      setCellTimeoutId(timeoutId);
+    }
+  }
+
+  function handleRemovingTempCellInput() {
+    setTempCellInput(null);
+    clearTimeout(cellTimeoutId);
   }
 
   return (
@@ -88,18 +95,8 @@ const Cell = ({
       onClick={handleClick}
     >
       <button
-        onMouseEnter={() => {
-          if (!cellInput && !gameResult && !computerThinking) {
-            const timeoutId = setTimeout(() => {
-              setTempCellInput(currentSymbol);
-            }, 50);
-            setCellTimeoutId(timeoutId);
-          }
-        }}
-        onMouseLeave={() => {
-          setTempCellInput(null);
-          clearTimeout(cellTimeoutId);
-        }}
+        onMouseEnter={handleSettingTempCellInput}
+        onMouseLeave={handleRemovingTempCellInput}
         className={`board-cell ${theme} ${
           !gameResult && !cellInput && "hoverable-board-cell"
         }`}

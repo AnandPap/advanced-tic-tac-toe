@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
-import { useDispatch } from "react-redux";
 import BackButton from "../header/BackButton";
-import Cell from "./Cell";
+import BattleComputerCell from "./BattleComputerCell";
 
 const BattleComputer = () => {
   const [currentSymbol, setCurrentSymbol] = useState("X");
@@ -21,7 +20,6 @@ const BattleComputer = () => {
   const theme = useAppSelector((s) => s.tictactoe.theme);
   const players = useAppSelector((s) => s.tictactoe.players);
   const playAs = useAppSelector((s) => s.tictactoe.playAs);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { difficulty } = useParams();
 
@@ -37,36 +35,40 @@ const BattleComputer = () => {
   ];
 
   useEffect(() => {
-    if (playAs === "Random") {
-      const number = Math.floor(Math.random() * 2) + 1;
-      if (number % 2 === 0) setFirstMove("human");
-      else {
+    if (!gameResult) {
+      if (playAs === "Random") {
+        const number = Math.floor(Math.random() * 2) + 1;
+        if (number % 2 === 0) setFirstMove("human");
+        else {
+          setFirstMove("computer");
+          setComputerThinking(true);
+        }
+      } else if (playAs === "X") {
+        setFirstMove("human");
+      } else {
         setFirstMove("computer");
         setComputerThinking(true);
       }
-    } else if (playAs === "X") {
-      setFirstMove("human");
-    } else {
-      setFirstMove("computer");
-      setComputerThinking(true);
-    }
-
-    if (!gameResult) {
       setPlayerXMoves([]);
       setPlayerOMoves([]);
     }
 
     if (
-      difficulty !== "easy" &&
-      difficulty !== "medium" &&
-      difficulty !== "hard"
+      (difficulty !== "easy" &&
+        difficulty !== "medium" &&
+        difficulty !== "hard") ||
+      !players.player1
     )
       navigate("/vs-computer", { replace: true });
   }, [gameResult]);
 
   useEffect(() => {
-    if ((playerXMoves.length > 0 || playerOMoves.length > 0) && !removedCell)
+    if (playerXMoves.length > 0 && !removedCell) {
       checkWinner();
+      if (currentSymbol === "X") setCurrentSymbol("O");
+      else setCurrentSymbol("X");
+      if (checkCurrentTurn() === "human") setComputerThinking(true);
+    }
   }, [playerXMoves, playerOMoves]);
 
   useEffect(() => {
@@ -104,10 +106,10 @@ const BattleComputer = () => {
       if (checkWinningPattern(winningPattern)) {
         if (checkCurrentTurn() === "human") {
           setGameResult("human won");
-          setResults((s) => ({ ...s, wins1: s.human + 1 }));
+          setResults((s) => ({ ...s, human: s.human + 1 }));
         } else {
           setGameResult("computer won");
-          setResults((s) => ({ ...s, wins2: s.computer + 1 }));
+          setResults((s) => ({ ...s, computer: s.computer + 1 }));
         }
         return;
       }
@@ -117,42 +119,6 @@ const BattleComputer = () => {
       setGameResult("tie");
       return;
     }
-    if (currentSymbol === "X") setCurrentSymbol("O");
-    else setCurrentSymbol("X");
-    if (checkCurrentTurn() === "human") setComputerThinking(true);
-  }
-
-  function gameReset() {
-    setCurrentSymbol("X");
-    setGameResult(null);
-    if (playAs === "random") {
-      const number = Math.floor(Math.random() * 2) + 1;
-      if (number % 2 === 0) setFirstMove("human");
-      else {
-        setFirstMove("computer");
-        setComputerThinking(true);
-      }
-    } else if (playAs === "X") {
-      setFirstMove("human");
-    } else {
-      setFirstMove("computer");
-      setComputerThinking(true);
-    }
-  }
-
-  function removeElementFromPlayer1() {
-    let tempArray = [...playerXMoves];
-    setPlayerXMoves(tempArray);
-  }
-
-  function removeElementFromPlayer2() {
-    let tempArray = [...playerOMoves];
-    setPlayerOMoves(tempArray);
-  }
-
-  function undoHandler() {
-    removeElementFromPlayer1();
-    removeElementFromPlayer2();
   }
 
   function checkCurrentTurn() {
@@ -171,6 +137,27 @@ const BattleComputer = () => {
     )
       return true;
     else return false;
+  }
+
+  function removeElementFromPlayer1() {
+    let tempArray = [...playerXMoves];
+    setPlayerXMoves(tempArray);
+  }
+
+  function removeElementFromPlayer2() {
+    let tempArray = [...playerOMoves];
+    setPlayerOMoves(tempArray);
+  }
+
+  function undoHandler() {
+    removeElementFromPlayer1();
+    removeElementFromPlayer2();
+  }
+
+  function gameReset() {
+    setCurrentSymbol("X");
+    setGameResult(null);
+    setComputerThinking(false);
   }
 
   function handlePlayerReset() {
@@ -215,7 +202,7 @@ const BattleComputer = () => {
         <div className="board-wrapper">
           <div className="board-container">
             {[...Array(9)].map((item, i) => (
-              <Cell
+              <BattleComputerCell
                 key={i}
                 i={i + 1}
                 computerThinking={computerThinking}
