@@ -165,10 +165,10 @@ const BattleComputer = () => {
   }
 
   return (
-    <div className={`${theme} game-screen-wrapper`}>
-      <div className="game-screen">
+    <div className={`${theme} battle-screen-wrapper`}>
+      <div className="battle-screen">
         {!gameResult ? (
-          <div className="game-status-bar">
+          <div className="battle-status-bar">
             {checkCurrentTurn() === "human" ? (
               <p className="players-turn">
                 It's {`${players.player1}`} 's turn.

@@ -1,0 +1,157 @@
+.choose-difficulty,
+.play-as {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.play-as {
+  margin-top: 30px;
+}
+.choose-difficulty-buttons-wrapper,
+.play-as-buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-left: 20px;
+}
+.choose-difficulty-buttons-wrapper > *,
+.play-as-buttons-wrapper > * {
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0px 0px 4px -1px black;
+  font-size: calc(var(--small-size-text) * 0.8);
+  transition: all 0.2s ease 0.03s;
+}
+.play-as-buttons-wrapper > * {
+  background-color: hsl(0, 0%, 50%);
+}
+.play-as-buttons-wrapper > *:hover:not(.O, .Random, .X) {
+  color: black;
+  background-color: hsl(0, 0%, 85%);
+}
+.selected-difficulty {
+  box-shadow: 0 0 10px lightcoral, 0 0 10px lightcoral;
+}
+.easy {
+  background-color: green;
+}
+.medium {
+  background-color: orangered;
+}
+.hard {
+  background-color: red;
+}
+.easy:hover,
+.medium:hover,
+.hard:hover {
+  transform: scale(1.05);
+}
+.O,
+.Random,
+.X {
+  color: black;
+  background-color: hsl(0, 0%, 100%);
+  box-shadow: 0 0 10px lightcoral, 0 0 10px lightcoral;
+}
+
+.players-form,
+.computer-form {
+  width: fit-content;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.computer-form {
+  margin-top: 30px;
+}
+.players-form > p,
+.computer-form > p {
+  margin-bottom: 10px;
+  font-size: calc(var(--big-size-text) * 0.9);
+  align-self: flex-start;
+}
+.players-form > input,
+.computer-form > input {
+  font-size: var(--medium-size-text);
+  width: 400px;
+  box-shadow: 0px 0px 4px -1px black;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  outline: 1px solid black;
+  margin-bottom: 30px;
+}
+.computer-form > input {
+  margin-bottom: 15px;
+}
+.players-form > input:focus,
+.computer-form > input:focus {
+  box-shadow: 0px 0px 7px 0px black;
+}
+.players-form.dark > input,
+.computer-form.dark > input {
+  box-shadow: none;
+}
+.players-form.dark > input:focus,
+.computer-form.dark > input:focus {
+  box-shadow: 0px 0px 7px 0px lightcoral, 0px 0px 7px 0px lightcoral;
+}
+
+@media only screen and (max-width: 675px) {
+  .choose-difficulty {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .choose-difficulty > p {
+    margin-bottom: 10px;
+  }
+  .choose-difficulty-buttons-wrapper {
+    flex-direction: column;
+    margin: 0 auto;
+    width: 80%;
+    max-width: 300px;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .choose-difficulty,
+  .play-as > p {
+    font-size: calc(var(--medium-size-text) * 1.1);
+  }
+  .play-as {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .play-as-buttons-wrapper {
+    margin-top: 20px;
+    margin-left: 0;
+    flex-direction: column;
+  }
+  .play-as-buttons-wrapper > * {
+    font-size: calc(var(--small-size-text) * 0.7);
+  }
+
+  .players-form,
+  .computer-form {
+    width: 90%;
+  }
+  .players-form > p,
+  .computer-form > p {
+    font-size: var(--small-size-text);
+  }
+  .computer-form > p {
+    align-self: center;
+  }
+  .players-form > input,
+  .computer-form > input {
+    width: 100%;
+    font-size: var(--small-size-text);
+  }
+}

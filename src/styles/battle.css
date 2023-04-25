@@ -1,0 +1,91 @@
+.battle-screen {
+  width: fit-content;
+  margin: 0 auto;
+}
+.battle-status-bar {
+  display: flex;
+}
+.players-turn,
+.winner-text {
+  text-align: center;
+  margin: 0;
+}
+.computer-is-thinking-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.board-wrapper {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+.board-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  margin: 0 auto;
+  width: 350px;
+  height: 350px;
+}
+.board-cell {
+  font-family: inherit;
+  border: none;
+  background-color: white;
+  font-size: var(--board-cell-text);
+  user-select: none;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.board-cell-wrapper.dark {
+  border-color: white;
+}
+.hoverable-board-cell {
+  cursor: pointer;
+  opacity: 0.5;
+}
+.border-top-bottom {
+  border-top: 3px solid black;
+  border-bottom: 3px solid black;
+}
+.border-right-left {
+  border-right: 3px solid black;
+  border-left: 3px solid black;
+}
+.border-all-around {
+  border: 3px solid black;
+}
+
+.endgame {
+  margin-top: 30px;
+}
+.endgame-buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.endgame-buttons-wrapper > :first-child {
+  margin-right: 20px;
+}
+
+@media only screen and (max-width: 425px) {
+  .players-turn,
+  .winner-text {
+    font-size: calc(var(--medium-size-text) * 1.1);
+  }
+  .board-container {
+    width: 300px;
+    height: 300px;
+  }
+  .board-cell {
+    font-size: calc(var(--board-cell-text) * 0.85);
+  }
+  .endgame-buttons-wrapper {
+    flex-direction: column;
+  }
+  .endgame-buttons-wrapper > :first-child {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
