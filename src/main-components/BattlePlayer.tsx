@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { setPlayers } from "../redux/tictactoe";
 import BattlePlayerCell from "./BattlePlayerCell";
 import BackButton from "../header/BackButton";
+import ErrorMessage from "../ErrorMessage";
 
 const BattlePlayer = () => {
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
@@ -190,7 +191,8 @@ const BattlePlayer = () => {
           </div>
         )}
         {errorMessage && (
-          <p className={`error-message ${theme}`}>{errorMessage}</p>
+          <ErrorMessage className="error-message" text={errorMessage} />
+          // <p className={`error-message ${theme}`}>{errorMessage}</p>
         )}
       </div>
     </div>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 import { useDispatch } from "react-redux";
 import { setPlayers } from "../redux/tictactoe";
+import ErrorMessage from "../ErrorMessage";
 
 const ChoosePlayers = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -60,7 +61,8 @@ const ChoosePlayers = () => {
         </button>
       </form>
       {errorMessage && (
-        <p className={`error-message ${theme}`}>{errorMessage}</p>
+        <ErrorMessage className="error-message" text={errorMessage} />
+        // <p className={`error-message ${theme}`}>{errorMessage}</p>
       )}
     </div>
   );

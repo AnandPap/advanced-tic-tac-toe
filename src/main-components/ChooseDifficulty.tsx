@@ -3,6 +3,7 @@ import { useAppSelector } from "../redux/hooks";
 import { useDispatch } from "react-redux";
 import { setPlayAs, setPlayers } from "../redux/tictactoe";
 import { useEffect, useState } from "react";
+import ErrorMessage from "../ErrorMessage";
 
 const ChooseDifficulty = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -84,7 +85,8 @@ const ChooseDifficulty = () => {
         Start battle
       </button>
       {errorMessage && (
-        <p className={`error-message ${theme}`}>{errorMessage}</p>
+        <ErrorMessage className="error-message" text={errorMessage} />
+        // <p className={`error-message ${theme}`}>{errorMessage}</p>
       )}
     </div>
   );

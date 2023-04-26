@@ -129,6 +129,26 @@
   right: 0;
   transform: translateY(-10px);
 }
+.hamburger-open .hamburger-menu {
+  display: none;
+}
+.X-close-button::before,
+.X-close-button::after {
+  content: "";
+  background-color: white;
+  position: absolute;
+  height: 33px;
+  width: 5px;
+  border-radius: 5rem;
+  right: 37px;
+  top: 20px;
+}
+.X-close-button::before {
+  transform: rotate(45deg);
+}
+.X-close-button::after {
+  transform: rotate(135deg);
+}
 
 .modal-cover {
   position: fixed;

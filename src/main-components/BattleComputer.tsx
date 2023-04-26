@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 import UndoButton from "../header/BackButton";
 import BattleComputerCell from "./BattleComputerCell";
+import ErrorMessage from "../ErrorMessage";
 
 const BattleComputer = () => {
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
@@ -85,6 +86,7 @@ const BattleComputer = () => {
         else if (difficulty === "medium") easyMove();
         else easyMove();
         setComputerThinking(false);
+        setErrorMessage("");
       }, 1500);
     }
   }, [computerThinking]);
@@ -165,6 +167,10 @@ const BattleComputer = () => {
       setErrorMessage("Choose unoccupied cell!");
       const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
       setErrorTimeoutId(timeoutId);
+    } else if (!gameResult && computerThinking) {
+      setErrorMessage("Computer is thinking!");
+      const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
+      setErrorTimeoutId(timeoutId);
     }
   }
 
@@ -233,7 +239,8 @@ const BattleComputer = () => {
           </div>
         )}
         {errorMessage && (
-          <p className={`error-message ${theme}`}>{errorMessage}</p>
+          <ErrorMessage className="error-message" text={errorMessage} />
+          // <p className={`error-message ${theme}`}>{errorMessage}</p>
         )}
       </div>
     </div>

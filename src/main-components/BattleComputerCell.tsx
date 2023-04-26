@@ -38,8 +38,10 @@ const Cell = ({
   useEffect(() => {
     if ((playerXMoves.includes(i) || playerOMoves.includes(i)) && !cellInput)
       setCellInput(currentSymbol);
-    else if (!playerXMoves.includes(i) && !playerOMoves.includes(i))
+    else if (!playerXMoves.includes(i) && !playerOMoves.includes(i)) {
       setCellInput(null);
+      setTempCellInput(null);
+    }
   }, [playerXMoves, playerOMoves]);
 
   function handleSettingTempCellInput() {

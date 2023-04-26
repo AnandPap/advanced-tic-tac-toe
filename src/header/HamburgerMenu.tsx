@@ -10,7 +10,9 @@ const HamburgerMenu = ({
   return (
     <div
       className={`hamburger-menu-wrapper ${
-        displayHamburgerContent ? "hamburger-open" : "hamburger-close"
+        displayHamburgerContent
+          ? "X-close-button hamburger-open"
+          : "hamburger-close"
       }`}
       onClick={() => setDisplayHamburgerContent((s) => !s)}
     >

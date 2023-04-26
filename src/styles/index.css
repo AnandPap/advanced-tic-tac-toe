@@ -64,13 +64,16 @@ p {
   opacity: 0.7;
   margin: 0 auto;
 }
-.error-message {
+.error-message-wrapper {
   max-width: 350px;
   margin-top: 20px;
   color: hsla(0, 100%, 50%, 0.7);
 }
-.error-message.dark {
+.error-message-wrapper.dark {
   color: lightcoral;
+}
+.error-message {
+  font-size: var(--big-size-text);
 }
 
 .dark {
