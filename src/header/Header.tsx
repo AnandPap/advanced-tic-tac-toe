@@ -28,7 +28,7 @@ const Header = () => {
       {screenWidth && screenWidth > 400 ? <h1>Tic-Tac-Toe</h1> : null}
       <div
         className={`header-buttons-wrapper hamburger-menu-content ${
-          displayHamburgerContent ? "hamburger-open" : "hamburger-close"
+          displayHamburgerContent && "hamburger-open"
         }`}
       >
         {location.pathname !== "/" && (

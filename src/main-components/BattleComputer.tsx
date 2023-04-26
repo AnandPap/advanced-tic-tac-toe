@@ -82,9 +82,12 @@ const BattleComputer = () => {
   useEffect(() => {
     if (computerThinking && !gameResult) {
       setTimeout(() => {
-        if (difficulty === "easy") easyMove();
-        else if (difficulty === "medium") easyMove();
-        else easyMove();
+        let moveToMake: number;
+        if (difficulty === "easy") moveToMake = easyMove();
+        else if (difficulty === "medium") moveToMake = mediumMove();
+        else moveToMake = mediumMove();
+        if (currentSymbol === "X") setPlayerXMoves((s) => [...s, moveToMake]);
+        else setPlayerOMoves((s) => [...s, moveToMake]);
         setComputerThinking(false);
         setErrorMessage("");
       }, 1500);
@@ -98,16 +101,76 @@ const BattleComputer = () => {
       if (!madeMoves.includes(i)) availableMoves.push(i);
     }
     const randomNumber = Math.floor(Math.random() * availableMoves.length);
-    if (currentSymbol === "O")
-      setPlayerOMoves((s) => [...s, availableMoves[randomNumber]]);
-    else setPlayerXMoves((s) => [...s, availableMoves[randomNumber]]);
+    return availableMoves[randomNumber];
+  }
+
+  function mediumMove() {
+    const availableMoves: number[] = [];
+    const madeMoves = [...playerOMoves, ...playerXMoves];
+    let moveToMake;
+    for (let i = 1; i < 10; i++) {
+      if (!madeMoves.includes(i)) availableMoves.push(i);
+    }
+    moveToMake = checkWinningMove(availableMoves);
+    if (moveToMake) return moveToMake;
+    moveToMake = checkBlockingMove(availableMoves);
+    if (moveToMake) return moveToMake;
+    const randomNumber = Math.floor(Math.random() * availableMoves.length);
+    return availableMoves[randomNumber];
   }
 
   // left to implement
-  function mediumMove() {}
-
-  // left to implement
   function hardMove() {}
+
+  function checkWinningMove(availableMoves: number[]) {
+    const tempXArray = [...playerXMoves];
+    const tempOArray = [...playerOMoves];
+    for (let i = 0; i < availableMoves.length; i++) {
+      if (currentSymbol === "X") {
+        tempXArray.push(availableMoves[i]);
+        for (let j = 0; j < winningPatterns.length; j++) {
+          let winningPattern = winningPatterns[j];
+          if (winningPattern.every((value) => tempXArray.includes(value)))
+            return availableMoves[i];
+        }
+        tempXArray.pop();
+      } else {
+        tempOArray.push(availableMoves[i]);
+        for (let j = 0; j < winningPatterns.length; j++) {
+          let winningPattern = winningPatterns[j];
+          if (winningPattern.every((value) => tempOArray.includes(value)))
+            return availableMoves[i];
+        }
+        tempOArray.pop();
+      }
+    }
+    return null;
+  }
+
+  function checkBlockingMove(availableMoves: number[]) {
+    const tempXArray = [...playerXMoves];
+    const tempOArray = [...playerOMoves];
+    for (let i = 0; i < availableMoves.length; i++) {
+      if (currentSymbol === "O") {
+        tempXArray.push(availableMoves[i]);
+        for (let j = 0; j < winningPatterns.length; j++) {
+          let winningPattern = winningPatterns[j];
+          if (winningPattern.every((value) => tempXArray.includes(value)))
+            return availableMoves[i];
+        }
+        tempXArray.pop();
+      } else {
+        tempOArray.push(availableMoves[i]);
+        for (let j = 0; j < winningPatterns.length; j++) {
+          let winningPattern = winningPatterns[j];
+          if (winningPattern.every((value) => tempOArray.includes(value)))
+            return availableMoves[i];
+        }
+        tempOArray.pop();
+      }
+    }
+    return null;
+  }
 
   function checkWinner() {
     for (let i = 0; i < winningPatterns.length; i++) {

@@ -8,7 +8,7 @@ import ErrorMessage from "../ErrorMessage";
 const ChooseDifficulty = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
-    "easy"
+    "medium"
   );
   const levelsOfDifficulty = ["easy", "medium", "hard"];
   const playAsOptions = ["O", "Random", "X"];
