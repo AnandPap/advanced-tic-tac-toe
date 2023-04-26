@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 import BackButton from "../header/BackButton";
@@ -6,7 +6,7 @@ import BattleComputerCell from "./BattleComputerCell";
 
 const BattleComputer = () => {
   const [currentSymbol, setCurrentSymbol] = useState("X");
-  const [results, setResults] = useState({ human: 0, computer: 0, ties: 0 });
+  const [results, setResults] = useState({ human: 0, computer: 0, tie: 0 });
   const [computerThinking, setComputerThinking] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [gameResult, setGameResult] = useState<string | null>(null);
@@ -16,6 +16,10 @@ const BattleComputer = () => {
   const [removedCell, setRemovedCell] = useState<number | undefined>(undefined);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
+  );
+  const randomNumber = useMemo(
+    () => Math.floor(Math.random() * 2) + 1,
+    [gameResult]
   );
   const theme = useAppSelector((s) => s.tictactoe.theme);
   const players = useAppSelector((s) => s.tictactoe.players);
@@ -37,8 +41,7 @@ const BattleComputer = () => {
   useEffect(() => {
     if (!gameResult) {
       if (playAs === "Random") {
-        const number = Math.floor(Math.random() * 2) + 1;
-        if (number % 2 === 0) setFirstMove("human");
+        if (randomNumber % 2 === 0) setFirstMove("human");
         else {
           setFirstMove("computer");
           setComputerThinking(true);
@@ -64,7 +67,11 @@ const BattleComputer = () => {
 
   useEffect(() => {
     if (playerXMoves.length > 0 && !removedCell) {
-      checkWinner();
+      const result = checkWinner();
+      if (result) {
+        setGameResult(`${result} won`);
+        setResults((s) => ({ ...s, [result]: s[result] + 1 }));
+      }
       if (currentSymbol === "X") setCurrentSymbol("O");
       else setCurrentSymbol("X");
       if (checkCurrentTurn() === "human") setComputerThinking(true);
@@ -104,21 +111,12 @@ const BattleComputer = () => {
     for (let i = 0; i < winningPatterns.length; i++) {
       let winningPattern = winningPatterns[i];
       if (checkWinningPattern(winningPattern)) {
-        if (checkCurrentTurn() === "human") {
-          setGameResult("human won");
-          setResults((s) => ({ ...s, human: s.human + 1 }));
-        } else {
-          setGameResult("computer won");
-          setResults((s) => ({ ...s, computer: s.computer + 1 }));
-        }
-        return;
+        if (checkCurrentTurn() === "human") return "human";
+        else return "computer";
       }
     }
-    if (playerXMoves.length + playerOMoves.length === 9) {
-      setResults((s) => ({ ...s, ties: s.ties + 1 }));
-      setGameResult("tie");
-      return;
-    }
+    if (playerXMoves.length + playerOMoves.length === 9) return "tie";
+    return null;
   }
 
   function checkCurrentTurn() {
@@ -175,7 +173,8 @@ const BattleComputer = () => {
               </p>
             ) : (
               <div className="computer-is-thinking-wrapper">
-                <p>Computer is thinking</p>
+                <span className="thinking-large">Computer is thinking</span>
+                <span className="thinking-small">AI thinking</span>
                 <div className={`dot-elastic ${theme}`}></div>
               </div>
             )}

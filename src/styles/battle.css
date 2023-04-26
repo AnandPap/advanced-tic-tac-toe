@@ -15,6 +15,9 @@
   justify-content: center;
   align-items: center;
 }
+.thinking-small {
+  display: none;
+}
 .board-wrapper {
   margin-top: 30px;
   display: flex;
@@ -73,6 +76,12 @@
   .players-turn,
   .winner-text {
     font-size: calc(var(--medium-size-text) * 1.1);
+  }
+  .thinking-large {
+    display: none;
+  }
+  .thinking-small {
+    display: block;
   }
   .board-container {
     width: 300px;

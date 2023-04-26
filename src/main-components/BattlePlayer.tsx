@@ -9,7 +9,7 @@ import BackButton from "../header/BackButton";
 const BattlePlayer = () => {
   const [currentSymbol, setCurrentSymbol] = useState("X");
   const [gameId, setGameId] = useState(1);
-  const [results, setResults] = useState({ wins1: 0, wins2: 0, ties: 0 });
+  const [results, setResults] = useState({ wins1: 0, wins2: 0, tie: 0 });
   const [errorMessage, setErrorMessage] = useState("");
   const [gameResult, setGameResult] = useState<string | null>(null);
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
@@ -89,7 +89,7 @@ const BattlePlayer = () => {
       }
     }
     if (playerXMoves.length + playerOMoves.length === 9) {
-      setResults((s) => ({ ...s, ties: s.ties + 1 }));
+      setResults((s) => ({ ...s, tie: s.tie + 1 }));
       setGameResult("tie");
       setGameId((s) => s + 1);
       return;
