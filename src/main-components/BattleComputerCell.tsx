@@ -39,7 +39,7 @@ const Cell = ({
     if ((playerXMoves.includes(i) || playerOMoves.includes(i)) && !cellInput)
       setCellInput(currentSymbol);
     else if (!playerXMoves.includes(i) && !playerOMoves.includes(i))
-      setCellInput("");
+      setCellInput(null);
   }, [playerXMoves, playerOMoves]);
 
   function handleSettingTempCellInput() {

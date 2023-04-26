@@ -7,13 +7,7 @@ type CellType = {
   currentSymbol: string;
   playerXMoves: number[];
   playerOMoves: number[];
-  setPlayerXMoves: React.Dispatch<React.SetStateAction<number[]>>;
-  setPlayerOMoves: React.Dispatch<React.SetStateAction<number[]>>;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-  errorTimeoutId: number | undefined;
-  setErrorTimeoutId: React.Dispatch<React.SetStateAction<number | undefined>>;
-  removedCell: number | undefined;
-  setRemovedCell: React.Dispatch<React.SetStateAction<number | undefined>>;
+  handleCellClick: (cellInput: string | null, i: number) => void;
 };
 
 const Cell = ({
@@ -22,13 +16,7 @@ const Cell = ({
   currentSymbol,
   playerXMoves,
   playerOMoves,
-  setPlayerXMoves,
-  setPlayerOMoves,
-  setErrorMessage,
-  errorTimeoutId,
-  setErrorTimeoutId,
-  removedCell,
-  setRemovedCell,
+  handleCellClick,
 }: CellType) => {
   const [cellInput, setCellInput] = useState<string | null>(null);
   const [tempCellInput, setTempCellInput] = useState<string | null>(null);
@@ -46,34 +34,11 @@ const Cell = ({
       : "";
 
   useEffect(() => {
-    if (!gameResult) {
-      setCellInput(null);
-      setTempCellInput(null);
-    }
-  }, [gameResult]);
-
-  useEffect(() => {
-    if (removedCell === i) setCellInput("");
-  }, [removedCell]);
-
-  useEffect(() => {
     if ((playerXMoves.includes(i) || playerOMoves.includes(i)) && !cellInput)
       setCellInput(currentSymbol);
+    else if (!playerXMoves.includes(i) && !playerOMoves.includes(i))
+      setCellInput(null);
   }, [playerXMoves, playerOMoves]);
-
-  function handleClick() {
-    clearTimeout(errorTimeoutId);
-    setRemovedCell(undefined);
-    if (!cellInput && !gameResult) {
-      if (currentSymbol === "X") setPlayerXMoves((s) => [...s, i]);
-      else if (currentSymbol === "O") setPlayerOMoves((s) => [...s, i]);
-      setErrorMessage("");
-    } else if (!gameResult) {
-      setErrorMessage("Choose unoccupied cell!");
-      const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
-      setErrorTimeoutId(timeoutId);
-    }
-  }
 
   function handleSettingTempCellInput() {
     if (!cellInput && !gameResult) {
@@ -92,7 +57,7 @@ const Cell = ({
   return (
     <div
       className={`board-cell-wrapper ${border} ${theme}`}
-      onClick={handleClick}
+      onClick={() => handleCellClick(cellInput, i)}
     >
       <button
         onMouseEnter={handleSettingTempCellInput}

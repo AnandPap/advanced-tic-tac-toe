@@ -5,11 +5,13 @@ import UndoButton from "../header/BackButton";
 import BattleComputerCell from "./BattleComputerCell";
 
 const BattleComputer = () => {
-  const [currentSymbol, setCurrentSymbol] = useState("X");
+  const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
   const [results, setResults] = useState({ human: 0, computer: 0, tie: 0 });
   const [computerThinking, setComputerThinking] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [gameResult, setGameResult] = useState<string | null>(null);
+  const [gameResult, setGameResult] = useState<
+    "human" | "computer" | "tie" | null
+  >(null);
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
   const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [firstMove, setFirstMove] = useState("");
@@ -65,7 +67,7 @@ const BattleComputer = () => {
   useEffect(() => {
     const result = checkWinner();
     if (result) {
-      setGameResult(`${result} won`);
+      setGameResult(result);
       setResults((s) => ({ ...s, [result]: s[result] + 1 }));
     } else {
       if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
@@ -83,7 +85,7 @@ const BattleComputer = () => {
         else if (difficulty === "medium") easyMove();
         else easyMove();
         setComputerThinking(false);
-      }, 2000);
+      }, 1500);
     }
   }, [computerThinking]);
 
@@ -111,9 +113,8 @@ const BattleComputer = () => {
       if (
         winningPattern.every((value) => playerXMoves.includes(value)) ||
         winningPattern.every((value) => playerOMoves.includes(value))
-      ) {
+      )
         return checkCurrentTurn();
-      }
     }
     if (playerXMoves.length + playerOMoves.length === 9) return "tie";
     return null;
@@ -141,6 +142,7 @@ const BattleComputer = () => {
   }
 
   function undoHandler() {
+    setErrorMessage("");
     removeElementFromPlayer1();
     removeElementFromPlayer2();
   }
@@ -197,7 +199,7 @@ const BattleComputer = () => {
           <p className="winner-text">
             {gameResult === "tie"
               ? "It's a Tie!"
-              : gameResult === "human won"
+              : gameResult === "human"
               ? `${players.player1} wins!`
               : "Computer wins!"}
           </p>

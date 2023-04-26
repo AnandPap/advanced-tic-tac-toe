@@ -7,14 +7,15 @@ import BattlePlayerCell from "./BattlePlayerCell";
 import BackButton from "../header/BackButton";
 
 const BattlePlayer = () => {
-  const [currentSymbol, setCurrentSymbol] = useState("X");
+  const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
   const [gameId, setGameId] = useState(1);
-  const [results, setResults] = useState({ wins1: 0, wins2: 0, tie: 0 });
+  const [score, setScore] = useState({ player1: 0, player2: 0, tie: 0 });
   const [errorMessage, setErrorMessage] = useState("");
-  const [gameResult, setGameResult] = useState<string | null>(null);
+  const [gameResult, setGameResult] = useState<
+    "player1" | "player2" | "tie" | null
+  >(null);
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
   const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
-  const [removedCell, setRemovedCell] = useState<number | undefined>(undefined);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
   );
@@ -41,21 +42,6 @@ const BattlePlayer = () => {
   ];
 
   useEffect(() => {
-    if (!gameResult) {
-      setPlayerXMoves([]);
-      setPlayerOMoves([]);
-    }
-  }, [gameResult]);
-
-  useEffect(() => {
-    if (playerXMoves.length > 0 && !removedCell) {
-      checkWinner();
-      if (currentSymbol === "X") setCurrentSymbol("O");
-      else setCurrentSymbol("X");
-    }
-  }, [playerXMoves, playerOMoves]);
-
-  useEffect(() => {
     if (
       player1Name &&
       player2Name &&
@@ -73,27 +59,30 @@ const BattlePlayer = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const result = checkWinner();
+    if (result) {
+      setGameResult(result);
+      setScore((s) => ({ ...s, [result]: s[result] + 1 }));
+      setGameId((s) => s + 1);
+    } else {
+      if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
+        setCurrentSymbol("X");
+      else setCurrentSymbol("O");
+    }
+  }, [playerXMoves, playerOMoves]);
+
   function checkWinner() {
     for (let i = 0; i < winningPatterns.length; i++) {
       let winningPattern = winningPatterns[i];
-      if (checkWinningPattern(winningPattern)) {
-        if (checkCurrentTurn() === "player1") {
-          setResults((s) => ({ ...s, wins1: s.wins1 + 1 }));
-          setGameResult("player1 won");
-        } else {
-          setResults((s) => ({ ...s, wins2: s.wins2 + 1 }));
-          setGameResult("player2 won");
-        }
-        setGameId((s) => s + 1);
-        return;
-      }
+      if (
+        winningPattern.every((value) => playerXMoves.includes(value)) ||
+        winningPattern.every((value) => playerOMoves.includes(value))
+      )
+        return checkCurrentTurn();
     }
-    if (playerXMoves.length + playerOMoves.length === 9) {
-      setResults((s) => ({ ...s, tie: s.tie + 1 }));
-      setGameResult("tie");
-      setGameId((s) => s + 1);
-      return;
-    }
+    if (playerXMoves.length + playerOMoves.length === 9) return "tie";
+    return null;
   }
 
   function checkCurrentTurn() {
@@ -105,24 +94,15 @@ const BattlePlayer = () => {
     else return "player2";
   }
 
-  function checkWinningPattern(winningPattern: number[]) {
-    if (
-      winningPattern.every((value) => playerXMoves.includes(value)) ||
-      winningPattern.every((value) => playerOMoves.includes(value))
-    )
-      return true;
-    else return false;
-  }
-
   function removeElementFromPlayer1() {
     let tempArray = [...playerXMoves];
-    setRemovedCell(tempArray.pop());
+    tempArray.pop();
     setPlayerXMoves(tempArray);
   }
 
   function removeElementFromPlayer2() {
     let tempArray = [...playerOMoves];
-    setRemovedCell(tempArray.pop());
+    tempArray.pop();
     setPlayerOMoves(tempArray);
   }
 
@@ -130,17 +110,29 @@ const BattlePlayer = () => {
     setErrorMessage("");
     if (currentSymbol === "X") removeElementFromPlayer2();
     else removeElementFromPlayer1();
-    if (currentSymbol === "X") setCurrentSymbol("O");
-    else setCurrentSymbol("X");
   }
 
-  function gameReset() {
-    setCurrentSymbol("X");
+  function handleGameReset() {
+    setPlayerXMoves([]);
+    setPlayerOMoves([]);
     setGameResult(null);
   }
 
   function handlePlayerReset() {
     navigate("/vs-player", { replace: true });
+  }
+
+  function handleCellClick(cellInput: string | null, i: number) {
+    clearTimeout(errorTimeoutId);
+    if (!cellInput && !gameResult) {
+      if (currentSymbol === "X") setPlayerXMoves((s) => [...s, i]);
+      else if (currentSymbol === "O") setPlayerOMoves((s) => [...s, i]);
+      setErrorMessage("");
+    } else if (!gameResult) {
+      setErrorMessage("Choose unoccupied cell!");
+      const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
+      setErrorTimeoutId(timeoutId);
+    }
   }
 
   return (
@@ -150,9 +142,7 @@ const BattlePlayer = () => {
           <div className="battle-status-bar">
             <p className="players-turn">
               It's
-              {checkCurrentTurn() === "player1"
-                ? ` ${players.player1}`
-                : ` ${players.player2}`}
+              {` ${players[checkCurrentTurn()]}`}
               's turn.
             </p>
             {playerXMoves.length + playerOMoves.length > 0 && (
@@ -168,10 +158,8 @@ const BattlePlayer = () => {
         ) : (
           <p className="winner-text">
             {gameResult === "tie"
-              ? "It's a Tie!"
-              : gameResult === "player1 won"
-              ? `${players.player1} wins!`
-              : `${players.player2} wins!`}
+              ? "It's a tie!"
+              : `${players[gameResult]} wins!`}
           </p>
         )}
         <div className="board-wrapper">
@@ -184,13 +172,7 @@ const BattlePlayer = () => {
                 currentSymbol={currentSymbol}
                 playerXMoves={playerXMoves}
                 playerOMoves={playerOMoves}
-                setPlayerXMoves={setPlayerXMoves}
-                setPlayerOMoves={setPlayerOMoves}
-                setErrorMessage={setErrorMessage}
-                errorTimeoutId={errorTimeoutId}
-                setErrorTimeoutId={setErrorTimeoutId}
-                removedCell={removedCell}
-                setRemovedCell={setRemovedCell}
+                handleCellClick={handleCellClick}
               />
             ))}
           </div>
@@ -198,7 +180,7 @@ const BattlePlayer = () => {
         {gameResult && (
           <div className="endgame">
             <div className="endgame-buttons-wrapper">
-              <button className="button" onClick={gameReset}>
+              <button className="button" onClick={handleGameReset}>
                 New Round
               </button>
               <button className="button" onClick={handlePlayerReset}>
