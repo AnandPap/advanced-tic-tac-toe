@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
-import BackButton from "../header/BackButton";
+import UndoButton from "../header/BackButton";
 import BattleComputerCell from "./BattleComputerCell";
 
 const BattleComputer = () => {
@@ -13,7 +13,6 @@ const BattleComputer = () => {
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
   const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [firstMove, setFirstMove] = useState("");
-  const [removedCell, setRemovedCell] = useState<number | undefined>(undefined);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
   );
@@ -39,23 +38,6 @@ const BattleComputer = () => {
   ];
 
   useEffect(() => {
-    if (!gameResult) {
-      if (playAs === "Random") {
-        if (randomNumber % 2 === 0) setFirstMove("human");
-        else {
-          setFirstMove("computer");
-          setComputerThinking(true);
-        }
-      } else if (playAs === "X") {
-        setFirstMove("human");
-      } else {
-        setFirstMove("computer");
-        setComputerThinking(true);
-      }
-      setPlayerXMoves([]);
-      setPlayerOMoves([]);
-    }
-
     if (
       (difficulty !== "easy" &&
         difficulty !== "medium" &&
@@ -63,18 +45,34 @@ const BattleComputer = () => {
       !players.player1
     )
       navigate("/vs-computer", { replace: true });
+  }, []);
+
+  useEffect(() => {
+    if (!gameResult) {
+      if ((playAs === "Random" && randomNumber % 2 === 0) || playAs === "X") {
+        setFirstMove("human");
+        setComputerThinking(false);
+      } else {
+        setFirstMove("computer");
+        setComputerThinking(true);
+      }
+
+      setPlayerXMoves([]);
+      setPlayerOMoves([]);
+    }
   }, [gameResult]);
 
   useEffect(() => {
-    if (playerXMoves.length > 0 && !removedCell) {
-      const result = checkWinner();
-      if (result) {
-        setGameResult(`${result} won`);
-        setResults((s) => ({ ...s, [result]: s[result] + 1 }));
-      }
-      if (currentSymbol === "X") setCurrentSymbol("O");
-      else setCurrentSymbol("X");
-      if (checkCurrentTurn() === "human") setComputerThinking(true);
+    const result = checkWinner();
+    if (result) {
+      setGameResult(`${result} won`);
+      setResults((s) => ({ ...s, [result]: s[result] + 1 }));
+    } else {
+      if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
+        setCurrentSymbol("X");
+      else setCurrentSymbol("O");
+      if (checkCurrentTurn() === "human" && playerXMoves.length > 0)
+        setComputerThinking(true);
     }
   }, [playerXMoves, playerOMoves]);
 
@@ -110,9 +108,11 @@ const BattleComputer = () => {
   function checkWinner() {
     for (let i = 0; i < winningPatterns.length; i++) {
       let winningPattern = winningPatterns[i];
-      if (checkWinningPattern(winningPattern)) {
-        if (checkCurrentTurn() === "human") return "human";
-        else return "computer";
+      if (
+        winningPattern.every((value) => playerXMoves.includes(value)) ||
+        winningPattern.every((value) => playerOMoves.includes(value))
+      ) {
+        return checkCurrentTurn();
       }
     }
     if (playerXMoves.length + playerOMoves.length === 9) return "tie";
@@ -128,22 +128,15 @@ const BattleComputer = () => {
     else return "computer";
   }
 
-  function checkWinningPattern(winningPattern: number[]) {
-    if (
-      winningPattern.every((value) => playerXMoves.includes(value)) ||
-      winningPattern.every((value) => playerOMoves.includes(value))
-    )
-      return true;
-    else return false;
-  }
-
   function removeElementFromPlayer1() {
     let tempArray = [...playerXMoves];
+    tempArray.pop();
     setPlayerXMoves(tempArray);
   }
 
   function removeElementFromPlayer2() {
     let tempArray = [...playerOMoves];
+    tempArray.pop();
     setPlayerOMoves(tempArray);
   }
 
@@ -152,14 +145,25 @@ const BattleComputer = () => {
     removeElementFromPlayer2();
   }
 
-  function gameReset() {
-    setCurrentSymbol("X");
+  function handleGameReset() {
     setGameResult(null);
-    setComputerThinking(false);
   }
 
   function handlePlayerReset() {
     navigate("/vs-computer", { replace: true });
+  }
+
+  function handleCellClick(cellInput: string | null, i: number) {
+    clearTimeout(errorTimeoutId);
+    if (!cellInput && !gameResult && !computerThinking) {
+      if (currentSymbol === "X") setPlayerXMoves((s) => [...s, i]);
+      else if (currentSymbol === "O") setPlayerOMoves((s) => [...s, i]);
+      setErrorMessage("");
+    } else if (!gameResult && !computerThinking) {
+      setErrorMessage("Choose unoccupied cell!");
+      const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
+      setErrorTimeoutId(timeoutId);
+    }
   }
 
   return (
@@ -178,16 +182,16 @@ const BattleComputer = () => {
                 <div className={`dot-elastic ${theme}`}></div>
               </div>
             )}
-            {/* {playerXMoves.length + playerOMoves.length > 0 &&
-              checkCurrentTurn() === "human" && (
+            {playerXMoves.length + playerOMoves.length > 0 &&
+              !computerThinking && (
                 <div className="undo-button-wrapper">
-                  <BackButton
+                  <UndoButton
                     className={`${theme} undo-button`}
                     text="Undo"
                     onClick={undoHandler}
                   />
                 </div>
-              )} */}
+              )}
           </div>
         ) : (
           <p className="winner-text">
@@ -209,13 +213,7 @@ const BattleComputer = () => {
                 currentSymbol={currentSymbol}
                 playerXMoves={playerXMoves}
                 playerOMoves={playerOMoves}
-                setPlayerXMoves={setPlayerXMoves}
-                setPlayerOMoves={setPlayerOMoves}
-                setErrorMessage={setErrorMessage}
-                errorTimeoutId={errorTimeoutId}
-                setErrorTimeoutId={setErrorTimeoutId}
-                removedCell={removedCell}
-                setRemovedCell={setRemovedCell}
+                handleCellClick={handleCellClick}
               />
             ))}
           </div>
@@ -223,7 +221,7 @@ const BattleComputer = () => {
         {gameResult && (
           <div className="endgame">
             <div className="endgame-buttons-wrapper">
-              <button className="button" onClick={gameReset}>
+              <button className="button" onClick={handleGameReset}>
                 New Round
               </button>
               <button className="button" onClick={handlePlayerReset}>
