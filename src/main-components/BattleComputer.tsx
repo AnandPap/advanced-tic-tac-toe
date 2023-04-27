@@ -4,6 +4,12 @@ import { useAppSelector } from "../redux/hooks";
 import UndoButton from "../header/BackButton";
 import BattleComputerCell from "./BattleComputerCell";
 import ErrorMessage from "../ErrorMessage";
+import {
+  checkCurrentTurn,
+  checkBestMove,
+  checkWinner,
+  makeRandomMove,
+} from "../helper-functions";
 
 const BattleComputer = () => {
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
@@ -15,7 +21,7 @@ const BattleComputer = () => {
   >(null);
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
   const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
-  const [firstMove, setFirstMove] = useState("");
+  const [firstMove, setFirstMove] = useState<"human" | "computer" | null>(null);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
   );
@@ -28,17 +34,6 @@ const BattleComputer = () => {
   const playAs = useAppSelector((s) => s.tictactoe.playAs);
   const navigate = useNavigate();
   const { difficulty } = useParams();
-
-  const winningPatterns = [
-    [1, 4, 7],
-    [2, 5, 8],
-    [3, 6, 9],
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [1, 5, 9],
-    [3, 5, 7],
-  ];
 
   useEffect(() => {
     if (
@@ -66,7 +61,12 @@ const BattleComputer = () => {
   }, [gameResult]);
 
   useEffect(() => {
-    const result = checkWinner();
+    const result = checkWinner(
+      playerXMoves,
+      playerOMoves,
+      firstMove,
+      currentSymbol
+    );
     if (result) {
       setGameResult(result);
       setResults((s) => ({ ...s, [result]: s[result] + 1 }));
@@ -74,7 +74,10 @@ const BattleComputer = () => {
       if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
         setCurrentSymbol("X");
       else setCurrentSymbol("O");
-      if (checkCurrentTurn() === "human" && playerXMoves.length > 0)
+      if (
+        checkCurrentTurn(firstMove, currentSymbol) === "human" &&
+        playerXMoves.length > 0
+      )
         setComputerThinking(true);
     }
   }, [playerXMoves, playerOMoves]);
@@ -95,104 +98,17 @@ const BattleComputer = () => {
   }, [computerThinking]);
 
   function easyMove() {
-    const availableMoves: number[] = [];
-    const madeMoves = [...playerOMoves, ...playerXMoves];
-    for (let i = 1; i < 10; i++) {
-      if (!madeMoves.includes(i)) availableMoves.push(i);
-    }
-    const randomNumber = Math.floor(Math.random() * availableMoves.length);
-    return availableMoves[randomNumber];
+    return makeRandomMove(playerXMoves, playerOMoves);
   }
 
   function mediumMove() {
-    const availableMoves: number[] = [];
-    const madeMoves = [...playerOMoves, ...playerXMoves];
-    let moveToMake;
-    for (let i = 1; i < 10; i++) {
-      if (!madeMoves.includes(i)) availableMoves.push(i);
-    }
-    moveToMake = checkWinningMove(availableMoves);
+    let moveToMake = checkBestMove(playerXMoves, playerOMoves, currentSymbol);
     if (moveToMake) return moveToMake;
-    moveToMake = checkBlockingMove(availableMoves);
-    if (moveToMake) return moveToMake;
-    const randomNumber = Math.floor(Math.random() * availableMoves.length);
-    return availableMoves[randomNumber];
+    else return makeRandomMove(playerXMoves, playerOMoves);
   }
 
   // left to implement
   function hardMove() {}
-
-  function checkWinningMove(availableMoves: number[]) {
-    const tempXArray = [...playerXMoves];
-    const tempOArray = [...playerOMoves];
-    for (let i = 0; i < availableMoves.length; i++) {
-      if (currentSymbol === "X") {
-        tempXArray.push(availableMoves[i]);
-        for (let j = 0; j < winningPatterns.length; j++) {
-          let winningPattern = winningPatterns[j];
-          if (winningPattern.every((value) => tempXArray.includes(value)))
-            return availableMoves[i];
-        }
-        tempXArray.pop();
-      } else {
-        tempOArray.push(availableMoves[i]);
-        for (let j = 0; j < winningPatterns.length; j++) {
-          let winningPattern = winningPatterns[j];
-          if (winningPattern.every((value) => tempOArray.includes(value)))
-            return availableMoves[i];
-        }
-        tempOArray.pop();
-      }
-    }
-    return null;
-  }
-
-  function checkBlockingMove(availableMoves: number[]) {
-    const tempXArray = [...playerXMoves];
-    const tempOArray = [...playerOMoves];
-    for (let i = 0; i < availableMoves.length; i++) {
-      if (currentSymbol === "O") {
-        tempXArray.push(availableMoves[i]);
-        for (let j = 0; j < winningPatterns.length; j++) {
-          let winningPattern = winningPatterns[j];
-          if (winningPattern.every((value) => tempXArray.includes(value)))
-            return availableMoves[i];
-        }
-        tempXArray.pop();
-      } else {
-        tempOArray.push(availableMoves[i]);
-        for (let j = 0; j < winningPatterns.length; j++) {
-          let winningPattern = winningPatterns[j];
-          if (winningPattern.every((value) => tempOArray.includes(value)))
-            return availableMoves[i];
-        }
-        tempOArray.pop();
-      }
-    }
-    return null;
-  }
-
-  function checkWinner() {
-    for (let i = 0; i < winningPatterns.length; i++) {
-      let winningPattern = winningPatterns[i];
-      if (
-        winningPattern.every((value) => playerXMoves.includes(value)) ||
-        winningPattern.every((value) => playerOMoves.includes(value))
-      )
-        return checkCurrentTurn();
-    }
-    if (playerXMoves.length + playerOMoves.length === 9) return "tie";
-    return null;
-  }
-
-  function checkCurrentTurn() {
-    if (
-      (firstMove === "human" && currentSymbol === "X") ||
-      (firstMove === "computer" && currentSymbol === "O")
-    )
-      return "human";
-    else return "computer";
-  }
 
   function removeElementFromPlayer1() {
     let tempArray = [...playerXMoves];
@@ -242,16 +158,16 @@ const BattleComputer = () => {
       <div className="battle-screen">
         {!gameResult ? (
           <div className="battle-status-bar">
-            {checkCurrentTurn() === "human" ? (
-              <p className="players-turn">
-                It's {`${players.player1}`} 's turn.
-              </p>
-            ) : (
+            {computerThinking ? (
               <div className="computer-is-thinking-wrapper">
                 <span className="thinking-large">Computer is thinking</span>
                 <span className="thinking-small">AI thinking</span>
                 <div className={`dot-elastic ${theme}`}></div>
               </div>
+            ) : (
+              <p className="players-turn">
+                It's {`${players.player1}`} 's turn.
+              </p>
             )}
             {playerXMoves.length + playerOMoves.length > 0 &&
               !computerThinking && (
@@ -303,7 +219,6 @@ const BattleComputer = () => {
         )}
         {errorMessage && (
           <ErrorMessage className="error-message" text={errorMessage} />
-          // <p className={`error-message ${theme}`}>{errorMessage}</p>
         )}
       </div>
     </div>

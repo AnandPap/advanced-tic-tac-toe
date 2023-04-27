@@ -62,7 +62,6 @@ const ChoosePlayers = () => {
       </form>
       {errorMessage && (
         <ErrorMessage className="error-message" text={errorMessage} />
-        // <p className={`error-message ${theme}`}>{errorMessage}</p>
       )}
     </div>
   );
