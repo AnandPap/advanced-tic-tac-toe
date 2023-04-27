@@ -3,20 +3,27 @@
   background-color: hsl(0, 0%, 70%);
   padding: 0 1rem;
 }
-.header > h1 {
+.icon-and-title-wrapper {
+  display: flex;
+  cursor: pointer;
+}
+.icon-and-title-wrapper > h1 {
   font-weight: 400;
   font-size: var(--big-size-text);
   margin: 0;
   align-self: center;
-  flex-shrink: 0;
 }
 .app-icon {
   width: 75px;
 }
 
-.undo-button-wrapper {
-  flex-grow: 1;
+.header-buttons-wrapper {
   display: flex;
+  flex-grow: 1;
+}
+.undo-button-wrapper {
+  display: flex;
+  flex-grow: 1;
   justify-content: flex-end;
   align-items: center;
 }
@@ -76,7 +83,6 @@
 .undo-button-text {
   margin: 0 5px;
 }
-
 .dark-mode-button-wrapper {
   display: flex;
   flex-grow: 1;
@@ -87,11 +93,6 @@
   width: 100px;
   height: 50px;
   cursor: pointer;
-}
-
-.header-buttons-wrapper {
-  display: flex;
-  width: 100%;
 }
 .hamburger-menu-wrapper {
   position: absolute;

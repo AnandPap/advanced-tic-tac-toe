@@ -9,11 +9,12 @@ import {
   checkBestMove,
   checkWinner,
   makeRandomMove,
-} from "../helper-functions";
+} from "../helpers/helper-functions";
 
 const BattleComputer = () => {
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
   const [results, setResults] = useState({ human: 0, computer: 0, tie: 0 });
+  const [undoPressed, setUndoPressed] = useState(false);
   const [computerThinking, setComputerThinking] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [gameResult, setGameResult] = useState<
@@ -76,7 +77,8 @@ const BattleComputer = () => {
       else setCurrentSymbol("O");
       if (
         checkCurrentTurn(firstMove, currentSymbol) === "human" &&
-        playerXMoves.length > 0
+        playerXMoves.length > 0 &&
+        !undoPressed
       )
         setComputerThinking(true);
     }
@@ -123,6 +125,7 @@ const BattleComputer = () => {
   }
 
   function undoHandler() {
+    setUndoPressed(true);
     setErrorMessage("");
     removeElementFromPlayer1();
     removeElementFromPlayer2();
@@ -141,6 +144,7 @@ const BattleComputer = () => {
     if (!cellInput && !gameResult && !computerThinking) {
       if (currentSymbol === "X") setPlayerXMoves((s) => [...s, i]);
       else if (currentSymbol === "O") setPlayerOMoves((s) => [...s, i]);
+      setUndoPressed(false);
       setErrorMessage("");
     } else if (!gameResult && !computerThinking) {
       setErrorMessage("Choose unoccupied cell!");
@@ -169,7 +173,10 @@ const BattleComputer = () => {
                 It's {`${players.player1}`} 's turn.
               </p>
             )}
-            {playerXMoves.length + playerOMoves.length > 0 &&
+            {((firstMove === "human" &&
+              playerXMoves.length + playerOMoves.length > 0) ||
+              (firstMove === "computer" &&
+                playerXMoves.length + playerOMoves.length > 2)) &&
               !computerThinking && (
                 <div className="undo-button-wrapper">
                   <UndoButton

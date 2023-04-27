@@ -24,8 +24,16 @@ const Header = () => {
 
   return (
     <header className={`${theme}-header header`} ref={ref}>
-      <img className="app-icon" alt="App Icon" src={tictactoePng} />
-      {screenWidth && screenWidth > 400 ? <h1>Tic-Tac-Toe</h1> : null}
+      <div
+        onClick={() => {
+          if (location.pathname === "/") navigate("/", { replace: true });
+          else navigate("/");
+        }}
+        className="icon-and-title-wrapper"
+      >
+        <img className="app-icon" alt="App Icon" src={tictactoePng} />
+        {screenWidth && screenWidth > 400 ? <h1>Tic-Tac-Toe</h1> : null}
+      </div>
       <div
         className={`header-buttons-wrapper hamburger-menu-content ${
           displayHamburgerContent && "hamburger-open"
