@@ -3,20 +3,22 @@ import { useAppSelector } from "../redux/hooks";
 
 type CellType = {
   i: number;
-  gameResult: string | null;
+  winner: string | null;
   currentSymbol: string;
   playerXMoves: number[];
   playerOMoves: number[];
   handleCellClick: (cellInput: string | null, i: number) => void;
+  computerThinking: boolean;
 };
 
 const Cell = ({
   i,
-  gameResult,
+  winner,
   currentSymbol,
   playerXMoves,
   playerOMoves,
   handleCellClick,
+  computerThinking,
 }: CellType) => {
   const [cellInput, setCellInput] = useState<string | null>(null);
   const [tempCellInput, setTempCellInput] = useState<string | null>(null);
@@ -36,12 +38,14 @@ const Cell = ({
   useEffect(() => {
     if ((playerXMoves.includes(i) || playerOMoves.includes(i)) && !cellInput)
       setCellInput(currentSymbol);
-    else if (!playerXMoves.includes(i) && !playerOMoves.includes(i))
+    else if (!playerXMoves.includes(i) && !playerOMoves.includes(i)) {
       setCellInput(null);
+      setTempCellInput(null);
+    }
   }, [playerXMoves, playerOMoves]);
 
   function handleSettingTempCellInput() {
-    if (!cellInput && !gameResult) {
+    if (!cellInput && !winner && !computerThinking) {
       const timeoutId = setTimeout(() => {
         setTempCellInput(currentSymbol);
       }, 50);
@@ -63,7 +67,7 @@ const Cell = ({
         onMouseEnter={handleSettingTempCellInput}
         onMouseLeave={handleRemovingTempCellInput}
         className={`board-cell ${theme} ${
-          !gameResult && !cellInput && "hoverable-board-cell"
+          !winner && !cellInput && !computerThinking && "hoverable-board-cell"
         }`}
       >
         {tempCellInput || cellInput}

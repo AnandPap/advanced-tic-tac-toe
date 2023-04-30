@@ -17,9 +17,9 @@ const BattleComputer = () => {
   const [undoPressed, setUndoPressed] = useState(false);
   const [computerThinking, setComputerThinking] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [gameResult, setGameResult] = useState<
-    "human" | "computer" | "tie" | null
-  >(null);
+  const [winner, setWinner] = useState<"human" | "computer" | "tie" | null>(
+    null
+  );
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
   const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [firstMove, setFirstMove] = useState<"human" | "computer" | null>(null);
@@ -28,7 +28,7 @@ const BattleComputer = () => {
   );
   const randomNumber = useMemo(
     () => Math.floor(Math.random() * 2) + 1,
-    [gameResult]
+    [winner]
   );
   const theme = useAppSelector((s) => s.tictactoe.theme);
   const players = useAppSelector((s) => s.tictactoe.players);
@@ -47,7 +47,7 @@ const BattleComputer = () => {
   }, []);
 
   useEffect(() => {
-    if (!gameResult) {
+    if (!winner) {
       if ((playAs === "Random" && randomNumber % 2 === 0) || playAs === "X") {
         setFirstMove("human");
         setComputerThinking(false);
@@ -59,7 +59,7 @@ const BattleComputer = () => {
       setPlayerXMoves([]);
       setPlayerOMoves([]);
     }
-  }, [gameResult]);
+  }, [winner]);
 
   useEffect(() => {
     const result = checkWinner(
@@ -69,7 +69,7 @@ const BattleComputer = () => {
       currentSymbol
     );
     if (result) {
-      setGameResult(result);
+      setWinner(result);
       setResults((s) => ({ ...s, [result]: s[result] + 1 }));
     } else {
       if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
@@ -85,7 +85,7 @@ const BattleComputer = () => {
   }, [playerXMoves, playerOMoves]);
 
   useEffect(() => {
-    if (computerThinking && !gameResult) {
+    if (computerThinking && !winner) {
       setTimeout(() => {
         let moveToMake: number;
         if (difficulty === "easy") moveToMake = easyMove();
@@ -132,7 +132,7 @@ const BattleComputer = () => {
   }
 
   function handleGameReset() {
-    setGameResult(null);
+    setWinner(null);
   }
 
   function handlePlayerReset() {
@@ -141,16 +141,16 @@ const BattleComputer = () => {
 
   function handleCellClick(cellInput: string | null, i: number) {
     clearTimeout(errorTimeoutId);
-    if (!cellInput && !gameResult && !computerThinking) {
+    if (!cellInput && !winner && !computerThinking) {
       if (currentSymbol === "X") setPlayerXMoves((s) => [...s, i]);
       else if (currentSymbol === "O") setPlayerOMoves((s) => [...s, i]);
       setUndoPressed(false);
       setErrorMessage("");
-    } else if (!gameResult && !computerThinking) {
+    } else if (!winner && !computerThinking) {
       setErrorMessage("Choose unoccupied cell!");
       const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
       setErrorTimeoutId(timeoutId);
-    } else if (!gameResult && computerThinking) {
+    } else if (!winner && computerThinking) {
       setErrorMessage("Computer is thinking!");
       const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
       setErrorTimeoutId(timeoutId);
@@ -160,7 +160,7 @@ const BattleComputer = () => {
   return (
     <div className={`${theme} battle-screen-wrapper`}>
       <div className="battle-screen">
-        {!gameResult ? (
+        {!winner ? (
           <div className="battle-status-bar">
             {computerThinking ? (
               <div className="computer-is-thinking-wrapper">
@@ -189,9 +189,9 @@ const BattleComputer = () => {
           </div>
         ) : (
           <p className="winner-text">
-            {gameResult === "tie"
+            {winner === "tie"
               ? "It's a Tie!"
-              : gameResult === "human"
+              : winner === "human"
               ? `${players.player1} wins!`
               : "Computer wins!"}
           </p>
@@ -202,17 +202,17 @@ const BattleComputer = () => {
               <BattleComputerCell
                 key={i}
                 i={i + 1}
-                computerThinking={computerThinking}
-                gameResult={gameResult}
+                winner={winner}
                 currentSymbol={currentSymbol}
                 playerXMoves={playerXMoves}
                 playerOMoves={playerOMoves}
                 handleCellClick={handleCellClick}
+                computerThinking={computerThinking}
               />
             ))}
           </div>
         </div>
-        {gameResult && (
+        {winner && (
           <div className="endgame">
             <div className="endgame-buttons-wrapper">
               <button className="button" onClick={handleGameReset}>

@@ -6,15 +6,23 @@ import { setPlayers } from "../redux/tictactoe";
 import BattlePlayerCell from "./BattlePlayerCell";
 import BackButton from "../header/BackButton";
 import ErrorMessage from "../ErrorMessage";
+import axios from "axios";
+
+type ResultType = {
+  player1: string;
+  player2: string;
+  result: string;
+  date: number;
+};
 
 const BattlePlayer = () => {
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
   const [gameId, setGameId] = useState(1);
   const [score, setScore] = useState({ player1: 0, player2: 0, tie: 0 });
   const [errorMessage, setErrorMessage] = useState("");
-  const [gameResult, setGameResult] = useState<
-    "player1" | "player2" | "tie" | null
-  >(null);
+  const [winner, setWinner] = useState<"player1" | "player2" | "tie" | null>(
+    null
+  );
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
   const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
@@ -42,6 +50,24 @@ const BattlePlayer = () => {
     [3, 5, 7],
   ];
 
+  async function saveResult(result: ResultType) {
+    return await axios
+      .post("http://localhost:5000/api/results", result)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err, 15));
+  }
+
+  async function fetchResults() {
+    try {
+      const results = await axios.get("http://localhost:5000/api/results");
+      console.log(results);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
     if (
       player1Name &&
@@ -63,7 +89,14 @@ const BattlePlayer = () => {
   useEffect(() => {
     const result = checkWinner();
     if (result) {
-      setGameResult(result);
+      saveResult({
+        player1: players.player1,
+        player2: players.player2,
+        result: result,
+        date: Date.now(),
+      });
+      fetchResults();
+      setWinner(result);
       setScore((s) => ({ ...s, [result]: s[result] + 1 }));
       setGameId((s) => s + 1);
     } else {
@@ -116,7 +149,7 @@ const BattlePlayer = () => {
   function handleGameReset() {
     setPlayerXMoves([]);
     setPlayerOMoves([]);
-    setGameResult(null);
+    setWinner(null);
   }
 
   function handlePlayerReset() {
@@ -125,11 +158,11 @@ const BattlePlayer = () => {
 
   function handleCellClick(cellInput: string | null, i: number) {
     clearTimeout(errorTimeoutId);
-    if (!cellInput && !gameResult) {
+    if (!cellInput && !winner) {
       if (currentSymbol === "X") setPlayerXMoves((s) => [...s, i]);
       else if (currentSymbol === "O") setPlayerOMoves((s) => [...s, i]);
       setErrorMessage("");
-    } else if (!gameResult) {
+    } else if (!winner) {
       setErrorMessage("Choose unoccupied cell!");
       const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
       setErrorTimeoutId(timeoutId);
@@ -139,7 +172,7 @@ const BattlePlayer = () => {
   return (
     <div className={`${theme} battle-screen-wrapper`}>
       <div className="battle-screen">
-        {!gameResult ? (
+        {!winner ? (
           <div className="battle-status-bar">
             <p className="players-turn">
               It's
@@ -158,9 +191,7 @@ const BattlePlayer = () => {
           </div>
         ) : (
           <p className="winner-text">
-            {gameResult === "tie"
-              ? "It's a tie!"
-              : `${players[gameResult]} wins!`}
+            {winner === "tie" ? "It's a tie!" : `${players[winner]} wins!`}
           </p>
         )}
         <div className="board-wrapper">
@@ -169,7 +200,7 @@ const BattlePlayer = () => {
               <BattlePlayerCell
                 key={i}
                 i={i + 1}
-                gameResult={gameResult}
+                winner={winner}
                 currentSymbol={currentSymbol}
                 playerXMoves={playerXMoves}
                 playerOMoves={playerOMoves}
@@ -178,7 +209,7 @@ const BattlePlayer = () => {
             ))}
           </div>
         </div>
-        {gameResult && (
+        {winner && (
           <div className="endgame">
             <div className="endgame-buttons-wrapper">
               <button className="button" onClick={handleGameReset}>

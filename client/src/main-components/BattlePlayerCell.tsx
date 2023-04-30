@@ -3,8 +3,7 @@ import { useAppSelector } from "../redux/hooks";
 
 type CellType = {
   i: number;
-  computerThinking: boolean;
-  gameResult: string | null;
+  winner: string | null;
   currentSymbol: string;
   playerXMoves: number[];
   playerOMoves: number[];
@@ -13,8 +12,7 @@ type CellType = {
 
 const Cell = ({
   i,
-  computerThinking,
-  gameResult,
+  winner,
   currentSymbol,
   playerXMoves,
   playerOMoves,
@@ -38,14 +36,12 @@ const Cell = ({
   useEffect(() => {
     if ((playerXMoves.includes(i) || playerOMoves.includes(i)) && !cellInput)
       setCellInput(currentSymbol);
-    else if (!playerXMoves.includes(i) && !playerOMoves.includes(i)) {
+    else if (!playerXMoves.includes(i) && !playerOMoves.includes(i))
       setCellInput(null);
-      setTempCellInput(null);
-    }
   }, [playerXMoves, playerOMoves]);
 
   function handleSettingTempCellInput() {
-    if (!cellInput && !gameResult && !computerThinking) {
+    if (!cellInput && !winner) {
       const timeoutId = setTimeout(() => {
         setTempCellInput(currentSymbol);
       }, 50);
@@ -67,10 +63,7 @@ const Cell = ({
         onMouseEnter={handleSettingTempCellInput}
         onMouseLeave={handleRemovingTempCellInput}
         className={`board-cell ${theme} ${
-          !gameResult &&
-          !cellInput &&
-          !computerThinking &&
-          "hoverable-board-cell"
+          !winner && !cellInput && "hoverable-board-cell"
         }`}
       >
         {tempCellInput || cellInput}
