@@ -1,11 +1,11 @@
 {
   "version": 2,
   "builds": [
-    { "src": "./client/dist", "use": "@vercel/static" },
-    { "src": "./server/index.js", "use": "@vercel/node" }
+    { "src": "./server/index.js", "use": "@vercel/node" },
+    { "src": "./client/dist", "use": "@vercel/static" }
   ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/server/index.js" },
-    { "source": "/(.*)", "destination": "/client/index.html" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
