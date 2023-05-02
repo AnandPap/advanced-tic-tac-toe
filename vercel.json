@@ -7,17 +7,11 @@
     },
     {
       "src": "client/dist",
-      "use": "@vercel/static",
-      "config": {
-        "build": {
-          "ssr": false,
-          "outDir": "client/dist"
-        }
-      }
+      "use": "@vercel/static"
     }
   ],
   "routes": [
-    { "src": "/server/(.*)", "dest": "server/server.js" },
+    { "src": "/server/(.*)", "dest": "server/index.js" },
     { "src": "/(.*)", "dest": "client/dist/index.html" }
   ]
 }
