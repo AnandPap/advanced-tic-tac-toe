@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "builds": [{ "src": "./client/dist", "use": "@vercel/static" }],
   "rewrites": [
     { "source": "/(.*)", "destination": "/server/index.js" },
     { "source": "/(.*)", "destination": "/index.html" }
