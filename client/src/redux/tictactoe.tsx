@@ -1,23 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-interface TictactoeState {
-  loading: boolean;
+interface InitialStateType {
   theme: "dark" | "light";
+  loading: boolean;
   playAs: string;
-  players: playersType;
+  players: PlayersType;
 }
 
-interface playersType {
+interface PlayersType {
   player1: string;
   player2: string;
 }
 
-type playersActionType = {
+type PlayersActionType = {
   [key: string]: string;
 };
 
-export const initialState: TictactoeState = {
+export const initialState: InitialStateType = {
   theme: "dark",
   loading: false,
   playAs: "Random",
@@ -28,22 +28,22 @@ export const tictactoeSlice = createSlice({
   name: "tictactoe",
   initialState,
   reducers: {
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
-    },
     setTheme: (state, action: PayloadAction<"dark" | "light">) => {
       state.theme = action.payload;
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
     },
     setPlayAs: (state, action: PayloadAction<string>) => {
       state.playAs = action.payload;
     },
-    setPlayers: (state, action: PayloadAction<playersActionType>) => {
+    setPlayers: (state, action: PayloadAction<PlayersActionType>) => {
       state.players = { ...state.players, ...action.payload };
     },
   },
 });
 
-export const { setLoading, setTheme, setPlayAs, setPlayers } =
+export const { setTheme, setLoading, setPlayAs, setPlayers } =
   tictactoeSlice.actions;
 
 export default tictactoeSlice.reducer;

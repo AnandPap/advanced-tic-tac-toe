@@ -1,5 +1,6 @@
 .battle-screen {
   width: fit-content;
+  max-width: 90%;
   margin: 0 auto;
 }
 .battle-status-bar {
@@ -67,9 +68,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.endgame-buttons-wrapper > :first-child {
-  margin-right: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 @media only screen and (max-width: 425px) {
@@ -93,8 +93,7 @@
   .endgame-buttons-wrapper {
     flex-direction: column;
   }
-  .endgame-buttons-wrapper > :first-child {
-    margin-right: 0;
-    margin-bottom: 10px;
+  .endgame-buttons-wrapper {
+    gap: 10px;
   }
 }

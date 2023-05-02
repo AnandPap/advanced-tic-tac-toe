@@ -8,7 +8,8 @@ import BackButton from "../header/BackButton";
 import ErrorMessage from "../ErrorMessage";
 import axios from "axios";
 
-type ResultType = {
+export type ResultType = {
+  [key: string]: string | number;
   player1: string;
   player2: string;
   result: string;
@@ -16,6 +17,8 @@ type ResultType = {
 };
 
 const BattlePlayer = () => {
+  const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
+  const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
   const [gameId, setGameId] = useState(1);
   const [score, setScore] = useState({ player1: 0, player2: 0, tie: 0 });
@@ -23,8 +26,6 @@ const BattlePlayer = () => {
   const [winner, setWinner] = useState<"player1" | "player2" | "tie" | null>(
     null
   );
-  const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
-  const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
   );
@@ -53,19 +54,8 @@ const BattlePlayer = () => {
   async function saveResult(result: ResultType) {
     return await axios
       .post("http://localhost:5000/api/results", result)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err, 15));
-  }
-
-  async function fetchResults() {
-    try {
-      const results = await axios.get("http://localhost:5000/api/results");
-      console.log(results);
-    } catch (err) {
-      console.log(err);
-    }
+      .then((res) => {})
+      .catch((err) => console.log(err));
   }
 
   useEffect(() => {
@@ -95,7 +85,6 @@ const BattlePlayer = () => {
         result: result,
         date: Date.now(),
       });
-      fetchResults();
       setWinner(result);
       setScore((s) => ({ ...s, [result]: s[result] + 1 }));
       setGameId((s) => s + 1);
@@ -217,6 +206,12 @@ const BattlePlayer = () => {
               </button>
               <button className="button" onClick={handlePlayerReset}>
                 Reset Players
+              </button>
+              <button
+                className="button"
+                onClick={() => navigate("/scoreboard")}
+              >
+                Scoreboard
               </button>
             </div>
           </div>

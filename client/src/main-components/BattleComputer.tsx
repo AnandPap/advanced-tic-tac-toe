@@ -4,25 +4,20 @@ import { useAppSelector } from "../redux/hooks";
 import UndoButton from "../header/BackButton";
 import BattleComputerCell from "./BattleComputerCell";
 import ErrorMessage from "../ErrorMessage";
-import {
-  checkCurrentTurn,
-  checkBestMove,
-  checkWinner,
-  makeRandomMove,
-} from "../helpers/helper-functions";
+import helperFunctions from "../helpers/helper-functions";
 
 const BattleComputer = () => {
+  const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
+  const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
-  const [results, setResults] = useState({ human: 0, computer: 0, tie: 0 });
+  const [score, setScore] = useState({ human: 0, computer: 0, tie: 0 });
   const [undoPressed, setUndoPressed] = useState(false);
   const [computerThinking, setComputerThinking] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [winner, setWinner] = useState<"human" | "computer" | "tie" | null>(
     null
   );
-  const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
-  const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
-  const [firstMove, setFirstMove] = useState<"human" | "computer" | null>(null);
+  const [firstMove, setFirstMove] = useState<"human" | "computer">("computer");
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
   );
@@ -31,10 +26,13 @@ const BattleComputer = () => {
     [winner]
   );
   const theme = useAppSelector((s) => s.tictactoe.theme);
-  const players = useAppSelector((s) => s.tictactoe.players);
   const playAs = useAppSelector((s) => s.tictactoe.playAs);
+  const players = useAppSelector((s) => s.tictactoe.players);
   const navigate = useNavigate();
   const { difficulty } = useParams();
+
+  const { checkWinner, checkCurrentTurn, makeRandomMove, checkBestMove } =
+    helperFunctions(playerXMoves, playerOMoves, currentSymbol);
 
   useEffect(() => {
     if (
@@ -62,21 +60,16 @@ const BattleComputer = () => {
   }, [winner]);
 
   useEffect(() => {
-    const result = checkWinner(
-      playerXMoves,
-      playerOMoves,
-      firstMove,
-      currentSymbol
-    );
+    const result = checkWinner(firstMove);
     if (result) {
       setWinner(result);
-      setResults((s) => ({ ...s, [result]: s[result] + 1 }));
+      setScore((s) => ({ ...s, [result]: s[result] + 1 }));
     } else {
       if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
         setCurrentSymbol("X");
       else setCurrentSymbol("O");
       if (
-        checkCurrentTurn(firstMove, currentSymbol) === "human" &&
+        checkCurrentTurn(firstMove) === "human" &&
         playerXMoves.length > 0 &&
         !undoPressed
       )
@@ -100,13 +93,14 @@ const BattleComputer = () => {
   }, [computerThinking]);
 
   function easyMove() {
-    return makeRandomMove(playerXMoves, playerOMoves);
+    return makeRandomMove();
   }
 
   function mediumMove() {
-    let moveToMake = checkBestMove(playerXMoves, playerOMoves, currentSymbol);
+    let moveToMake = checkBestMove("winning");
+    if (!moveToMake) moveToMake = checkBestMove("blocking");
     if (moveToMake) return moveToMake;
-    else return makeRandomMove(playerXMoves, playerOMoves);
+    return makeRandomMove();
   }
 
   // left to implement
