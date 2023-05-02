@@ -103,8 +103,28 @@ const BattleComputer = () => {
     return makeRandomMove();
   }
 
-  // left to implement
-  function hardMove() {}
+  function hardMove() {
+    let moveToMake = checkBestMove("winning");
+    if (!moveToMake) moveToMake = checkBestMove("blocking");
+    if (moveToMake) return moveToMake;
+    const availableMoves: number[] = [];
+    const madeMoves = [...playerXMoves, ...playerOMoves];
+    for (let i = 1; i < 10; i++) {
+      if (!madeMoves.includes(i)) availableMoves.push(i);
+    }
+    if (currentSymbol === "X") {
+      if (madeMoves.length === 0) {
+        const bestMoves = [1, 3, 7, 9];
+        const randomNumber = Math.floor(Math.random() * 4);
+        moveToMake = bestMoves[randomNumber];
+      }
+    } else {
+      if (madeMoves.length === 1) {
+        playerOMoves[0];
+      }
+    }
+    return makeRandomMove();
+  }
 
   function removeElementFromPlayer1() {
     let tempArray = [...playerXMoves];
