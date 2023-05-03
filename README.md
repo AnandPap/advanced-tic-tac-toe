@@ -1,4 +1,4 @@
-# Tic-Tac-Toe Game
+# Advanced Tic-Tac-Toe Game
 
 Project has been completed but with little more work to be done and that is:
 
