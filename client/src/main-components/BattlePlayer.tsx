@@ -6,15 +6,7 @@ import { setPlayers } from "../redux/tictactoe";
 import BattlePlayerCell from "./BattlePlayerCell";
 import BackButton from "../header/BackButton";
 import ErrorMessage from "../ErrorMessage";
-import axios from "axios";
-
-export type ResultType = {
-  [key: string]: string | number;
-  player1: string;
-  player2: string;
-  result: string;
-  date: number;
-};
+import { saveResult } from "../helpers/fetch-functions";
 
 const BattlePlayer = () => {
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
@@ -50,13 +42,6 @@ const BattlePlayer = () => {
     [1, 5, 9],
     [3, 5, 7],
   ];
-
-  async function saveResult(result: ResultType) {
-    return await axios
-      .post("/api/results", result)
-      .then((res) => {})
-      .catch((err) => console.log(err));
-  }
 
   useEffect(() => {
     if (
