@@ -53,7 +53,7 @@ const BattlePlayer = () => {
 
   async function saveResult(result: ResultType) {
     return await axios
-      .post("http://localhost:5000/api/results", result)
+      .post("/api/results", result)
       .then((res) => {})
       .catch((err) => console.log(err));
   }
