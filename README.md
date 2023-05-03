@@ -1,4 +1,4 @@
-# Advanced Tic-Tac-Toe App
+# Advanced Tic-Tac-Toe
 
 Project has been completed but with little more work to be done and that is:
 
