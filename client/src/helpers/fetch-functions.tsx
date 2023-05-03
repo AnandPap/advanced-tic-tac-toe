@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const PORT = "https://advanced-tic-tac-toe-server.onrender.com";
+let PORT: string;
+
+if (import.meta.env.PROD)
+  PORT = "https://advanced-tic-tac-toe-server.onrender.com";
+else PORT = "https://localhost:5173";
 
 export type ResultType = {
   [key: string]: string | number;

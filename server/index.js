@@ -1,4 +1,3 @@
-const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -9,7 +8,14 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: "https://advanced-tic-tac-toe-client.vercel.app" }));
+app.use(
+  cors({
+    origin: [
+      "https://advanced-tic-tac-toe-client.vercel.app",
+      "https://localhost:5173",
+    ],
+  })
+);
 
 app.use(router);
 
@@ -22,8 +28,3 @@ mongoose
   .connect(config.mongo)
   .then(() => console.log("MongoDB connected successfully."))
   .catch((err) => console.log(err));
-
-app.use(express.static(path.join(__dirname, "../client", "dist")));
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client", "dist", "index.html"));
-});
