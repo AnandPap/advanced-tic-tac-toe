@@ -143,6 +143,9 @@ const BattlePlayer = () => {
     }
   }
 
+  {
+    console.log(import.meta.env.PROD);
+  }
   return (
     <div className={`${theme} battle-screen-wrapper`}>
       <div className="battle-screen">
