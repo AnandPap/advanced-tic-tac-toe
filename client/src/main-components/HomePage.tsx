@@ -17,6 +17,12 @@ const HomePage = () => {
             Human player
           </button>
         </div>
+        <p>Check results:</p>
+        <div className="home-page-buttons-wrapper">
+          <button className="button" onClick={() => navigate("/scoreboard")}>
+            Scoreboard
+          </button>
+        </div>
       </div>
     </div>
   );

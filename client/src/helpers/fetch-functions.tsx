@@ -1,10 +1,8 @@
 import axios from "axios";
 
-let PORT: string;
-
+let ORIGIN = "";
 if (import.meta.env.PROD)
-  PORT = "https://advanced-tic-tac-toe-server.onrender.com";
-else PORT = "https://localhost:5173";
+  ORIGIN = "https://advanced-tic-tac-toe-server.onrender.com";
 
 export type ResultType = {
   [key: string]: string | number;
@@ -27,14 +25,16 @@ export interface ScoreType {
 
 export async function saveResult(result: ResultType) {
   return await axios
-    .post(`${PORT}/api/results`, result)
-    .then((res) => {})
+    .post(`${ORIGIN}/api/results`, result)
+    .then((res) => {
+      console.log("Saved successfully.");
+    })
     .catch((err) => console.log(err));
 }
 
 export async function getResults() {
   try {
-    const res: DataType = await axios.get(`${PORT}/api/results`);
+    const res: DataType = await axios.get(`${ORIGIN}/api/results`);
     return res.data;
   } catch (err) {
     console.log(err);
