@@ -18,9 +18,7 @@ const Scoreboard = () => {
 
   async function fetchResults() {
     try {
-      const res: DataType = await axios.get(
-        "http://localhost:5000/api/results"
-      );
+      const res: DataType = await axios.get("/api/results");
       const playerNamesSet: Set<string> = new Set();
       const unsortedScores: ScoreType[] = [];
       for (let i = 0; i < res.data.length; i++) {
