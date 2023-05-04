@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import MainRouter from "./router/MainRouter";
+import MainRouter from "./MainRouter";
 import "./styles/header.css";
 import "./styles/pre-battle.css";
 import "./styles/battle.css";
