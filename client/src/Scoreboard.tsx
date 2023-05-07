@@ -1,11 +1,15 @@
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ScoreType, getResults } from "./helpers/fetch-functions";
+import { useAppSelector } from "./redux/hooks";
 
 const Scoreboard = () => {
   const [scores, setScores] = useState<ScoreType[]>([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const theme = useAppSelector((s) => s.tictactoe.theme);
 
   async function getScores() {
+    setLoading(true);
     const res = await getResults();
     const playerNamesSet: Set<string> = new Set();
     const unsortedScores: ScoreType[] = [];
@@ -40,32 +44,37 @@ const Scoreboard = () => {
 
   useEffect(() => {
     getScores();
+    setTimeout(() => setLoading(false), 500);
   }, []);
 
   return (
-    <table>
-      <caption>Scoreboard</caption>
-      <Suspense fallback={<div>Loading...</div>}>
-        <thead>
-          <tr>
-            <th>Player name</th>
-            <th>Games played</th>
-            <th>Wins</th>
-            <th>Winrate</th>
-          </tr>
-        </thead>
-        <tbody>
-          {scores.map((score, i) => (
-            <tr key={i}>
-              <td>{score.playerName}</td>
-              <td>{score.gamesPlayed}</td>
-              <td>{score.wins}</td>
-              <td>{score.winRate}</td>
+    <div className={`scoreboard-wrapper ${theme}`}>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <table>
+          <caption>Scoreboard</caption>
+          <thead>
+            <tr>
+              <th>Player name</th>
+              <th>Games played</th>
+              <th>Wins</th>
+              <th>Winrate</th>
             </tr>
-          ))}
-        </tbody>
-      </Suspense>
-    </table>
+          </thead>
+          <tbody>
+            {scores.map((score, i) => (
+              <tr key={i}>
+                <td>{score.playerName}</td>
+                <td>{score.gamesPlayed}</td>
+                <td>{score.wins}</td>
+                <td>{score.winRate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
   );
 };
 

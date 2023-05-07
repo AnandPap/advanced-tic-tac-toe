@@ -42,7 +42,8 @@ p {
 .choose-difficulty-wrapper,
 .players-form-wrapper,
 .battle-screen-wrapper,
-.on-empty-page-wrapper {
+.on-empty-page-wrapper,
+.scoreboard-wrapper {
   text-align: center;
   padding: 30px 0;
   min-height: calc(100vh - 75px);
@@ -81,24 +82,88 @@ p {
   color: white;
 }
 
+table {
+  min-width: 70%;
+  max-width: 90%;
+}
+table,
+th,
+td,
+caption {
+  font-size: var(--medium-size-text);
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.dark table,
+.dark th,
+.dark td,
+.dark caption {
+  border-color: white;
+}
+caption {
+  font-weight: 600;
+  border-bottom: none;
+}
+caption,
+th {
+  padding: 25px;
+}
+th {
+  font-style: italic;
+  font-weight: 500;
+}
+tr {
+  cursor: pointer;
+}
+tbody > tr:hover {
+  background-color: #d6eeee;
+}
+.dark tbody > tr:hover {
+  background-color: gray;
+}
+th:hover {
+  background-color: whitesmoke;
+}
+.dark th:hover {
+  background-color: rgb(100, 100, 100);
+}
+
+@media only screen and (max-width: 600px) {
+  caption,
+  th,
+  td {
+    font-size: calc(var(--medium-size-text) * 0.8);
+    padding: 15px;
+  }
+  td {
+    padding: 0;
+  }
+}
+
 @media only screen and (max-width: 425px) {
+  body {
+    font-size: calc(var(--small-size-text) * 0.7);
+  }
   .button {
     font-size: calc(var(--small-size-text) * 0.8);
     padding: 7px 15px;
   }
-
   .home-page-buttons-wrapper {
     flex-direction: column;
   }
   .home-page > p {
     font-size: calc(var(--medium-size-text) * 1.1);
   }
-
   .on-empty-page {
     font-size: var(--big-size-text);
   }
-
   .error-message {
     font-size: var(--small-size-text);
+  }
+  caption,
+  th,
+  td {
+    font-size: calc(var(--medium-size-text) * 0.7);
+    padding: 5px;
   }
 }

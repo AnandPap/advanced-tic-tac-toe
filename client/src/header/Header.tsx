@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import tictactoePng from "../assets/tic-tac-toe.png";
 import BackButton from "./BackButton";
 import LottieDarkModeSwitch from "./LottieDarkModeSwitch";
-import { useAppSelector } from "../redux/hooks";
 import ModalCover from "./ModalCover";
 import { useEffect, useRef, useState } from "react";
 import HamburgerMenu from "./HamburgerMenu";
@@ -11,7 +10,6 @@ const Header = () => {
   const [displayHamburgerContent, setDisplayHamburgerContent] = useState(false);
   const [screenWidth, setScreenWidth] = useState<number | undefined>(undefined);
   const ref = useRef<HTMLDivElement>(null);
-  const theme = useAppSelector((s) => s.tictactoe.theme);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,7 +21,7 @@ const Header = () => {
   }, [ref.current?.clientWidth]);
 
   return (
-    <header className={`${theme}-header header`} ref={ref}>
+    <header className="header" ref={ref}>
       <div
         onClick={() => {
           if (location.pathname === "/") navigate("/", { replace: true });
