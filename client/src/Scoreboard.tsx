@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { ScoreType, getResults } from "./helpers/fetch-functions";
 import { useAppSelector } from "./redux/hooks";
+import TableHeaderCell from "./TableHeaderCell";
 
 const Scoreboard = () => {
   const [scores, setScores] = useState<ScoreType[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [sortType, setSortType] = useState({
+    direction: "down",
+    type: "Player name",
+  });
   const theme = useAppSelector((s) => s.tictactoe.theme);
+  const tableHeaderTitles = ["Player name", "Games played", "Wins", "Winrate"];
 
   async function getScores() {
     setLoading(true);
@@ -47,6 +53,8 @@ const Scoreboard = () => {
     setTimeout(() => setLoading(false), 500);
   }, []);
 
+  useEffect(() => {}, [sortType.direction, sortType.type]);
+
   return (
     <div className={`scoreboard-wrapper ${theme}`}>
       {loading ? (
@@ -56,10 +64,27 @@ const Scoreboard = () => {
           <caption>Scoreboard</caption>
           <thead>
             <tr>
-              <th>Player name</th>
-              <th>Games played</th>
-              <th>Wins</th>
-              <th>Winrate</th>
+              {tableHeaderTitles.map((title, i) => (
+                <TableHeaderCell
+                  key={i}
+                  title={title}
+                  className={`arrow-${sortType.direction} ${
+                    sortType.type === title ? "show" : ""
+                  }`}
+                  onClick={() =>
+                    setSortType((s) => {
+                      let direction = "";
+                      if (s.type === title && s.direction === "down")
+                        direction = "up";
+                      else direction = "down";
+                      return {
+                        direction: direction,
+                        type: title,
+                      };
+                    })
+                  }
+                />
+              ))}
             </tr>
           </thead>
           <tbody>

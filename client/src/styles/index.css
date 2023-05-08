@@ -87,17 +87,17 @@ table {
   max-width: 90%;
 }
 table,
+caption,
 th,
-td,
-caption {
+td {
   font-size: var(--medium-size-text);
   border: 1px solid black;
   border-collapse: collapse;
 }
 .dark table,
+.dark caption,
 .dark th,
-.dark td,
-.dark caption {
+.dark td {
   border-color: white;
 }
 caption {
@@ -106,26 +106,56 @@ caption {
 }
 caption,
 th {
-  padding: 25px;
+  padding: 20px;
 }
 th {
   font-style: italic;
   font-weight: 500;
 }
+th > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+th:hover {
+  background-color: hsl(0, 0%, 90%);
+}
+.dark th:hover {
+  background-color: rgb(100, 100, 100);
+}
 tr {
   cursor: pointer;
 }
 tbody > tr:hover {
-  background-color: #d6eeee;
+  background-color: hsl(0, 0%, 95%);
 }
 .dark tbody > tr:hover {
   background-color: gray;
 }
-th:hover {
-  background-color: whitesmoke;
+
+.arrow-down,
+.arrow-up {
+  visibility: hidden;
+  position: relative;
+  left: 5px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
 }
-.dark th:hover {
-  background-color: rgb(100, 100, 100);
+.arrow-down.show,
+.arrow-up.show {
+  visibility: visible;
+}
+.arrow-down {
+  border-top: 8px solid black;
+}
+.arrow-up {
+  border-bottom: 8px solid black;
+}
+
+.header-cell-title {
+  /* width: min-content; */
 }
 
 @media only screen and (max-width: 600px) {
@@ -133,7 +163,7 @@ th:hover {
   th,
   td {
     font-size: calc(var(--medium-size-text) * 0.8);
-    padding: 15px;
+    padding: 10px;
   }
   td {
     padding: 0;
@@ -164,6 +194,18 @@ th:hover {
   th,
   td {
     font-size: calc(var(--medium-size-text) * 0.7);
-    padding: 5px;
+    padding: 2px;
+  }
+  .arrow-down,
+  .arrow-up {
+    left: 0px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+  }
+  .arrow-down {
+    border-top: 7px solid black;
+  }
+  .arrow-up {
+    border-bottom: 7px solid black;
   }
 }
