@@ -37,8 +37,9 @@ const BattleComputer = () => {
     makeRandomMove,
     checkBestMove,
     checkIfAdjacent,
-    makeAdjacentMove,
+    responseToAdjacentMove,
     makeCornerMove,
+    makeAdjacentMove,
   } = helperFunctions(playerXMoves, playerOMoves, currentSymbol);
 
   useEffect(() => {
@@ -124,7 +125,7 @@ const BattleComputer = () => {
           if (playerOMoves[0] === 5) return 10 - playerXMoves[0];
           else if (playerOMoves[0] + playerXMoves[0] === 10)
             return makeCornerMove();
-          else if (checkIfAdjacent()) return makeAdjacentMove();
+          else if (checkIfAdjacent()) return responseToAdjacentMove();
           else if (/^1|3|7|9$/.test(playerOMoves[0].toString()))
             return makeCornerMove("adjacent");
           else return 5;
@@ -136,7 +137,15 @@ const BattleComputer = () => {
         }
       } else {
         if (madeMoves.length === 1) {
-          return makeRandomMove();
+          if (playerXMoves[0] === 5) return makeCornerMove();
+          else if (/^1|3|7|9$/.test(playerXMoves[0].toString())) return 5;
+          else return makeAdjacentMove();
+        }
+        if (madeMoves.length === 3) {
+          if (playerXMoves[0] === 5) return makeCornerMove();
+          else if (playerXMoves[0] + playerXMoves[1] === 10) {
+            return [2, 4, 6, 8][Math.floor(Math.random() * 4)];
+          } else return 5;
         }
       }
       return makeRandomMove();

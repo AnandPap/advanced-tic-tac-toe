@@ -88,7 +88,7 @@ function helperFunctions(
     else return false;
   }
 
-  function makeAdjacentMove() {
+  function responseToAdjacentMove() {
     if (
       (playerXMoves[0] === 1 && playerOMoves[0] === 2) ||
       (playerXMoves[0] === 9 && playerOMoves[0] === 6)
@@ -109,7 +109,7 @@ function helperFunctions(
       (playerXMoves[0] === 9 && playerOMoves[0] === 8)
     )
       return 3;
-    else return makeRandomMove();
+    return makeRandomMove();
   }
 
   function makeCornerMove(type?: string) {
@@ -122,7 +122,15 @@ function helperFunctions(
         (type === "adjacent" ? element + playerXMoves[0] !== 10 : true)
     );
     if (bestMove) return bestMove;
-    else return makeRandomMove();
+    return makeRandomMove();
+  }
+
+  function makeAdjacentMove() {
+    if (playerXMoves[0] === 2) return [1, 3][Math.floor(Math.random() * 2)];
+    if (playerXMoves[0] === 4) return [1, 7][Math.floor(Math.random() * 2)];
+    if (playerXMoves[0] === 6) return [3, 9][Math.floor(Math.random() * 2)];
+    if (playerXMoves[0] === 8) return [7, 9][Math.floor(Math.random() * 2)];
+    return makeRandomMove();
   }
 
   return {
@@ -131,8 +139,9 @@ function helperFunctions(
     makeRandomMove,
     checkBestMove,
     checkIfAdjacent,
-    makeAdjacentMove,
+    responseToAdjacentMove,
     makeCornerMove,
+    makeAdjacentMove,
   };
 }
 
