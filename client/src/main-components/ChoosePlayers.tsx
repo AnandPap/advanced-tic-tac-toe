@@ -19,7 +19,7 @@ const ChoosePlayers = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (players.player1.length < 2 && players.player2.length < 2)
-      setErrorMessage("Please enter both player names.");
+      setErrorMessage("Please enter players' names.");
     else if (players.player1.length < 2)
       setErrorMessage("Please enter player1 name.");
     else if (players.player2.length < 2)
@@ -32,7 +32,6 @@ const ChoosePlayers = () => {
       <form
         className={`${theme} players-form`}
         onSubmit={(e) => handleSubmit(e)}
-        action="submit"
       >
         <p>Enter player 1 name:</p>
         <input

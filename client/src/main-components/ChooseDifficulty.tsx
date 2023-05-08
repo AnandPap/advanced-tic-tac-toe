@@ -20,7 +20,15 @@ const ChooseDifficulty = () => {
 
   useEffect(() => {
     dispatch(setPlayAs("Random"));
+    dispatch(setPlayers({ player1: "", player2: "" }));
   }, []);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (players.player1.length < 2)
+      setErrorMessage("Please enter player's name.");
+    else navigate(`/vs-computer/${selectedDifficulty}`);
+  };
 
   return (
     <div className={`choose-difficulty-wrapper ${theme}`}>
@@ -61,7 +69,10 @@ const ChooseDifficulty = () => {
           })}
         </div>
       </div>
-      <form className={`${theme} computer-form`}>
+      <form
+        className={`${theme} computer-form`}
+        onSubmit={(e) => handleSubmit(e)}
+      >
         <p>Enter players name:</p>
         <input
           type="text"
@@ -71,19 +82,10 @@ const ChooseDifficulty = () => {
             setErrorMessage("");
           }}
         />
+        <button type="submit" className="button">
+          Start battle
+        </button>
       </form>
-      <button
-        onClick={() => {
-          if (!players.player1) setErrorMessage("Please enter players name.");
-          else if (selectedDifficulty)
-            navigate(`/vs-computer/${selectedDifficulty}`);
-          else if (!selectedDifficulty)
-            setErrorMessage("Please select computer difficulty.");
-        }}
-        className="button"
-      >
-        Start battle
-      </button>
       {errorMessage && (
         <ErrorMessage className="error-message" text={errorMessage} />
       )}
