@@ -33,17 +33,20 @@ const ChoosePlayers = () => {
         className={`${theme} players-form`}
         onSubmit={(e) => handleSubmit(e)}
       >
-        <p>Enter player 1 name:</p>
+        <label htmlFor="player1">Enter player 1 name:</label>
         <input
+          id="player1"
           type="text"
           value={players.player1}
+          autoFocus
           onChange={(e) => {
             dispatch(setPlayers({ player1: e.target.value }));
             setErrorMessage("");
           }}
         />
-        <p>Enter player 2 name:</p>
+        <label htmlFor="player2">Enter player 2 name:</label>
         <input
+          id="player2"
           type="text"
           value={players.player2}
           onChange={(e) => {

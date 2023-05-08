@@ -73,10 +73,12 @@ const ChooseDifficulty = () => {
         className={`${theme} computer-form`}
         onSubmit={(e) => handleSubmit(e)}
       >
-        <p>Enter players name:</p>
+        <label htmlFor="player">Enter players name:</label>
         <input
+          id="player"
           type="text"
           value={players.player1}
+          autoFocus
           onChange={(e) => {
             dispatch(setPlayers({ player1: e.target.value }));
             setErrorMessage("");

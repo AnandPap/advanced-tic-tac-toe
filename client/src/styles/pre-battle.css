@@ -69,8 +69,8 @@
 .computer-form {
   margin-top: 30px;
 }
-.players-form > p,
-.computer-form > p {
+.players-form > label,
+.computer-form > label {
   margin-bottom: 10px;
   font-size: calc(var(--big-size-text) * 0.9);
   align-self: flex-start;
