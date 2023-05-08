@@ -36,22 +36,23 @@ function helperFunctions(
     else return "computer";
   }
 
-  function makeRandomMove() {
+  function getAvailableMoves() {
     const availableMoves: number[] = [];
     const madeMoves = [...playerXMoves, ...playerOMoves];
     for (let i = 1; i < 10; i++) {
       if (!madeMoves.includes(i)) availableMoves.push(i);
     }
+    return availableMoves;
+  }
+
+  function makeRandomMove() {
+    const availableMoves = getAvailableMoves();
     const randomNumber = Math.floor(Math.random() * availableMoves.length);
     return availableMoves[randomNumber];
   }
 
   function checkBestMove(type: "winning" | "blocking") {
-    const availableMoves: number[] = [];
-    const madeMoves = [...playerOMoves, ...playerXMoves];
-    for (let i = 1; i < 10; i++) {
-      if (!madeMoves.includes(i)) availableMoves.push(i);
-    }
+    const availableMoves = getAvailableMoves();
     const tempMoves: number[] = [];
     if (
       (currentSymbol === "X" && type === "winning") ||
@@ -72,11 +73,66 @@ function helperFunctions(
     return null;
   }
 
+  function checkIfAdjacent() {
+    if (
+      (playerXMoves[0] === 1 &&
+        (playerOMoves[0] === 2 || playerOMoves[0] === 4)) ||
+      (playerXMoves[0] === 3 &&
+        (playerOMoves[0] === 2 || playerOMoves[0] === 6)) ||
+      (playerXMoves[0] === 7 &&
+        (playerOMoves[0] === 4 || playerOMoves[0] === 8)) ||
+      (playerXMoves[0] === 9 &&
+        (playerOMoves[0] === 6 || playerOMoves[0] === 8))
+    )
+      return true;
+    else return false;
+  }
+
+  function makeAdjacentMove() {
+    if (
+      (playerXMoves[0] === 1 && playerOMoves[0] === 2) ||
+      (playerXMoves[0] === 9 && playerOMoves[0] === 6)
+    )
+      return 7;
+    else if (
+      (playerXMoves[0] === 3 && playerOMoves[0] === 2) ||
+      (playerXMoves[0] === 7 && playerOMoves[0] === 4)
+    )
+      return 9;
+    else if (
+      (playerXMoves[0] === 3 && playerOMoves[0] === 6) ||
+      (playerXMoves[0] === 7 && playerOMoves[0] === 8)
+    )
+      return 1;
+    else if (
+      (playerXMoves[0] === 1 && playerOMoves[0] === 4) ||
+      (playerXMoves[0] === 9 && playerOMoves[0] === 8)
+    )
+      return 3;
+    else return makeRandomMove();
+  }
+
+  function makeCornerMove(type?: string) {
+    const availableMoves = getAvailableMoves();
+    const bestMoves = [1, 3, 7, 9];
+    if (type === "random") return bestMoves[Math.floor(Math.random() * 4)];
+    const bestMove = availableMoves.find(
+      (element) =>
+        bestMoves.includes(element) &&
+        (type === "adjacent" ? element + playerXMoves[0] !== 10 : true)
+    );
+    if (bestMove) return bestMove;
+    else return makeRandomMove();
+  }
+
   return {
     checkWinner,
     checkCurrentTurn,
     makeRandomMove,
     checkBestMove,
+    checkIfAdjacent,
+    makeAdjacentMove,
+    makeCornerMove,
   };
 }
 

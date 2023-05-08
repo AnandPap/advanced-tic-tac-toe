@@ -89,6 +89,7 @@ p {
   color: lightcoral;
 }
 .error-message {
+  max-width: 350px;
   font-size: var(--big-size-text);
 }
 

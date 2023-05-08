@@ -31,8 +31,15 @@ const BattleComputer = () => {
   const navigate = useNavigate();
   const { difficulty } = useParams();
 
-  const { checkWinner, checkCurrentTurn, makeRandomMove, checkBestMove } =
-    helperFunctions(playerXMoves, playerOMoves, currentSymbol);
+  const {
+    checkWinner,
+    checkCurrentTurn,
+    makeRandomMove,
+    checkBestMove,
+    checkIfAdjacent,
+    makeAdjacentMove,
+    makeCornerMove,
+  } = helperFunctions(playerXMoves, playerOMoves, currentSymbol);
 
   useEffect(() => {
     if (
@@ -83,7 +90,7 @@ const BattleComputer = () => {
         let moveToMake: number;
         if (difficulty === "easy") moveToMake = easyMove();
         else if (difficulty === "medium") moveToMake = mediumMove();
-        else moveToMake = mediumMove();
+        else moveToMake = hardMove();
         if (currentSymbol === "X") setPlayerXMoves((s) => [...s, moveToMake]);
         else setPlayerOMoves((s) => [...s, moveToMake]);
         setComputerThinking(false);
@@ -107,23 +114,33 @@ const BattleComputer = () => {
     let moveToMake = checkBestMove("winning");
     if (!moveToMake) moveToMake = checkBestMove("blocking");
     if (moveToMake) return moveToMake;
-    const availableMoves: number[] = [];
-    const madeMoves = [...playerXMoves, ...playerOMoves];
-    for (let i = 1; i < 10; i++) {
-      if (!madeMoves.includes(i)) availableMoves.push(i);
-    }
-    if (currentSymbol === "X") {
-      if (madeMoves.length === 0) {
-        const bestMoves = [1, 3, 7, 9];
-        const randomNumber = Math.floor(Math.random() * 4);
-        moveToMake = bestMoves[randomNumber];
+    else {
+      const madeMoves = [...playerXMoves, ...playerOMoves];
+      if (currentSymbol === "X") {
+        if (madeMoves.length === 0) {
+          return makeCornerMove("random");
+        } else if (madeMoves.length === 2) {
+          // moze lukaviji potez
+          if (playerOMoves[0] === 5) return 10 - playerXMoves[0];
+          else if (playerOMoves[0] + playerXMoves[0] === 10)
+            return makeCornerMove();
+          else if (checkIfAdjacent()) return makeAdjacentMove();
+          else if (/^1|3|7|9$/.test(playerOMoves[0].toString()))
+            return makeCornerMove("adjacent");
+          else return 5;
+        } else if (madeMoves.length === 4) {
+          if (playerOMoves[0] + playerXMoves[0] === 10) return makeCornerMove();
+          else if (checkIfAdjacent()) return 5;
+          else if (/^1|3|7|9$/.test(playerOMoves[0].toString()))
+            return makeCornerMove();
+        }
+      } else {
+        if (madeMoves.length === 1) {
+          return makeRandomMove();
+        }
       }
-    } else {
-      if (madeMoves.length === 1) {
-        playerOMoves[0];
-      }
+      return makeRandomMove();
     }
-    return makeRandomMove();
   }
 
   function removeElementFromPlayer1() {
