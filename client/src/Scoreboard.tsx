@@ -2,24 +2,55 @@ import { useEffect, useState } from "react";
 import { ScoreType, getResults } from "./helpers/fetch-functions";
 import { useAppSelector } from "./redux/hooks";
 import TableHeaderCell from "./TableHeaderCell";
+import ErrorMessage from "./ErrorMessage";
 
 const Scoreboard = () => {
   const [scores, setScores] = useState<ScoreType[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [sortType, setSortType] = useState({
-    direction: "down",
     type: "Player name",
+    direction: "down",
   });
   const theme = useAppSelector((s) => s.tictactoe.theme);
-  const tableHeaderTitles = ["Player name", "Games played", "Wins", "Winrate"];
+  const tableHeaderTitles = ["Player name", "Games played", "Wins", "Win rate"];
+
+  useEffect(() => {
+    getScores();
+  }, []);
+
+  useEffect(() => {
+    const words = sortType.type.split(" ");
+    let type = "";
+    for (let i = 0; i < words.length; i++) {
+      if (i === 0) {
+        type += words[0].charAt(0).toLowerCase() + words[0].slice(1);
+      } else {
+        type += words[1].charAt(0).toUpperCase() + words[1].slice(1);
+      }
+    }
+    sortScores(scores, type, sortType.direction);
+  }, [sortType.type, sortType.direction]);
+
+  function sortScores(scores: ScoreType[], type: string, direction: string) {
+    const array = structuredClone(scores);
+    array.sort((a: ScoreType, b: ScoreType) => {
+      if (
+        (direction === "up" && type !== "playerName") ||
+        (type === "playerName" && direction === "down")
+      )
+        return a[type] > b[type] ? 1 : b[type] > a[type] ? -1 : 0;
+      else return b[type] > a[type] ? 1 : a[type] > b[type] ? -1 : 0;
+    });
+    setScores(array);
+  }
 
   async function getScores() {
     setLoading(true);
     const res = await getResults();
-    const playerNamesSet: Set<string> = new Set();
-    const unsortedScores: ScoreType[] = [];
     if (res) {
+      const playerNamesSet: Set<string> = new Set();
+      const unsortedScores: ScoreType[] = [];
       for (let i = 0; i < res.length; i++) {
         playerNamesSet.add(res[i].player1);
         playerNamesSet.add(res[i].player2);
@@ -36,30 +67,23 @@ const Scoreboard = () => {
         unsortedScores.push({
           playerName: playerName,
           ...playerScoreObject,
-          winRate: `${Math.round(
+          winRate: Math.round(
             (playerScoreObject.wins / playerScoreObject.gamesPlayed) * 100
-          )}%`,
+          ),
         });
       }
-      setScores(unsortedScores);
-      console.log(unsortedScores);
+      sortScores(unsortedScores, "playerName", "down");
     } else {
       setError("Something went wrong.");
     }
-  }
-
-  useEffect(() => {
-    getScores();
     setTimeout(() => setLoading(false), 500);
-  }, []);
-
-  useEffect(() => {}, [sortType.direction, sortType.type]);
+  }
 
   return (
     <div className={`scoreboard-wrapper ${theme}`}>
       {loading ? (
         <div>Loading...</div>
-      ) : (
+      ) : !error ? (
         <table>
           <caption>Scoreboard</caption>
           <thead>
@@ -93,11 +117,13 @@ const Scoreboard = () => {
                 <td>{score.playerName}</td>
                 <td>{score.gamesPlayed}</td>
                 <td>{score.wins}</td>
-                <td>{score.winRate}</td>
+                <td>{score.winRate}%</td>
               </tr>
             ))}
           </tbody>
         </table>
+      ) : (
+        <ErrorMessage className="error-message" text={error} />
       )}
     </div>
   );

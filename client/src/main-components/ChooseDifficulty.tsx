@@ -71,7 +71,7 @@ const ChooseDifficulty = () => {
         className={`${theme} computer-form`}
         onSubmit={(e) => handleSubmit(e)}
       >
-        <label htmlFor="player">Enter players name:</label>
+        <label htmlFor="player">Enter player's name:</label>
         <input
           id="player"
           type="text"

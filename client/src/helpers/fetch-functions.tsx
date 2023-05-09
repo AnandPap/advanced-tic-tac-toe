@@ -17,10 +17,11 @@ export interface DataType {
 }
 
 export interface ScoreType {
+  [key: string]: string | number;
   playerName: string;
   gamesPlayed: number;
   wins: number;
-  winRate: string;
+  winRate: number;
 }
 
 export async function saveResult(result: ResultType) {
