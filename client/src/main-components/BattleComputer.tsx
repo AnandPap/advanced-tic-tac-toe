@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  useSearchParams,
+  Navigate,
+} from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 import UndoButton from "../header/BackButton";
 import BattleComputerCell from "./BattleComputerCell";
@@ -27,9 +32,10 @@ const BattleComputer = () => {
   );
   const theme = useAppSelector((s) => s.tictactoe.theme);
   const playAs = useAppSelector((s) => s.tictactoe.playAs);
-  const players = useAppSelector((s) => s.tictactoe.players);
   const navigate = useNavigate();
   const { difficulty } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const player = searchParams.get("player");
 
   const {
     checkWinner,
@@ -43,12 +49,7 @@ const BattleComputer = () => {
   } = helperFunctions(playerXMoves, playerOMoves, currentSymbol);
 
   useEffect(() => {
-    if (
-      (difficulty !== "easy" &&
-        difficulty !== "medium" &&
-        difficulty !== "hard") ||
-      !players.player1
-    )
+    if (!player || player.length < 2)
       navigate("/vs-computer", { replace: true });
   }, []);
 
@@ -135,7 +136,7 @@ const BattleComputer = () => {
           else if (/^1|3|7|9$/.test(playerOMoves[0].toString()))
             return makeCornerMove();
         }
-      } else {
+      } else if (currentSymbol === "O") {
         if (madeMoves.length === 1) {
           if (playerXMoves[0] === 5) return makeCornerMove();
           else if (/^1|3|7|9$/.test(playerXMoves[0].toString())) return 5;
@@ -197,7 +198,9 @@ const BattleComputer = () => {
     }
   }
 
-  return (
+  return difficulty === "easy" ||
+    difficulty === "medium" ||
+    difficulty === "hard" ? (
     <div className={`${theme} battle-screen-wrapper`}>
       <div className="battle-screen">
         {!winner ? (
@@ -209,9 +212,7 @@ const BattleComputer = () => {
                 <div className={`dot-elastic ${theme}`}></div>
               </div>
             ) : (
-              <p className="players-turn">
-                It's {`${players.player1}`} 's turn.
-              </p>
+              <p className="players-turn">It's {`${player}`} 's turn.</p>
             )}
             {((firstMove === "human" &&
               playerXMoves.length + playerOMoves.length > 0) ||
@@ -232,7 +233,7 @@ const BattleComputer = () => {
             {winner === "tie"
               ? "It's a Tie!"
               : winner === "human"
-              ? `${players.player1} wins!`
+              ? `${player} wins!`
               : "Computer wins!"}
           </p>
         )}
@@ -269,6 +270,9 @@ const BattleComputer = () => {
         )}
       </div>
     </div>
+  ) : (
+    // <Navigate to={"/vs-computer"} replace={true} />
+    <ErrorMessage className="on-empty-page" text="Page not found" />
   );
 };
 

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 import { useDispatch } from "react-redux";
-import { setPlayAs, setPlayers } from "../redux/tictactoe";
+import { setPlayAs } from "../redux/tictactoe";
 import { useEffect, useState } from "react";
 import ErrorMessage from "../ErrorMessage";
 
@@ -10,24 +10,22 @@ const ChooseDifficulty = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
     "medium"
   );
+  const [player, setPlayer] = useState("");
   const levelsOfDifficulty = ["easy", "medium", "hard"];
   const playAsOptions = ["O", "Random", "X"];
   const theme = useAppSelector((s) => s.tictactoe.theme);
-  const players = useAppSelector((s) => s.tictactoe.players);
   const playAs = useAppSelector((s) => s.tictactoe.playAs);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(setPlayAs("Random"));
-    dispatch(setPlayers({ player1: "", player2: "" }));
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (players.player1.length < 2)
-      setErrorMessage("Please enter player's name.");
-    else navigate(`/vs-computer/${selectedDifficulty}`);
+    if (player.length < 2) setErrorMessage("Please enter player's name.");
+    else navigate(`/vs-computer/${selectedDifficulty}?player=${player}`);
   };
 
   return (
@@ -77,10 +75,10 @@ const ChooseDifficulty = () => {
         <input
           id="player"
           type="text"
-          value={players.player1}
+          value={player}
           autoFocus
           onChange={(e) => {
-            dispatch(setPlayers({ player1: e.target.value }));
+            setPlayer(e.target.value);
             setErrorMessage("");
           }}
         />
