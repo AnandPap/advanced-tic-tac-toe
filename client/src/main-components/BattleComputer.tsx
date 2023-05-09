@@ -120,7 +120,7 @@ const BattleComputer = () => {
       const madeMoves = [...playerXMoves, ...playerOMoves];
       if (currentSymbol === "X") {
         if (madeMoves.length === 0) {
-          return makeCornerMove("random");
+          return makeCornerMove();
         } else if (madeMoves.length === 2) {
           // moze lukaviji potez
           if (playerOMoves[0] === 5) return 10 - playerXMoves[0];
@@ -144,9 +144,10 @@ const BattleComputer = () => {
         }
         if (madeMoves.length === 3) {
           if (playerXMoves[0] === 5) return makeCornerMove();
-          else if (playerXMoves[0] + playerXMoves[1] === 10) {
+          else if (playerXMoves[0] + playerXMoves[1] === 10)
             return [2, 4, 6, 8][Math.floor(Math.random() * 4)];
-          } else return 5;
+          else if (playerOMoves[0] !== 5) return 5;
+          return 10 - playerXMoves[0];
         }
       }
       return makeRandomMove();
@@ -212,7 +213,7 @@ const BattleComputer = () => {
                 <div className={`dot-elastic ${theme}`}></div>
               </div>
             ) : (
-              <p className="players-turn">It's {`${player}`} 's turn.</p>
+              <p className="players-turn">It's {player}'s turn.</p>
             )}
             {((firstMove === "human" &&
               playerXMoves.length + playerOMoves.length > 0) ||

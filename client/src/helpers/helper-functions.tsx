@@ -115,14 +115,14 @@ function helperFunctions(
   function makeCornerMove(type?: string) {
     const availableMoves = getAvailableMoves();
     const bestMoves = [1, 3, 7, 9];
-    if (type === "random") return bestMoves[Math.floor(Math.random() * 4)];
-    const bestMove = availableMoves.find(
+    const availableBestMoves = bestMoves.filter(
       (element) =>
-        bestMoves.includes(element) &&
+        availableMoves.includes(element) &&
         (type === "adjacent" ? element + playerXMoves[0] !== 10 : true)
     );
-    if (bestMove) return bestMove;
-    return makeRandomMove();
+    return availableBestMoves[
+      Math.floor(Math.random() * availableBestMoves.length)
+    ];
   }
 
   function makeAdjacentMove() {
