@@ -1,8 +1,13 @@
 const express = require("express");
-const { saveResult, fetchResults } = require("./controllers.js");
+const {
+  saveResult,
+  fetchResults,
+  fetchPlayerResults,
+} = require("./controllers.js");
 
 const router = express.Router();
 
 router.route("/api/results").post(saveResult).get(fetchResults);
+router.route("/api/player-results/:ids").get(fetchPlayerResults);
 
 module.exports = router;

@@ -60,7 +60,8 @@ p {
 .players-form-wrapper,
 .battle-screen-wrapper,
 .on-empty-page-wrapper,
-.scoreboard-wrapper {
+.scoreboard-wrapper,
+.player-profile-wrapper {
   text-align: center;
   padding: 30px 0;
   min-height: calc(100vh - 75px);

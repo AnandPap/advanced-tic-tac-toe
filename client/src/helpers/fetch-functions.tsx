@@ -12,9 +12,13 @@ export type ResultType = {
   date: number;
 };
 
-export interface DataType {
+export type ResultsDataType = {
   data: ResultType[];
-}
+};
+export type ErrorType = {
+  code: number | undefined;
+  errorMessage: string;
+};
 
 export interface ScoreType {
   [key: string]: string | number;
@@ -35,10 +39,27 @@ export async function saveResult(result: ResultType) {
 
 export async function getResults() {
   try {
-    const res: DataType = await axios.get(`${ORIGIN}/api/results`);
+    const res: ResultsDataType = await axios.get(`${ORIGIN}/api/results`);
     return res.data;
   } catch (err) {
-    console.log(err);
     return undefined;
+  }
+}
+
+export async function getPlayerResults(playerName: string) {
+  try {
+    const res: ResultsDataType = await axios.get(
+      `${ORIGIN}/api/player-results/${playerName}`
+    );
+    console.log(res);
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      const errorObject: ErrorType = {
+        code: err.response?.status,
+        errorMessage: err.response?.data,
+      };
+      return errorObject;
+    } else return undefined;
   }
 }

@@ -3,6 +3,7 @@ import { ScoreType, getResults } from "./helpers/fetch-functions";
 import { useAppSelector } from "./redux/hooks";
 import TableHeaderCell from "./TableHeaderCell";
 import ErrorMessage from "./ErrorMessage";
+import { useNavigate } from "react-router-dom";
 
 const Scoreboard = () => {
   const [scores, setScores] = useState<ScoreType[]>([]);
@@ -13,6 +14,7 @@ const Scoreboard = () => {
     direction: "down",
   });
   const theme = useAppSelector((s) => s.tictactoe.theme);
+  const navigate = useNavigate();
   const tableHeaderTitles = ["Player name", "Games played", "Wins", "Win rate"];
 
   useEffect(() => {
@@ -113,7 +115,12 @@ const Scoreboard = () => {
           </thead>
           <tbody>
             {scores.map((score, i) => (
-              <tr key={i}>
+              <tr
+                key={i}
+                onClick={() =>
+                  navigate(`/scoreboard/player-profile/${score.playerName}`)
+                }
+              >
                 <td>{score.playerName}</td>
                 <td>{score.gamesPlayed}</td>
                 <td>{score.wins}</td>

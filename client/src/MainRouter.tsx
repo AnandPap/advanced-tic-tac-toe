@@ -20,7 +20,10 @@ const MainRouter = () => {
         <Route path="/vs-player" element={<ChoosePlayers />} />
         <Route path="/vs-player/battle" element={<BattlePlayer />} />
         <Route path="/scoreboard" element={<Scoreboard />} />
-        <Route path="/scoreboard/:id" element={<PlayerProfile />} />
+        <Route
+          path="/scoreboard/player-profile/:playerName"
+          element={<PlayerProfile />}
+        />
         <Route
           path="*"
           element={

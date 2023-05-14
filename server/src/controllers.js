@@ -6,8 +6,8 @@ async function saveResult(req, res) {
     await resultModel.save();
     res.status(200).json(resultModel);
   } catch (err) {
-    res.status(400).json(err);
     console.log(err);
+    res.status(500).json(err);
   }
 }
 
@@ -16,9 +16,22 @@ async function fetchResults(req, res) {
     const results = await Result.find({});
     res.status(200).json(results);
   } catch (err) {
-    res.status(400).json(err);
     console.log(err);
+    res.status(500).json(err);
   }
 }
 
-module.exports = { saveResult, fetchResults };
+async function fetchPlayerResults(req, res) {
+  try {
+    const playerResults = await Result.find({
+      $or: [{ player1: req.params.ids }, { player2: req.params.ids }],
+    });
+    if (playerResults.length < 1) res.status(404).json("User not found.");
+    else res.status(200).json(playerResults);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json("Internal server error.");
+  }
+}
+
+module.exports = { saveResult, fetchResults, fetchPlayerResults };
