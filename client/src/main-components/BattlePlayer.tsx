@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 import { useDispatch } from "react-redux";
 import { setPlayers } from "../redux/tictactoe";
-import BattlePlayerCell from "./BattlePlayerCell";
+import Cell from "./Cell";
 import BackButton from "../header/BackButton";
 import ErrorMessage from "../ErrorMessage";
 import { saveResult } from "../helpers/fetch-functions";
@@ -171,7 +171,7 @@ const BattlePlayer = () => {
         <div className="board-wrapper">
           <div className="board-container">
             {[...Array(9)].map((item, i) => (
-              <BattlePlayerCell
+              <Cell
                 key={i}
                 i={i + 1}
                 winner={winner}

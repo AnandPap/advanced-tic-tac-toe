@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { ScoreType, getResults } from "./helpers/fetch-functions";
-import { useAppSelector } from "./redux/hooks";
-import TableHeaderCell from "./TableHeaderCell";
-import ErrorMessage from "./ErrorMessage";
+import { ScoreType, getResults } from "../helpers/fetch-functions";
+import { useAppSelector } from "../redux/hooks";
+import TableHeaderCell from "../TableHeaderCell";
+import ErrorMessage from "../ErrorMessage";
 import { useNavigate } from "react-router-dom";
 
 const Scoreboard = () => {

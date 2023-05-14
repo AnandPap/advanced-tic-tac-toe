@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPlayerResults, ResultType } from "./helpers/fetch-functions";
-import { axiosErrorHandler } from "./helpers/error-functions";
+import { getPlayerResults, ResultType } from "../helpers/fetch-functions";
+import { axiosErrorHandler } from "../helpers/error-functions";
 
 const PlayerProfile = () => {
   const [playerInfo, setPlayerInfo] = useState<ResultType[]>([]);

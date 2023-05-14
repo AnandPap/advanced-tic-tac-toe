@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 import UndoButton from "../header/BackButton";
-import BattleComputerCell from "./BattleComputerCell";
+import Cell from "./Cell";
 import ErrorMessage from "../ErrorMessage";
 import helperFunctions from "../helpers/helper-functions";
 
@@ -241,7 +241,7 @@ const BattleComputer = () => {
         <div className="board-wrapper">
           <div className="board-container">
             {[...Array(9)].map((item, i) => (
-              <BattleComputerCell
+              <Cell
                 key={i}
                 i={i + 1}
                 winner={winner}
