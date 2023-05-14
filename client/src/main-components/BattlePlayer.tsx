@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { setPlayers } from "../redux/tictactoe";
 import Cell from "./Cell";
 import BackButton from "../header/BackButton";
-import ErrorMessage from "../ErrorMessage";
+import ErrorMessage from "./ErrorMessage";
 import { saveResult } from "../helpers/fetch-functions";
 
 const BattlePlayer = () => {

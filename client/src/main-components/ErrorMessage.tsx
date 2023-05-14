@@ -1,4 +1,4 @@
-import { useAppSelector } from "./redux/hooks";
+import { useAppSelector } from "../redux/hooks";
 
 type ErrorMessageProps = {
   className?: string;

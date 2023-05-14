@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 import { useDispatch } from "react-redux";
 import { setPlayers } from "../redux/tictactoe";
-import ErrorMessage from "../ErrorMessage";
+import ErrorMessage from "./ErrorMessage";
 
 const ChoosePlayers = () => {
   const [errorMessage, setErrorMessage] = useState("");

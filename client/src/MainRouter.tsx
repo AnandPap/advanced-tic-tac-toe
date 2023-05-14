@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "./main-components/ErrorMessage";
 import HomePage from "./main-components/HomePage";
 import Scoreboard from "./main-components/Scoreboard";
 import PlayerProfile from "./main-components/PlayerProfile";

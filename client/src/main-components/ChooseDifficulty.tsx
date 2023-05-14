@@ -3,7 +3,7 @@ import { useAppSelector } from "../redux/hooks";
 import { useDispatch } from "react-redux";
 import { setPlayAs } from "../redux/tictactoe";
 import { useEffect, useState } from "react";
-import ErrorMessage from "../ErrorMessage";
+import ErrorMessage from "./ErrorMessage";
 
 const ChooseDifficulty = () => {
   const [errorMessage, setErrorMessage] = useState("");

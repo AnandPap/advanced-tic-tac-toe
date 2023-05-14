@@ -8,7 +8,7 @@ import {
 import { useAppSelector } from "../redux/hooks";
 import UndoButton from "../header/BackButton";
 import Cell from "./Cell";
-import ErrorMessage from "../ErrorMessage";
+import ErrorMessage from "./ErrorMessage";
 import helperFunctions from "../helpers/helper-functions";
 
 const BattleComputer = () => {
