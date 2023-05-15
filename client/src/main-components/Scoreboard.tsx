@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
-import { ScoreType, getResults } from "../helpers/fetch-functions";
+import { getResults } from "../helpers/fetch-functions";
 import { useAppSelector } from "../redux/hooks";
 import TableHeaderCell from "./TableHeaderCell";
 import ErrorMessage from "./ErrorMessage";
 import { useNavigate } from "react-router-dom";
 
+export interface Score {
+  [key: string]: string | number;
+  playerName: string;
+  gamesPlayed: number;
+  wins: number;
+  winRate: number;
+}
+
 const Scoreboard = () => {
-  const [scores, setScores] = useState<ScoreType[]>([]);
+  const [scores, setScores] = useState<Score[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [sortType, setSortType] = useState({
@@ -34,9 +42,9 @@ const Scoreboard = () => {
     sortScores(scores, type, sortType.direction);
   }, [sortType.type, sortType.direction]);
 
-  function sortScores(scores: ScoreType[], type: string, direction: string) {
-    const array = structuredClone(scores);
-    array.sort((a: ScoreType, b: ScoreType) => {
+  function sortScores(scores: Score[], type: string, direction: string) {
+    const clonedScores: Score[] = structuredClone(scores);
+    clonedScores.sort((a, b) => {
       if (
         (direction === "up" && type !== "playerName") ||
         (type === "playerName" && direction === "down")
@@ -44,7 +52,7 @@ const Scoreboard = () => {
         return a[type] > b[type] ? 1 : b[type] > a[type] ? -1 : 0;
       else return b[type] > a[type] ? 1 : a[type] > b[type] ? -1 : 0;
     });
-    setScores(array);
+    setScores(clonedScores);
   }
 
   async function getScores() {
@@ -52,7 +60,7 @@ const Scoreboard = () => {
     const res = await getResults();
     if (res) {
       const playerNamesSet: Set<string> = new Set();
-      const unsortedScores: ScoreType[] = [];
+      const unsortedScores: Score[] = [];
       for (let i = 0; i < res.length; i++) {
         playerNamesSet.add(res[i].player1);
         playerNamesSet.add(res[i].player2);

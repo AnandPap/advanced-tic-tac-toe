@@ -4,7 +4,7 @@ let ORIGIN = "";
 if (import.meta.env.PROD)
   ORIGIN = "https://advanced-tic-tac-toe-server.onrender.com";
 
-export type ResultType = {
+export type Result = {
   [key: string]: string | number;
   player1: string;
   player2: string;
@@ -12,23 +12,12 @@ export type ResultType = {
   date: number;
 };
 
-export type ResultsDataType = {
-  data: ResultType[];
-};
-export type ErrorType = {
+export type Error = {
   code: number | undefined;
   errorMessage: string;
 };
 
-export interface ScoreType {
-  [key: string]: string | number;
-  playerName: string;
-  gamesPlayed: number;
-  wins: number;
-  winRate: number;
-}
-
-export async function saveResult(result: ResultType) {
+export async function saveResult(result: Result) {
   return await axios
     .post(`${ORIGIN}/api/results`, result)
     .then((res) => {
@@ -39,7 +28,7 @@ export async function saveResult(result: ResultType) {
 
 export async function getResults() {
   try {
-    const res: ResultsDataType = await axios.get(`${ORIGIN}/api/results`);
+    const res = await axios.get<Result[]>(`${ORIGIN}/api/results`);
     return res.data;
   } catch (err) {
     return undefined;
@@ -48,16 +37,15 @@ export async function getResults() {
 
 export async function getPlayerResults(playerName: string) {
   try {
-    const res: ResultsDataType = await axios.get(
+    const res = await axios.get<Result[]>(
       `${ORIGIN}/api/player-results/${playerName}`
     );
-    console.log(res);
     return res.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      const errorObject: ErrorType = {
+      const errorObject: Error = {
         code: err.response?.status,
-        errorMessage: err.response?.data,
+        errorMessage: err.response?.data || err.response?.statusText,
       };
       return errorObject;
     } else return undefined;

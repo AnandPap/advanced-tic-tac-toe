@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPlayerResults, ResultType } from "../helpers/fetch-functions";
-import { axiosErrorHandler } from "../helpers/error-functions";
+import { getPlayerResults } from "../helpers/fetch-functions";
+import { errorHandler } from "../helpers/error-functions";
+
+type PlayerInfo = {
+  opponentName: string;
+  gamesPlayed: number;
+  winRate: number;
+};
 
 const PlayerProfile = () => {
-  const [playerInfo, setPlayerInfo] = useState<ResultType[]>([]);
+  const [playerInfo, setPlayerInfo] = useState<PlayerInfo[]>([]);
   const [error, setError] = useState("");
   const { playerName } = useParams();
 
@@ -15,8 +21,23 @@ const PlayerProfile = () => {
   async function getPlayerGames(playerName: string | undefined) {
     if (playerName) {
       const res = await getPlayerResults(playerName);
-      if (res && !("code" in res)) setPlayerInfo(res);
-      else setError(axiosErrorHandler(res));
+      if (res && !("code" in res)) {
+        const set: Set<string> = new Set();
+        const arrayOfObjects: PlayerInfo[] = [];
+        for (let i = 0; i < res.length; i++) {
+          if (res[i].player1 !== playerName) set.add(res[i].player1);
+          else set.add(res[i].player2);
+        }
+        const iterator = set.entries();
+        for (const entry of iterator) {
+          arrayOfObjects.push({
+            opponentName: entry[0],
+            gamesPlayed: 0,
+            winRate: 0,
+          });
+        }
+        setPlayerInfo(arrayOfObjects);
+      } else setError(errorHandler(res));
     }
   }
 
@@ -26,13 +47,10 @@ const PlayerProfile = () => {
         <>
           <h2>{playerName}'s profile</h2>
           {playerInfo.map((result, i) => (
-            <div key={i}>
-              <span>
-                vs{" "}
-                {result.player1 === playerName
-                  ? result.player2
-                  : result.player1}
-              </span>
+            <div key={i} style={{ display: "flex" }}>
+              <span>{result.opponentName}</span>
+              <span>{result.gamesPlayed}</span>
+              <span>{result.winRate}</span>
             </div>
           ))}
         </>
