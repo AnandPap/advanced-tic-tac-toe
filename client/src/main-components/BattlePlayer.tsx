@@ -67,7 +67,7 @@ const BattlePlayer = () => {
       saveResult({
         player1: players.player1,
         player2: players.player2,
-        result: result,
+        winner: result,
         date: Date.now(),
       });
       setWinner(result);

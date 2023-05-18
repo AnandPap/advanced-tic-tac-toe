@@ -70,7 +70,7 @@ const Scoreboard = () => {
         for (let i = 0; i < res.length; i++) {
           if (res[i].player1 === playerName || res[i].player2 === playerName) {
             playerScoreObject.gamesPlayed += 1;
-            if (res[i][res[i].result] === playerName)
+            if (res[i][res[i].winner] === playerName)
               playerScoreObject.wins += 1;
           }
         }
@@ -93,7 +93,11 @@ const Scoreboard = () => {
     <div className={`scoreboard-wrapper ${theme}`}>
       {loading ? (
         <div>Loading...</div>
-      ) : !error ? (
+      ) : error ? (
+        <ErrorMessage className="error-message" text={error} />
+      ) : scores.length < 1 ? (
+        <div>No scores to show.</div>
+      ) : (
         <table>
           <caption>Scoreboard</caption>
           <thead>
@@ -137,8 +141,6 @@ const Scoreboard = () => {
             ))}
           </tbody>
         </table>
-      ) : (
-        <ErrorMessage className="error-message" text={error} />
       )}
     </div>
   );
