@@ -1,6 +1,6 @@
 .header {
   display: flex;
-  background-color: hsl(0, 0%, 70%);
+  background-color: var(--bg-gray-slightly-light);
   padding: 0 1rem;
 }
 .icon-and-title-wrapper {
@@ -38,14 +38,14 @@
   border-radius: 0.5rem;
   padding: 1rem 1.5rem;
   height: fit-content;
-  background-color: hsl(0, 0%, 70%);
+  background-color: var(--bg-gray-slightly-light);
   cursor: pointer;
   align-self: center;
   margin-left: 10px;
   transition: all 0.2s ease 0.03s;
 }
 .back-button:hover {
-  background-color: hsl(0, 0%, 60%);
+  background-color: var(--bg-gray-slightly-dark);
 }
 .undo-button {
   margin-left: 0;
@@ -55,16 +55,16 @@
   transition: none;
 }
 .undo-button.dark {
-  background-color: hsl(0, 0%, 30%);
+  background-color: var(--bg-gray-very-dark);
 }
 .undo-button:hover {
-  background-color: hsl(0, 0%, 70%);
+  background-color: var(--bg-gray-slightly-light);
 }
 .undo-button:hover.dark,
 .undo-button:hover.dark > .undo-button-arrow,
 .undo-button:hover.dark > .undo-button-text {
   transition: none;
-  background-color: hsl(0, 0%, 60%);
+  background-color: var(--bg-gray-slightly-dark);
 }
 .back-button-arrow,
 .undo-button-arrow {
@@ -177,7 +177,7 @@
     border-radius: 0;
     width: 100%;
     margin-left: 0;
-    background-color: hsl(0, 0%, 70%);
+    background-color: var(--bg-gray-slightly-light);
     justify-content: center;
   }
   .hamburger-menu-content.hamburger-open {

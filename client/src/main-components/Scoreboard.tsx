@@ -86,7 +86,7 @@ const Scoreboard = () => {
     } else {
       setError("Something went wrong.");
     }
-    setTimeout(() => setLoading(false), 500);
+    setTimeout(() => setLoading(false), 250);
   }
 
   return (
@@ -98,7 +98,7 @@ const Scoreboard = () => {
       ) : scores.length < 1 ? (
         <div>No scores to show.</div>
       ) : (
-        <table>
+        <table className="scoreboard-table">
           <caption>Scoreboard</caption>
           <thead>
             <tr>

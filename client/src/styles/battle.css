@@ -74,7 +74,8 @@
 
 @media only screen and (max-width: 425px) {
   .players-turn,
-  .winner-text {
+  .winner-text,
+  .thinking-small {
     font-size: calc(var(--medium-size-text) * 1.1);
   }
   .thinking-large {

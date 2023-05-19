@@ -26,11 +26,11 @@
   transition: all 0.2s ease 0.03s;
 }
 .play-as-buttons-wrapper > * {
-  background-color: hsl(0, 0%, 50%);
+  background-color: gray;
 }
 .play-as-buttons-wrapper > *:hover:not(.O, .Random, .X) {
   color: black;
-  background-color: hsl(0, 0%, 85%);
+  background-color: var(--bg-gray-light);
 }
 .selected-difficulty {
   box-shadow: 0 0 10px lightcoral, 0 0 10px lightcoral;
@@ -53,7 +53,7 @@
 .Random,
 .X {
   color: black;
-  background-color: hsl(0, 0%, 100%);
+  background-color: white;
   box-shadow: 0 0 10px lightcoral, 0 0 10px lightcoral;
 }
 
