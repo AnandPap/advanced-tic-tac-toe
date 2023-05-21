@@ -4,6 +4,7 @@ import { useAppSelector } from "../redux/hooks";
 import TableHeaderCell from "./TableHeaderCell";
 import ErrorMessage from "./ErrorMessage";
 import { useNavigate } from "react-router-dom";
+import { errorHandler } from "../helpers/error-functions";
 
 export interface Score {
   [key: string]: string | number;
@@ -58,7 +59,7 @@ const Scoreboard = () => {
   async function getScores() {
     setLoading(true);
     const res = await getResults();
-    if (res) {
+    if (res && !("code" in res)) {
       const playerNamesSet: Set<string> = new Set();
       const unsortedScores: Score[] = [];
       for (let i = 0; i < res.length; i++) {
@@ -84,7 +85,7 @@ const Scoreboard = () => {
       }
       sortScores(unsortedScores, "playerName", "down");
     } else {
-      setError("Something went wrong.");
+      setError(errorHandler(res));
     }
     setTimeout(() => setLoading(false), 250);
   }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getAxiosErrorObject } from "./error-functions";
 
 let ORIGIN = "";
 if (import.meta.env.PROD)
@@ -10,11 +11,6 @@ export type Result = {
   player2: string;
   winner: string;
   date: number;
-};
-
-export type Error = {
-  code: number | undefined;
-  errorMessage: string;
 };
 
 export async function saveResult(result: Result) {
@@ -31,7 +27,7 @@ export async function getResults() {
     const res = await axios.get<Result[]>(`${ORIGIN}/api/results`);
     return res.data;
   } catch (err) {
-    return undefined;
+    return getAxiosErrorObject(err);
   }
 }
 
@@ -42,12 +38,6 @@ export async function getPlayerResults(playerName: string) {
     );
     return res.data;
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      const errorObject: Error = {
-        code: err.response?.status,
-        errorMessage: err.response?.data || err.response?.statusText,
-      };
-      return errorObject;
-    } else return undefined;
+    return getAxiosErrorObject(err);
   }
 }

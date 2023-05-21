@@ -3,7 +3,6 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface InitialStateType {
   theme: "dark" | "light";
-  loading: boolean;
   playAs: string;
   players: PlayersType;
 }
@@ -19,7 +18,6 @@ type PlayersActionType = {
 
 export const initialState: InitialStateType = {
   theme: "dark",
-  loading: false,
   playAs: "Random",
   players: { player1: "", player2: "" },
 };
@@ -31,9 +29,6 @@ export const tictactoeSlice = createSlice({
     setTheme: (state, action: PayloadAction<"dark" | "light">) => {
       state.theme = action.payload;
     },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
-    },
     setPlayAs: (state, action: PayloadAction<string>) => {
       state.playAs = action.payload;
     },
@@ -43,7 +38,6 @@ export const tictactoeSlice = createSlice({
   },
 });
 
-export const { setTheme, setLoading, setPlayAs, setPlayers } =
-  tictactoeSlice.actions;
+export const { setTheme, setPlayAs, setPlayers } = tictactoeSlice.actions;
 
 export default tictactoeSlice.reducer;
