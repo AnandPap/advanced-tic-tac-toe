@@ -76,7 +76,7 @@
   .players-turn,
   .winner-text,
   .thinking-small {
-    font-size: calc(var(--medium-size-text) * 1.1);
+    font-size: calc(var(--medium-size-text));
   }
   .thinking-large {
     display: none;

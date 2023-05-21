@@ -91,11 +91,11 @@ const Scoreboard = () => {
   }
 
   return (
-    <div className={`scoreboard-wrapper ${theme}`}>
+    <>
       {loading ? (
         <div>Loading...</div>
       ) : error ? (
-        <ErrorMessage className="error-message" text={error} />
+        <ErrorMessage className="not-found" text={error} />
       ) : scores.length < 1 ? (
         <div>No scores to show.</div>
       ) : (
@@ -143,7 +143,7 @@ const Scoreboard = () => {
           </tbody>
         </table>
       )}
-    </div>
+    </>
   );
 };
 

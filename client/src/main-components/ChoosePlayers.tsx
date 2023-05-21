@@ -28,7 +28,7 @@ const ChoosePlayers = () => {
   };
 
   return (
-    <div className={`${theme} players-form-wrapper`}>
+    <>
       <form
         className={`${theme} players-form`}
         onSubmit={(e) => handleSubmit(e)}
@@ -65,7 +65,7 @@ const ChoosePlayers = () => {
       {errorMessage && (
         <ErrorMessage className="error-message" text={errorMessage} />
       )}
-    </div>
+    </>
   );
 };
 

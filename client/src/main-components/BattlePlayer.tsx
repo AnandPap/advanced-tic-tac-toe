@@ -144,67 +144,62 @@ const BattlePlayer = () => {
   }
 
   return (
-    <div className={`${theme} battle-screen-wrapper`}>
-      <div className="battle-screen">
-        {!winner ? (
-          <div className="battle-status-bar">
-            <p className="players-turn">
-              It's
-              {` ${players[checkCurrentTurn()]}`}
-              's turn.
-            </p>
-            {playerXMoves.length + playerOMoves.length > 0 && (
-              <div className="undo-button-wrapper">
-                <BackButton
-                  className={`${theme} undo-button`}
-                  text="Undo"
-                  onClick={undoHandler}
-                />
-              </div>
-            )}
-          </div>
-        ) : (
-          <p className="winner-text">
-            {winner === "tie" ? "It's a tie!" : `${players[winner]} wins!`}
+    <div className="battle-screen">
+      {!winner ? (
+        <div className="battle-status-bar">
+          <p className="players-turn">
+            It's
+            {` ${players[checkCurrentTurn()]}`}
+            's turn.
           </p>
-        )}
-        <div className="board-wrapper">
-          <div className="board-container">
-            {[...Array(9)].map((item, i) => (
-              <Cell
-                key={i}
-                i={i + 1}
-                winner={winner}
-                currentSymbol={currentSymbol}
-                playerXMoves={playerXMoves}
-                playerOMoves={playerOMoves}
-                handleCellClick={handleCellClick}
+          {playerXMoves.length + playerOMoves.length > 0 && (
+            <div className="undo-button-wrapper">
+              <BackButton
+                className={`${theme} undo-button`}
+                text="Undo"
+                onClick={undoHandler}
               />
-            ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <p className="winner-text">
+          {winner === "tie" ? "It's a tie!" : `${players[winner]} wins!`}
+        </p>
+      )}
+      <div className="board-wrapper">
+        <div className="board-container">
+          {[...Array(9)].map((item, i) => (
+            <Cell
+              key={i}
+              i={i + 1}
+              winner={winner}
+              currentSymbol={currentSymbol}
+              playerXMoves={playerXMoves}
+              playerOMoves={playerOMoves}
+              handleCellClick={handleCellClick}
+            />
+          ))}
+        </div>
+      </div>
+      {winner && (
+        <div className="endgame">
+          <div className="endgame-buttons-wrapper">
+            <button className="button" onClick={handleGameReset}>
+              New Round
+            </button>
+            <button className="button" onClick={handlePlayerReset}>
+              Reset Players
+            </button>
+            <button className="button" onClick={() => navigate("/scoreboard")}>
+              Scoreboard
+            </button>
           </div>
         </div>
-        {winner && (
-          <div className="endgame">
-            <div className="endgame-buttons-wrapper">
-              <button className="button" onClick={handleGameReset}>
-                New Round
-              </button>
-              <button className="button" onClick={handlePlayerReset}>
-                Reset Players
-              </button>
-              <button
-                className="button"
-                onClick={() => navigate("/scoreboard")}
-              >
-                Scoreboard
-              </button>
-            </div>
-          </div>
-        )}
-        {errorMessage && (
-          <ErrorMessage className="error-message" text={errorMessage} />
-        )}
-      </div>
+      )}
+      {errorMessage && (
+        <ErrorMessage className="error-message" text={errorMessage} />
+      )}
     </div>
   );
 };

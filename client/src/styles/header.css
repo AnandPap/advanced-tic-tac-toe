@@ -2,10 +2,12 @@
   display: flex;
   background-color: var(--bg-gray-slightly-light);
   padding: 0 1rem;
+  margin-bottom: 30px;
 }
 .icon-and-title-wrapper {
   display: flex;
   cursor: pointer;
+  color: black;
 }
 .icon-and-title-wrapper > h1 {
   font-weight: 400;

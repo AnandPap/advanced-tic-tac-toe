@@ -202,78 +202,76 @@ const BattleComputer = () => {
   return difficulty === "easy" ||
     difficulty === "medium" ||
     difficulty === "hard" ? (
-    <div className={`${theme} battle-screen-wrapper`}>
-      <div className="battle-screen">
-        {!winner ? (
-          <div className="battle-status-bar">
-            {computerThinking ? (
-              <div className="computer-is-thinking-wrapper">
-                <span className="thinking-large">Computer is thinking</span>
-                <span className="thinking-small">AI thinking</span>
-                <div className={`dot-elastic ${theme}`}></div>
+    <div className="battle-screen">
+      {!winner ? (
+        <div className="battle-status-bar">
+          {computerThinking ? (
+            <div className="computer-is-thinking-wrapper">
+              <span className="thinking-large">Computer is thinking</span>
+              <span className="thinking-small">AI thinking</span>
+              <div className={`dot-elastic ${theme}`}></div>
+            </div>
+          ) : (
+            <p className="players-turn">It's {player}'s turn.</p>
+          )}
+          {((firstMove === "human" &&
+            playerXMoves.length + playerOMoves.length > 0) ||
+            (firstMove === "computer" &&
+              playerXMoves.length + playerOMoves.length > 2)) &&
+            !computerThinking && (
+              <div className="undo-button-wrapper">
+                <UndoButton
+                  className={`${theme} undo-button`}
+                  text="Undo"
+                  onClick={undoHandler}
+                />
               </div>
-            ) : (
-              <p className="players-turn">It's {player}'s turn.</p>
             )}
-            {((firstMove === "human" &&
-              playerXMoves.length + playerOMoves.length > 0) ||
-              (firstMove === "computer" &&
-                playerXMoves.length + playerOMoves.length > 2)) &&
-              !computerThinking && (
-                <div className="undo-button-wrapper">
-                  <UndoButton
-                    className={`${theme} undo-button`}
-                    text="Undo"
-                    onClick={undoHandler}
-                  />
-                </div>
-              )}
-          </div>
-        ) : (
-          <p className="winner-text">
-            {winner === "tie"
-              ? "It's a Tie!"
-              : winner === "human"
-              ? `${player} wins!`
-              : "Computer wins!"}
-          </p>
-        )}
-        <div className="board-wrapper">
-          <div className="board-container">
-            {[...Array(9)].map((item, i) => (
-              <Cell
-                key={i}
-                i={i + 1}
-                winner={winner}
-                currentSymbol={currentSymbol}
-                playerXMoves={playerXMoves}
-                playerOMoves={playerOMoves}
-                handleCellClick={handleCellClick}
-                computerThinking={computerThinking}
-              />
-            ))}
+        </div>
+      ) : (
+        <p className="winner-text">
+          {winner === "tie"
+            ? "It's a Tie!"
+            : winner === "human"
+            ? `${player} wins!`
+            : "Computer wins!"}
+        </p>
+      )}
+      <div className="board-wrapper">
+        <div className="board-container">
+          {[...Array(9)].map((item, i) => (
+            <Cell
+              key={i}
+              i={i + 1}
+              winner={winner}
+              currentSymbol={currentSymbol}
+              playerXMoves={playerXMoves}
+              playerOMoves={playerOMoves}
+              handleCellClick={handleCellClick}
+              computerThinking={computerThinking}
+            />
+          ))}
+        </div>
+      </div>
+      {winner && (
+        <div className="endgame">
+          <div className="endgame-buttons-wrapper">
+            <button className="button" onClick={handleGameReset}>
+              New Round
+            </button>
+            <button className="button" onClick={handlePlayerReset}>
+              Reset Player
+            </button>
           </div>
         </div>
-        {winner && (
-          <div className="endgame">
-            <div className="endgame-buttons-wrapper">
-              <button className="button" onClick={handleGameReset}>
-                New Round
-              </button>
-              <button className="button" onClick={handlePlayerReset}>
-                Reset Player
-              </button>
-            </div>
-          </div>
-        )}
-        {errorMessage && (
-          <ErrorMessage className="error-message" text={errorMessage} />
-        )}
-      </div>
+      )}
+      {errorMessage && (
+        <ErrorMessage className="error-message" text={errorMessage} />
+      )}
     </div>
   ) : (
     // <Navigate to={"/vs-computer"} replace={true} />
-    <ErrorMessage className="on-empty-page" text="Page not found" />
+    <ErrorMessage className="not-found" text="Page not found" />
   );
 };
 

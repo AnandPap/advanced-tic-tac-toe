@@ -15,27 +15,24 @@
   --bg-gray-very-dark: hsl(0, 0%, 30%);
   --btn-light-blue: hsl(225, 73%, 57%);
   --btn-dark-blue: hsl(225, 88%, 51%);
-  height: 100%;
 }
 body {
   margin: 0;
-  height: 100%;
   font-size: var(--big-size-text);
+  text-align: center;
+  min-height: calc(100vh - 75px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 #root {
-  height: 100%;
+  width: 100%;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill::first-line,
-input:-webkit-autofill:active,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
+input:-webkit-autofill:active {
   font-size: var(--medium-size-text);
   transition: background-color 5000s ease-in-out 0s;
 }
@@ -62,21 +59,6 @@ p {
   transform: scale(1.03);
 }
 
-.home-page-wrapper,
-.choose-difficulty-wrapper,
-.players-form-wrapper,
-.battle-screen-wrapper,
-.on-empty-page-wrapper,
-.scoreboard-wrapper,
-.player-profile-wrapper {
-  text-align: center;
-  padding: 30px 0;
-  min-height: calc(100vh - 75px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .home-page-buttons-wrapper {
   display: flex;
   align-items: center;
@@ -85,20 +67,18 @@ p {
   margin: 30px 0;
 }
 
-.on-empty-page {
+.not-found {
   font-size: calc(var(--big-size-text) * 1.25);
   opacity: 0.7;
   margin: 0 auto;
 }
-.error-message-wrapper {
-  color: hsla(0, 100%, 50%, 0.7);
-}
-.error-message-wrapper.dark {
-  color: lightcoral;
-}
 .error-message {
+  color: hsl(350, 100%, 60%);
   max-width: 350px;
   font-size: var(--big-size-text);
+}
+.error-message.dark {
+  color: hsl(350, 100%, 70%);
 }
 
 .dark {
@@ -110,6 +90,7 @@ p {
   min-width: 70%;
   max-width: 90%;
   border-radius: 0.5rem;
+  margin: 0 auto;
 }
 .scoreboard-table,
 .scoreboard-table caption,
@@ -124,6 +105,10 @@ p {
 .dark .scoreboard-table th,
 .dark .scoreboard-table td {
   border-color: white;
+}
+.dark .scoreboard-table,
+.dark .scoreboard-table caption {
+  background-color: hsl(0, 0%, 35%);
 }
 .scoreboard-table caption {
   font-weight: 600;
@@ -194,15 +179,17 @@ p {
 .opponent-info-wrapper {
   display: flex;
   flex-direction: column;
+  width: fit-content;
+  margin: 0 auto;
   gap: 1rem;
+  max-width: 95%;
 }
-.player-profile-wrapper h4 {
+.player-profile-heading {
   margin-top: 0;
   margin-bottom: 30px;
-  font-weight: 600;
 }
 .opponent-info {
-  box-shadow: 1px 1px 3px black;
+  box-shadow: 0px 0px 1px black;
   border-radius: 2rem;
   padding: 0.25rem 1rem;
   cursor: pointer;
@@ -268,9 +255,9 @@ p {
   align-items: center;
   box-shadow: 0px 0px 2px black;
   border-radius: 0.5rem;
+  font-size: calc(var(--big-size-text) * 0.9);
 }
 .game-info-wrapper > * {
-  font-size: calc(var(--big-size-text) * 0.9);
   display: flex;
   border-bottom: 1px solid black;
   padding: 5px 0;
@@ -309,7 +296,8 @@ p {
 }
 
 @media only screen and (max-width: 425px) {
-  body {
+  body,
+  .game-info-wrapper {
     font-size: calc(var(--small-size-text) * 0.7);
   }
   input:-webkit-autofill,
@@ -329,7 +317,7 @@ p {
   .home-page > p {
     font-size: calc(var(--medium-size-text) * 1.1);
   }
-  .on-empty-page {
+  .not-found {
     font-size: var(--big-size-text);
   }
   .error-message {

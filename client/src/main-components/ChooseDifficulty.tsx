@@ -29,7 +29,7 @@ const ChooseDifficulty = () => {
   };
 
   return (
-    <div className={`choose-difficulty-wrapper ${theme}`}>
+    <>
       <div className="choose-difficulty">
         <p>Choose difficulty:</p>
         <div className="choose-difficulty-buttons-wrapper">
@@ -89,7 +89,7 @@ const ChooseDifficulty = () => {
       {errorMessage && (
         <ErrorMessage className="error-message" text={errorMessage} />
       )}
-    </div>
+    </>
   );
 };
 

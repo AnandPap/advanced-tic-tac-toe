@@ -26,9 +26,7 @@ const MainRouter = () => {
         />
         <Route
           path="*"
-          element={
-            <ErrorMessage className="on-empty-page" text="Page not found" />
-          }
+          element={<ErrorMessage className="not-found" text="Page not found" />}
         />
       </Routes>
     </BrowserRouter>
