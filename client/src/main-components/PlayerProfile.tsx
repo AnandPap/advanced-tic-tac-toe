@@ -89,7 +89,7 @@ const PlayerProfile = () => {
   }
 
   return loading ? (
-    <Loading theme={theme} />
+    <Loading />
   ) : error ? (
     <ErrorMessage className="not-found" text={error} />
   ) : (

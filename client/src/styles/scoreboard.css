@@ -86,6 +86,7 @@ table,
   padding-right: 1rem;
 }
 .opponent-info > :first-child {
+  word-break: break-all;
   flex-grow: 1;
   position: relative;
   padding-left: 2rem;
@@ -98,8 +99,6 @@ table,
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 500ms;
-  width: 95%;
-  margin: auto;
 }
 .opened-accordion {
   grid-template-rows: 1fr;
@@ -108,17 +107,17 @@ table,
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   box-shadow: 0px 0px 2px black;
   border-radius: 0.5rem;
-  padding: 0 0.5rem;
+  padding: 0 1rem;
+  margin: 0 auto;
 }
 .dark .game-info-wrapper {
   background-color: gray;
 }
 .game-info-wrapper > * {
   display: flex;
+  flex-wrap: wrap;
   border-bottom: 1px solid black;
   padding: 5px 0;
 }

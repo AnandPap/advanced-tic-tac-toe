@@ -2,6 +2,7 @@
   position: relative;
   translate: 20px 10px;
   animation: dot-elastic 1s infinite linear;
+  --loading-dot-size: 8px;
 }
 .dot-elastic,
 .dot-elastic::before,
@@ -27,9 +28,9 @@
   left: 15px;
   animation: dot-elastic-after 1s infinite linear;
 }
-.dot-elastic.light,
-.dot-elastic.light::before,
-.dot-elastic.light::after {
+.light .dot-elastic,
+.light .dot-elastic::before,
+.light .dot-elastic::after {
   background-color: black;
   color: black;
 }
@@ -83,5 +84,11 @@
   }
   100% {
     transform: scale(1, 1);
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .dot-elastic {
+    --loading-dot-size: 6px;
   }
 }

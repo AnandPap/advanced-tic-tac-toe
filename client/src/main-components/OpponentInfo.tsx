@@ -29,14 +29,20 @@ const OpponentInfo = ({ gamesInfo, result, i }: OpponentInfoProps) => {
       <div className={`accordion-content ${className}-accordion`}>
         <div className="game-info-wrapper">
           {gamesInfo[i].map((item, i) => (
-            <div key={i} className="game-info">
-              {i + 1}. played at: {item.datePlayed.toLocaleDateString("es-sp")},
-              <div
-                className={
-                  item.winner === result.opponentName ? "red" : "green"
-                }
-              >
-                winner: {item.winner}
+            <div key={i}>
+              <span>
+                {i + 1}. played at:{" "}
+                {item.datePlayed.toLocaleDateString("es-sp")},&nbsp;
+              </span>
+              <div>
+                <span>winner:&nbsp;</span>
+                <span
+                  className={
+                    item.winner === result.opponentName ? "red" : "green"
+                  }
+                >
+                  {item.winner}
+                </span>
               </div>
             </div>
           ))}

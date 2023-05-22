@@ -69,10 +69,10 @@ const BattleComputer = () => {
   }, [winner]);
 
   useEffect(() => {
-    const result = checkWinner(firstMove);
-    if (result) {
-      setWinner(result);
-      setScore((s) => ({ ...s, [result]: s[result] + 1 }));
+    const winner = checkWinner(firstMove);
+    if (winner) {
+      setWinner(winner);
+      setScore((s) => ({ ...s, [winner]: s[winner] + 1 }));
     } else {
       if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
         setCurrentSymbol("X");

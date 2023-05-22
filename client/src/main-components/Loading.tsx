@@ -1,8 +1,8 @@
-const Loading = (props: { theme: string }) => {
+const Loading = () => {
   return (
     <div className="loading-wrapper">
       <span>Loading</span>
-      <div className={`dot-elastic ${props.theme}`}></div>
+      <div className="dot-elastic"></div>
     </div>
   );
 };

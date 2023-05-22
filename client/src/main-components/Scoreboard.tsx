@@ -88,11 +88,11 @@ const Scoreboard = () => {
     } else {
       setError(errorHandler(res));
     }
-    setTimeout(() => setLoading(false), 250);
+    setTimeout(() => setLoading(false), 500);
   }
 
   return loading ? (
-    <Loading theme={theme} />
+    <Loading />
   ) : error ? (
     <ErrorMessage className="not-found" text={error} />
   ) : scores.length < 1 ? (
