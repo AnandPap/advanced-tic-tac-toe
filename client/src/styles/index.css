@@ -19,6 +19,8 @@
 
   --btn-light-blue: hsl(225, 73%, 57%);
   --btn-dark-blue: hsl(225, 88%, 51%);
+
+  --loading-dot-size: 8px;
 }
 body {
   margin: 0;
@@ -91,6 +93,13 @@ p {
   color: white;
 }
 
+.loading-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 @media only screen and (max-width: 425px) {
   :root {
     --fs-small: 1.4rem;
@@ -98,6 +107,8 @@ p {
     --fs-large: 2rem;
     --fs-big: 2.25rem;
     --fs-huge: 4.25rem;
+
+    --loading-dot-size: 6px;
   }
   .button {
     padding: 7px 15px;

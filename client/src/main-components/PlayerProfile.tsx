@@ -5,6 +5,7 @@ import { errorHandler } from "../helpers/error-functions";
 import { useAppSelector } from "../redux/hooks";
 import OpponentInfo from "./OpponentInfo";
 import ErrorMessage from "./ErrorMessage";
+import Loading from "./Loading";
 
 export type OverallInfo = {
   opponentName: string;
@@ -88,7 +89,7 @@ const PlayerProfile = () => {
   }
 
   return loading ? (
-    <div className="loading">Loading...</div>
+    <Loading theme={theme} />
   ) : error ? (
     <ErrorMessage className="not-found" text={error} />
   ) : (

@@ -1,18 +1,16 @@
 .dot-elastic {
   position: relative;
-  width: 8px;
-  height: 8px;
-  border-radius: 5px;
-  background-color: white;
-  color: white;
   translate: 20px 10px;
   animation: dot-elastic 1s infinite linear;
 }
-.dot-elastic.light,
-.dot-elastic.light::before,
-.dot-elastic.light::after {
-  background-color: black;
-  color: black;
+.dot-elastic,
+.dot-elastic::before,
+.dot-elastic::after {
+  width: var(--loading-dot-size);
+  height: var(--loading-dot-size);
+  border-radius: 5px;
+  background-color: white;
+  color: white;
 }
 .dot-elastic::before,
 .dot-elastic::after {
@@ -23,21 +21,17 @@
 }
 .dot-elastic::before {
   left: -15px;
-  width: 8px;
-  height: 8px;
-  border-radius: 5px;
-  background-color: white;
-  color: white;
   animation: dot-elastic-before 1s infinite linear;
 }
 .dot-elastic::after {
   left: 15px;
-  width: 8px;
-  height: 8px;
-  border-radius: 5px;
-  background-color: white;
-  color: white;
   animation: dot-elastic-after 1s infinite linear;
+}
+.dot-elastic.light,
+.dot-elastic.light::before,
+.dot-elastic.light::after {
+  background-color: black;
+  color: black;
 }
 
 @keyframes dot-elastic-before {

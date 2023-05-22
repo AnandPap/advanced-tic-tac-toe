@@ -5,6 +5,7 @@ import TableHeaderCell from "./TableHeaderCell";
 import ErrorMessage from "./ErrorMessage";
 import { useNavigate } from "react-router-dom";
 import { errorHandler } from "../helpers/error-functions";
+import Loading from "./Loading";
 
 export interface Score {
   [key: string]: string | number;
@@ -91,7 +92,7 @@ const Scoreboard = () => {
   }
 
   return loading ? (
-    <div>Loading...</div>
+    <Loading theme={theme} />
   ) : error ? (
     <ErrorMessage className="not-found" text={error} />
   ) : scores.length < 1 ? (
@@ -132,9 +133,9 @@ const Scoreboard = () => {
               navigate(`/scoreboard/player-profile/${score.playerName}`)
             }
           >
-            {Object.keys(score).map((key) => {
+            {Object.keys(score).map((key, i) => {
               return (
-                <td>
+                <td key={i}>
                   {score[key]}
                   {key === "winRate" && "%"}
                 </td>
