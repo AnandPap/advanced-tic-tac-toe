@@ -5,12 +5,9 @@
 }
 .battle-status-bar {
   display: flex;
+  align-items: center;
 }
-.players-turn,
-.winner-text {
-  text-align: center;
-  margin: 0;
-}
+
 .computer-is-thinking-wrapper {
   display: flex;
   justify-content: center;
@@ -36,7 +33,7 @@
   font-family: inherit;
   border: none;
   background-color: white;
-  font-size: var(--board-cell-text);
+  font-size: var(--fs-huge);
   user-select: none;
   width: 100%;
   height: 100%;
@@ -68,15 +65,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
 @media only screen and (max-width: 425px) {
+  .battle-status-bar > :first-child {
+    word-break: break-all;
+  }
   .players-turn,
   .winner-text,
   .thinking-small {
-    font-size: calc(var(--medium-size-text));
   }
   .thinking-large {
     display: none;
@@ -87,14 +86,5 @@
   .board-container {
     width: 300px;
     height: 300px;
-  }
-  .board-cell {
-    font-size: calc(var(--board-cell-text) * 0.85);
-  }
-  .endgame-buttons-wrapper {
-    flex-direction: column;
-  }
-  .endgame-buttons-wrapper {
-    gap: 10px;
   }
 }

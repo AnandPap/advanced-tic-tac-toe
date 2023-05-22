@@ -2,7 +2,7 @@ table,
 caption,
 th,
 td {
-  font-size: var(--medium-size-text);
+  font-size: var(--fs-medium);
   border: 1px solid black;
   border-collapse: collapse;
 }
@@ -35,7 +35,7 @@ tr {
   cursor: pointer;
 }
 tbody > tr:hover {
-  background-color: whitesmoke;
+  background-color: hsl(0, 0%, 90%);
 }
 tbody tr :first-child {
   font-style: italic;
@@ -112,7 +112,7 @@ table,
   align-items: center;
   box-shadow: 0px 0px 2px black;
   border-radius: 0.5rem;
-  font-size: calc(var(--big-size-text) * 0.9);
+  padding: 0 0.5rem;
 }
 .dark .game-info-wrapper {
   background-color: gray;
@@ -193,11 +193,14 @@ table,
   caption,
   th,
   td {
-    font-size: calc(var(--medium-size-text) * 0.8);
+    font-size: var(--fs-small);
     padding: 10px;
   }
   td {
     padding: 0;
+  }
+  .opponent-info-wrapper {
+    font-size: var(--fs-medium);
   }
 }
 
@@ -205,8 +208,10 @@ table,
   caption,
   th,
   td {
-    font-size: calc(var(--medium-size-text) * 0.7);
     padding: 2px;
+  }
+  .opponent-info-wrapper {
+    font-size: var(--fs-small);
   }
   .arrow-down,
   .arrow-up {

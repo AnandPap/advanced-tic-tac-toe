@@ -8,7 +8,7 @@ type ErrorMessageProps = {
 const ErrorMessage = ({ className, text }: ErrorMessageProps) => {
   const theme = useAppSelector((s) => s.tictactoe.theme);
 
-  return <h2 className={`${className} ${theme}`}>{text}</h2>;
+  return <p className={`${className} ${theme}`}>{text}</p>;
 };
 
 export default ErrorMessage;
