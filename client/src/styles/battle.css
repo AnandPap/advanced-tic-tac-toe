@@ -5,7 +5,6 @@
 }
 .battle-status-bar {
   display: flex;
-  align-items: center;
 }
 
 .computer-is-thinking-wrapper {

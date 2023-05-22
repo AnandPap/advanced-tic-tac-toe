@@ -4,6 +4,7 @@ import { getPlayerResults } from "../helpers/fetch-functions";
 import { errorHandler } from "../helpers/error-functions";
 import { useAppSelector } from "../redux/hooks";
 import OpponentInfo from "./OpponentInfo";
+import ErrorMessage from "./ErrorMessage";
 
 export type OverallInfo = {
   opponentName: string;
@@ -27,7 +28,7 @@ const PlayerProfile = () => {
 
   useEffect(() => {
     getPlayerGames(playerName);
-    setTimeout(() => setLoading(false), 250);
+    setTimeout(() => setLoading(false), 500);
   }, []);
 
   async function getPlayerGames(playerName: string | undefined) {
@@ -86,30 +87,19 @@ const PlayerProfile = () => {
     }
   }
 
-  return (
-    <div className={`player-profile-wrapper ${theme}`}>
-      {!error ? (
-        <>
-          <h4>{playerName}'s profile</h4>
-          {!loading ? (
-            <div className="opponent-info-wrapper">
-              {overallInfo.map((result, i) => (
-                <OpponentInfo
-                  gamesInfo={gamesInfo}
-                  result={result}
-                  key={i}
-                  i={i}
-                />
-              ))}
-            </div>
-          ) : (
-            <div>Loading...</div>
-          )}
-        </>
-      ) : (
-        <div>{error}</div>
-      )}
-    </div>
+  return loading ? (
+    <div className="loading">Loading...</div>
+  ) : error ? (
+    <ErrorMessage className="not-found" text={error} />
+  ) : (
+    <>
+      <h4 className="player-profile-heading">{playerName}'s profile</h4>
+      <div className="opponent-info-wrapper">
+        {overallInfo.map((result, i) => (
+          <OpponentInfo gamesInfo={gamesInfo} result={result} key={i} i={i} />
+        ))}
+      </div>
+    </>
   );
 };
 

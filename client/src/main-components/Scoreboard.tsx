@@ -90,60 +90,60 @@ const Scoreboard = () => {
     setTimeout(() => setLoading(false), 250);
   }
 
-  return (
-    <>
-      {loading ? (
-        <div>Loading...</div>
-      ) : error ? (
-        <ErrorMessage className="not-found" text={error} />
-      ) : scores.length < 1 ? (
-        <div>No scores to show.</div>
-      ) : (
-        <table className="scoreboard-table">
-          <caption>Scoreboard</caption>
-          <thead>
-            <tr>
-              {tableHeaderTitles.map((title, i) => (
-                <TableHeaderCell
-                  key={i}
-                  title={title}
-                  className={`arrow-${sortType.direction} ${
-                    sortType.type === title ? "show" : ""
-                  }`}
-                  onClick={() =>
-                    setSortType((s) => {
-                      let direction = "";
-                      if (s.type === title && s.direction === "down")
-                        direction = "up";
-                      else direction = "down";
-                      return {
-                        direction: direction,
-                        type: title,
-                      };
-                    })
-                  }
-                />
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {scores.map((score, i) => (
-              <tr
-                key={i}
-                onClick={() =>
-                  navigate(`/scoreboard/player-profile/${score.playerName}`)
-                }
-              >
-                <td>{score.playerName}</td>
-                <td>{score.gamesPlayed}</td>
-                <td>{score.wins}</td>
-                <td>{score.winRate}%</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </>
+  return loading ? (
+    <div>Loading...</div>
+  ) : error ? (
+    <ErrorMessage className="not-found" text={error} />
+  ) : scores.length < 1 ? (
+    <div>No scores to show.</div>
+  ) : (
+    <table className="scoreboard-table">
+      <caption>Scoreboard</caption>
+      <thead>
+        <tr>
+          {tableHeaderTitles.map((title, i) => (
+            <TableHeaderCell
+              key={i}
+              title={title}
+              className={`arrow-${sortType.direction} ${
+                sortType.type === title ? "show" : ""
+              }`}
+              onClick={() =>
+                setSortType((s) => {
+                  let direction = "";
+                  if (s.type === title && s.direction === "down")
+                    direction = "up";
+                  else direction = "down";
+                  return {
+                    direction: direction,
+                    type: title,
+                  };
+                })
+              }
+            />
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {scores.map((score, i) => (
+          <tr
+            key={i}
+            onClick={() =>
+              navigate(`/scoreboard/player-profile/${score.playerName}`)
+            }
+          >
+            {Object.keys(score).map((key) => {
+              return (
+                <td>
+                  {score[key]}
+                  {key === "winRate" && "%"}
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
 
