@@ -7,6 +7,8 @@ import Cell from "./Cell";
 import BackButton from "../header/BackButton";
 import ErrorMessage from "./ErrorMessage";
 import { saveResult } from "../helpers/fetch-functions";
+import Saving from "./Saving";
+import { errorHandler } from "../helpers/error-functions";
 
 const BattlePlayer = () => {
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
@@ -15,12 +17,14 @@ const BattlePlayer = () => {
   const [gameId, setGameId] = useState(1);
   const [score, setScore] = useState({ player1: 0, player2: 0, tie: 0 });
   const [errorMessage, setErrorMessage] = useState("");
+  const [axiosError, setAxiosError] = useState("");
   const [winner, setWinner] = useState<"player1" | "player2" | "tie" | null>(
     null
   );
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
   );
+  const [saveCompleted, setSaveCompleted] = useState(false);
   const theme = useAppSelector((s) => s.tictactoe.theme);
   const players = useAppSelector((s) => s.tictactoe.players);
   const dispatch = useDispatch();
@@ -62,16 +66,23 @@ const BattlePlayer = () => {
   }, []);
 
   useEffect(() => {
-    const result = checkWinner();
-    if (result) {
-      saveResult({
-        player1: players.player1,
-        player2: players.player2,
-        winner: result,
-        date: Date.now(),
-      });
-      setWinner(result);
-      setScore((s) => ({ ...s, [result]: s[result] + 1 }));
+    const winner = checkWinner();
+    if (winner) {
+      const saveData = async () => {
+        const res = await saveResult({
+          player1: players.player1,
+          player2: players.player2,
+          winner: winner,
+          date: Date.now(),
+        });
+        if (!res || !("winner" in res))
+          setTimeout(() => setAxiosError(errorHandler(res)), 1000);
+        else console.log(res);
+        setTimeout(() => setSaveCompleted(true), 1000);
+      };
+      saveData();
+      setWinner(winner);
+      setScore((s) => ({ ...s, [winner]: s[winner] + 1 }));
       setGameId((s) => s + 1);
     } else {
       if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
@@ -124,6 +135,8 @@ const BattlePlayer = () => {
     setPlayerXMoves([]);
     setPlayerOMoves([]);
     setWinner(null);
+    setSaveCompleted(false);
+    setAxiosError("");
   }
 
   function handlePlayerReset() {
@@ -182,6 +195,12 @@ const BattlePlayer = () => {
           ))}
         </div>
       </div>
+      {winner &&
+        (axiosError ? (
+          <ErrorMessage className="not-found" text={axiosError} />
+        ) : (
+          <Saving saveCompleted={saveCompleted} />
+        ))}
       {winner && (
         <div className="endgame">
           <div className="endgame-buttons-wrapper">

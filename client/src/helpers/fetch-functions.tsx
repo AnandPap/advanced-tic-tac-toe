@@ -15,11 +15,14 @@ export type Result = {
 
 export async function saveResult(result: Result) {
   return await axios
-    .post(`${ORIGIN}/api/results`, result)
+    .post<Result>(`${ORIGIN}/api/results`, result)
     .then((res) => {
       console.log("Saved successfully.");
+      return res.data;
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      return getAxiosErrorObject(err);
+    });
 }
 
 export async function getResults() {

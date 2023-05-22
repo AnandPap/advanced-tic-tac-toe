@@ -1,7 +1,7 @@
 import { useAppSelector } from "../redux/hooks";
 
 type ErrorMessageProps = {
-  className?: string;
+  className?: "error-message" | "not-found";
   text: string;
 };
 
