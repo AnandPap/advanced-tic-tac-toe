@@ -26,7 +26,7 @@ const OpponentInfo = ({ gamesInfo, result, i }: OpponentInfoProps) => {
         <div>Games played: {result.gamesPlayed}</div>
         <div>WR: {result.winRate}%</div>
       </div>
-      <div className={`${className}-accordion accordion-content`}>
+      <div className={`accordion-content ${className}-accordion`}>
         <div className="game-info-wrapper">
           {gamesInfo[i].map((item, i) => (
             <div key={i} className="game-info">

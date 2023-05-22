@@ -6,6 +6,7 @@ import "./styles/pre-battle.css";
 import "./styles/battle.css";
 import "./styles/index.css";
 import "./styles/dots-animation.css";
+import "./styles/scoreboard.css";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 

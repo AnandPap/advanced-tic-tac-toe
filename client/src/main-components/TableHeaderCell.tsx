@@ -6,7 +6,7 @@ const TableHeaderCell = (props: {
   return (
     <th onClick={props.onClick}>
       <div>
-        <p className="header-cell-title">{props.title}</p>
+        <h4 className="header-cell-title">{props.title}</h4>
         <div className={props.className}></div>
       </div>
     </th>

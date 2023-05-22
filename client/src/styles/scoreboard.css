@@ -1,0 +1,223 @@
+table,
+caption,
+th,
+td {
+  font-size: var(--medium-size-text);
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+table {
+  min-width: 70%;
+  max-width: 90%;
+  border-radius: 0.5rem;
+  margin: 0 auto;
+}
+caption {
+  font-weight: 600;
+  border-bottom: none;
+}
+caption,
+th {
+  padding: 10px;
+}
+th > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-cell-title {
+  margin: 0;
+}
+th:hover {
+  background-color: whitesmoke;
+}
+tr {
+  cursor: pointer;
+}
+tbody > tr:hover {
+  background-color: whitesmoke;
+}
+tbody tr :first-child {
+  font-style: italic;
+}
+table,
+.dark caption,
+.dark th,
+.dark td {
+  border-color: white;
+}
+.dark table,
+.dark caption {
+  background-color: hsl(0, 0%, 35%);
+}
+.dark th:hover {
+  background-color: var(--bg-gray-dark);
+}
+.dark tbody > tr:hover {
+  background-color: gray;
+}
+
+.player-profile-heading {
+  margin: 30px 0;
+}
+.opponent-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  margin: 0 auto;
+  gap: 1rem;
+  max-width: 95%;
+}
+.opponent-info {
+  box-shadow: 0px 0px 1px black;
+  border-radius: 2rem;
+  padding: 0.25rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: rgb(250, 250, 250);
+}
+.dark .opponent-info {
+  background-color: var(--bg-gray-dark);
+}
+.opponent-info > * {
+  border-right: 1px solid black;
+  padding-right: 1rem;
+}
+.opponent-info > :first-child {
+  flex-grow: 1;
+  position: relative;
+  padding-left: 2rem;
+}
+.opponent-info > :last-child {
+  border: none;
+  padding: 0rem;
+}
+.accordion-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 500ms;
+  width: 95%;
+  margin: auto;
+}
+.opened-accordion {
+  grid-template-rows: 1fr;
+}
+.game-info-wrapper {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 0px 2px black;
+  border-radius: 0.5rem;
+  font-size: calc(var(--big-size-text) * 0.9);
+}
+.dark .game-info-wrapper {
+  background-color: gray;
+}
+.game-info-wrapper > * {
+  display: flex;
+  border-bottom: 1px solid black;
+  padding: 5px 0;
+}
+.game-info-wrapper > :last-child {
+  border: none;
+}
+
+.arrow-down,
+.arrow-up {
+  visibility: hidden;
+  position: relative;
+  left: 5px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+.arrow-down {
+  border-top: 8px solid black;
+}
+.arrow-up {
+  border-bottom: 8px solid black;
+}
+.dark .arrow-down {
+  border-top: 8px solid white;
+}
+.dark .arrow-up {
+  border-bottom: 8px solid white;
+}
+.arrow-down.show,
+.arrow-up.show {
+  visibility: visible;
+}
+.arrow-right {
+  top: 45%;
+  left: 0.5rem;
+  position: absolute;
+  border: solid black;
+  border-width: 0px 3px 3px 0px;
+  padding: 3.5px;
+  border-color: black;
+  transform: rotate(-45deg);
+}
+.dark .arrow-right {
+  border-color: white;
+}
+.arrow-right.opened {
+  animation: show-accordion 0.25s forwards;
+}
+.arrow-right.closed {
+  animation: hide-accordion 0.25s forwards;
+}
+
+@keyframes show-accordion {
+  0% {
+    transform: rotate(-45deg);
+  }
+  100% {
+    transform: rotate(45deg);
+  }
+}
+@keyframes hide-accordion {
+  0% {
+    transform: rotate(45deg);
+  }
+  100% {
+    transform: rotate(-45deg);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  caption,
+  th,
+  td {
+    font-size: calc(var(--medium-size-text) * 0.8);
+    padding: 10px;
+  }
+  td {
+    padding: 0;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  caption,
+  th,
+  td {
+    font-size: calc(var(--medium-size-text) * 0.7);
+    padding: 2px;
+  }
+  .arrow-down,
+  .arrow-up {
+    left: 0px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+  }
+  .arrow-down {
+    border-top: 7px solid black;
+  }
+  .arrow-up {
+    border-bottom: 7px solid black;
+  }
+}
