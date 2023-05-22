@@ -1,12 +1,5 @@
 # Advanced Tic-Tac-Toe
 
-Project has been completed but with little more work to be done and that is:
-
-1. Implement hard computer player.
-2. Implement scoreboard.
-
-> **Note** Rest of implementations and fixes are coming soon!
-
 ## Deployed version:
 
 https://advanced-tic-tac-toe-anandpap.vercel.app/
