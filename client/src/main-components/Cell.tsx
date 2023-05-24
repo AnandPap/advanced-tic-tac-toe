@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useAppSelector } from "../redux/hooks";
+import { FC, useEffect, useState } from "react";
 
 type CellType = {
   i: number;
@@ -11,7 +10,7 @@ type CellType = {
   computerThinking?: boolean;
 };
 
-const Cell = ({
+const Cell: FC<CellType> = ({
   i,
   winner,
   currentSymbol,
@@ -19,13 +18,12 @@ const Cell = ({
   playerOMoves,
   handleCellClick,
   computerThinking = false,
-}: CellType) => {
+}) => {
   const [cellInput, setCellInput] = useState<string | null>(null);
   const [tempCellInput, setTempCellInput] = useState<string | null>(null);
   const [cellTimeoutId, setCellTimeoutId] = useState<number | undefined>(
     undefined
   );
-  const theme = useAppSelector((s) => s.tictactoe.theme);
   const border =
     i === 2 || i === 8
       ? "border-right-left"
@@ -60,13 +58,13 @@ const Cell = ({
 
   return (
     <div
-      className={`board-cell-wrapper ${border} ${theme}`}
+      className={`board-cell-wrapper ${border}`}
       onClick={() => handleCellClick(cellInput, i)}
     >
       <button
         onMouseEnter={handleSettingTempCellInput}
         onMouseLeave={handleRemovingTempCellInput}
-        className={`board-cell ${theme} ${
+        className={`board-cell ${
           !winner && !cellInput && !computerThinking && "hoverable-board-cell"
         }`}
       >

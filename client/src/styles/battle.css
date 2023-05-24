@@ -38,7 +38,7 @@
   height: 100%;
   text-align: center;
 }
-.board-cell-wrapper.dark {
+.dark .board-cell-wrapper {
   border-color: white;
 }
 .hoverable-board-cell {
@@ -71,10 +71,6 @@
 @media only screen and (max-width: 425px) {
   .battle-status-bar > :first-child {
     word-break: break-all;
-  }
-  .players-turn,
-  .winner-text,
-  .thinking-small {
   }
   .thinking-large {
     display: none;

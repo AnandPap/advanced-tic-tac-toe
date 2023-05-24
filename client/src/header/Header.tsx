@@ -24,8 +24,7 @@ const Header = () => {
     <header className="header" ref={ref}>
       <div
         onClick={() => {
-          if (location.pathname === "/") navigate("/", { replace: true });
-          else navigate("/");
+          if (location.pathname !== "/home") navigate("/home");
         }}
         className="icon-and-title-wrapper"
       >

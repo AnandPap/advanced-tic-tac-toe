@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getResults } from "../helpers/fetch-functions";
-import { useAppSelector } from "../redux/hooks";
 import TableHeaderCell from "./TableHeaderCell";
 import ErrorMessage from "./ErrorMessage";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +22,6 @@ const Scoreboard = () => {
     type: "Player name",
     direction: "down",
   });
-  const theme = useAppSelector((s) => s.tictactoe.theme);
   const navigate = useNavigate();
   const tableHeaderTitles = ["Player name", "Games played", "Wins", "Win rate"];
 

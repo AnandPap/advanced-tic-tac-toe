@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../redux/hooks";
-import { useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { setPlayAs } from "../redux/tictactoe";
 import { useEffect, useState } from "react";
 import ErrorMessage from "./ErrorMessage";
@@ -13,9 +12,8 @@ const ChooseDifficulty = () => {
   const [player, setPlayer] = useState("");
   const levelsOfDifficulty = ["easy", "medium", "hard"];
   const playAsOptions = ["O", "Random", "X"];
-  const theme = useAppSelector((s) => s.tictactoe.theme);
   const playAs = useAppSelector((s) => s.tictactoe.playAs);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,10 +65,7 @@ const ChooseDifficulty = () => {
           })}
         </div>
       </div>
-      <form
-        className={`computer-form ${theme}`}
-        onSubmit={(e) => handleSubmit(e)}
-      >
+      <form className="computer-form" onSubmit={(e) => handleSubmit(e)}>
         <label htmlFor="player">Enter player's name:</label>
         <input
           id="player"

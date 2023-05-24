@@ -1,22 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-interface InitialStateType {
+interface InitialState {
   theme: "dark" | "light";
   playAs: string;
-  players: PlayersType;
+  players: Players;
 }
-
-interface PlayersType {
+interface Players {
   player1: string;
   player2: string;
 }
-
-type PlayersActionType = {
+type PlayersAction = {
   [key: string]: string;
 };
 
-export const initialState: InitialStateType = {
+const initialState: InitialState = {
   theme: "dark",
   playAs: "Random",
   players: { player1: "", player2: "" },
@@ -32,7 +30,7 @@ export const tictactoeSlice = createSlice({
     setPlayAs: (state, action: PayloadAction<string>) => {
       state.playAs = action.payload;
     },
-    setPlayers: (state, action: PayloadAction<PlayersActionType>) => {
+    setPlayers: (state, action: PayloadAction<PlayersAction>) => {
       state.players = { ...state.players, ...action.payload };
     },
   },

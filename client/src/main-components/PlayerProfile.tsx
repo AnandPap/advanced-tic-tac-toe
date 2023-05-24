@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPlayerResults } from "../helpers/fetch-functions";
 import { errorHandler } from "../helpers/error-functions";
-import { useAppSelector } from "../redux/hooks";
 import OpponentInfo from "./OpponentInfo";
 import ErrorMessage from "./ErrorMessage";
 import Loading from "./Loading";
@@ -24,7 +23,6 @@ const PlayerProfile = () => {
   const [gamesInfo, setGamesInfo] = useState<GamesInfo[][]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const theme = useAppSelector((s) => s.tictactoe.theme);
   const { playerName } = useParams();
 
   useEffect(() => {

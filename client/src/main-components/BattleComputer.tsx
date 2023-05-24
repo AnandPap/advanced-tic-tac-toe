@@ -30,7 +30,6 @@ const BattleComputer = () => {
     () => Math.floor(Math.random() * 2) + 1,
     [winner]
   );
-  const theme = useAppSelector((s) => s.tictactoe.theme);
   const playAs = useAppSelector((s) => s.tictactoe.playAs);
   const navigate = useNavigate();
   const { difficulty } = useParams();
@@ -209,7 +208,7 @@ const BattleComputer = () => {
             <div className="computer-is-thinking-wrapper">
               <span className="thinking-large">Computer is thinking</span>
               <span className="thinking-small">AI thinking</span>
-              <div className={`dot-elastic ${theme}`}></div>
+              <div className="dot-elastic"></div>
             </div>
           ) : (
             <p className="players-turn">It's {player}'s turn.</p>
@@ -221,7 +220,7 @@ const BattleComputer = () => {
             !computerThinking && (
               <div className="undo-button-wrapper">
                 <UndoButton
-                  className={`${theme} undo-button`}
+                  className="undo-button"
                   text="Undo"
                   onClick={undoHandler}
                 />

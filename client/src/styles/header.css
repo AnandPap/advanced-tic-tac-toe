@@ -2,7 +2,6 @@
   display: flex;
   background-color: var(--bg-gray-slightly-light);
   padding-left: 1rem;
-  margin-bottom: 30px;
 }
 .icon-and-title-wrapper {
   display: flex;
@@ -57,16 +56,16 @@
   background-color: white;
   transition: none;
 }
-.undo-button.dark {
+.dark .undo-button {
+  color: white;
   background-color: var(--bg-gray-very-dark);
 }
 .undo-button:hover {
   background-color: var(--bg-gray-slightly-light);
 }
-.undo-button:hover.dark,
-.undo-button:hover.dark > .undo-button-arrow,
-.undo-button:hover.dark > .undo-button-text {
-  transition: none;
+.dark .undo-button:hover,
+.dark .undo-button:hover > .undo-button-arrow,
+.dark .undo-button:hover > .undo-button-text {
   background-color: var(--bg-gray-slightly-dark);
 }
 .back-button-arrow,
@@ -79,7 +78,7 @@
   transform: rotate(45deg);
   -webkit-transform: rotate(135deg);
 }
-.undo-button-arrow.dark {
+.dark .undo-button-arrow {
   border-color: white;
 }
 .back-button-text,

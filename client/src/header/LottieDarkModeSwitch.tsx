@@ -15,10 +15,6 @@ const LottieDarkModeSwitch = () => {
   const sunFrame = 30;
   const moonFrame = 180;
 
-  const d = document.getElementsByTagName("body");
-  d[0]?.classList.add(theme);
-  d[0]?.classList.remove(theme === "dark" ? "light" : "dark");
-
   useEffect(() => {
     let item = localStorage.getItem("theme");
     if (item !== null) {

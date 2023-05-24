@@ -11,7 +11,7 @@ const HomePage = () => {
           Computer
         </button>
         <button className="button" onClick={() => navigate("/vs-player")}>
-          Human player
+          Another player
         </button>
       </div>
       <p>Check results:</p>

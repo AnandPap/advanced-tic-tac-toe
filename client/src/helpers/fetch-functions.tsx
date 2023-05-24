@@ -17,7 +17,6 @@ export async function saveResult(result: Result) {
   return await axios
     .post<Result>(`${ORIGIN}/api/results`, result)
     .then((res) => {
-      console.log("Saved successfully.");
       return res.data;
     })
     .catch((err) => {
