@@ -4,20 +4,11 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 interface InitialState {
   theme: "dark" | "light";
   playAs: string;
-  players: Players;
 }
-interface Players {
-  player1: string;
-  player2: string;
-}
-type PlayersAction = {
-  [key: string]: string;
-};
 
 const initialState: InitialState = {
   theme: "dark",
   playAs: "Random",
-  players: { player1: "", player2: "" },
 };
 
 export const tictactoeSlice = createSlice({
@@ -30,12 +21,9 @@ export const tictactoeSlice = createSlice({
     setPlayAs: (state, action: PayloadAction<string>) => {
       state.playAs = action.payload;
     },
-    setPlayers: (state, action: PayloadAction<PlayersAction>) => {
-      state.players = { ...state.players, ...action.payload };
-    },
   },
 });
 
-export const { setTheme, setPlayAs, setPlayers } = tictactoeSlice.actions;
+export const { setTheme, setPlayAs } = tictactoeSlice.actions;
 
 export default tictactoeSlice.reducer;

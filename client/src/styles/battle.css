@@ -31,7 +31,8 @@
 .board-cell {
   font-family: inherit;
   border: none;
-  background-color: white;
+  background-color: transparent;
+  color: inherit;
   font-size: var(--fs-huge);
   user-select: none;
   width: 100%;

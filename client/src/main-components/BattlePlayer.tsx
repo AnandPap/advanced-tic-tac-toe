@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useAppSelector } from "../redux/hooks";
-import { useDispatch } from "react-redux";
-import { setPlayers } from "../redux/tictactoe";
 import Cell from "./Cell";
 import BackButton from "../header/BackButton";
 import ErrorMessage from "./ErrorMessage";
@@ -11,6 +8,7 @@ import Saving from "./Saving";
 import { errorHandler } from "../helpers/error-functions";
 
 const BattlePlayer = () => {
+  const [players, setPlayers] = useState({ player1: "", player2: "" });
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
   const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
@@ -25,9 +23,6 @@ const BattlePlayer = () => {
     undefined
   );
   const [saveCompleted, setSaveCompleted] = useState(false);
-  const theme = useAppSelector((s) => s.tictactoe.theme);
-  const players = useAppSelector((s) => s.tictactoe.players);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams({
     player1: "",
@@ -54,12 +49,7 @@ const BattlePlayer = () => {
       player1Name.length > 1 &&
       player2Name.length > 1
     ) {
-      dispatch(setPlayers({ player1: player1Name, player2: player2Name }));
-    } else if (players.player1.length > 1 && players.player2.length > 1) {
-      setSearchParams(
-        { player1: players.player1, player2: players.player2 },
-        { replace: true }
-      );
+      setPlayers({ player1: player1Name, player2: player2Name });
     } else {
       navigate("/vs-player", { replace: true });
     }
@@ -168,7 +158,7 @@ const BattlePlayer = () => {
           {playerXMoves.length + playerOMoves.length > 0 && (
             <div className="undo-button-wrapper">
               <BackButton
-                className={`${theme} undo-button`}
+                className="undo-button"
                 text="Undo"
                 onClick={undoHandler}
               />
