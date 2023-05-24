@@ -1,18 +1,18 @@
 type HamburgerMenuProps = {
-  displayHamburgerContent: boolean;
-  setDisplayHamburgerContent: React.Dispatch<React.SetStateAction<boolean>>;
+  displayContent: boolean;
+  setDisplayContent: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const HamburgerMenu = ({
-  displayHamburgerContent,
-  setDisplayHamburgerContent,
+  displayContent,
+  setDisplayContent,
 }: HamburgerMenuProps) => {
   return (
     <div
       className={`hamburger-menu-wrapper ${
-        displayHamburgerContent && "X-close-button hamburger-open"
+        displayContent && "X-close-button hamburger-open"
       }`}
-      onClick={() => setDisplayHamburgerContent((s) => !s)}
+      onClick={() => setDisplayContent((s) => !s)}
     >
       <div className="hamburger-menu"></div>
     </div>

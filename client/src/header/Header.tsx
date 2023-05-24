@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import HamburgerMenu from "./HamburgerMenu";
 
 const Header = () => {
-  const [displayHamburgerContent, setDisplayHamburgerContent] = useState(false);
+  const [displayContent, setDisplayContent] = useState(false);
   const [screenWidth, setScreenWidth] = useState<number | undefined>(undefined);
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const Header = () => {
       </div>
       <div
         className={`header-buttons-wrapper hamburger-menu-content ${
-          displayHamburgerContent && "hamburger-open"
+          displayContent && "hamburger-open"
         }`}
       >
         {location.pathname !== "/" && (
@@ -46,12 +46,12 @@ const Header = () => {
         <LottieDarkModeSwitch />
       </div>
       <ModalCover
-        displayHamburgerContent={displayHamburgerContent}
-        setDisplayHamburgerContent={setDisplayHamburgerContent}
+        displayContent={displayContent}
+        setDisplayContent={setDisplayContent}
       />
       <HamburgerMenu
-        displayHamburgerContent={displayHamburgerContent}
-        setDisplayHamburgerContent={setDisplayHamburgerContent}
+        displayContent={displayContent}
+        setDisplayContent={setDisplayContent}
       />
     </header>
   );

@@ -1,22 +1,15 @@
 type ModalCoverProps = {
-  displayHamburgerContent: boolean;
-  setDisplayHamburgerContent: React.Dispatch<React.SetStateAction<boolean>>;
+  displayContent: boolean;
+  setDisplayContent: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const ModalCover = ({
-  displayHamburgerContent,
-  setDisplayHamburgerContent,
-}: ModalCoverProps) => {
-  return (
-    <>
-      {displayHamburgerContent && (
-        <div
-          className="modal-cover"
-          onClick={() => setDisplayHamburgerContent((s) => !s)}
-        ></div>
-      )}
-    </>
-  );
+const ModalCover = ({ displayContent, setDisplayContent }: ModalCoverProps) => {
+  return displayContent ? (
+    <div
+      className="modal-cover"
+      onClick={() => setDisplayContent((s) => !s)}
+    ></div>
+  ) : null;
 };
 
 export default ModalCover;

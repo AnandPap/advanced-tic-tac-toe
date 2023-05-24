@@ -121,15 +121,15 @@ p {
 }
 .dark .circle-loader {
   border-color: white;
-  border-left-color: rgba(0, 0, 0, 0.5);
+  border-left-color: hsl(0, 0%, 20%);
 }
-.load-complete {
+.load-completed {
   -webkit-animation: none;
   animation: none;
   border-color: rgba(0, 0, 0, 0.5);
   border-width: 3px;
 }
-.dark .load-complete {
+.dark .load-completed {
   border-left-color: white;
 }
 
