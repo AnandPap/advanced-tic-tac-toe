@@ -33,11 +33,8 @@ const Scoreboard = () => {
     const words = sortType.type.split(" ");
     let type = "";
     for (let i = 0; i < words.length; i++) {
-      if (i === 0) {
-        type += words[0].charAt(0).toLowerCase() + words[0].slice(1);
-      } else {
-        type += words[1].charAt(0).toUpperCase() + words[1].slice(1);
-      }
+      if (i === 0) type += words[0].charAt(0).toLowerCase() + words[0].slice(1);
+      else type += words[1].charAt(0).toUpperCase() + words[1].slice(1);
     }
     sortScores(scores, type, sortType.direction);
   }, [sortType.type, sortType.direction]);

@@ -37,7 +37,7 @@ tr {
 tbody > tr:hover {
   background-color: hsl(0, 0%, 90%);
 }
-tbody tr :first-child {
+tbody tr > :first-child {
   font-style: italic;
 }
 table,

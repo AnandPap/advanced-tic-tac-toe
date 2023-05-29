@@ -153,6 +153,12 @@
   z-index: 1;
 }
 
+@media only screen and (max-width: 400px) {
+  .icon-and-title-wrapper > h1 {
+    display: none;
+  }
+}
+
 @media only screen and (max-width: 525px) {
   .app-icon {
     width: 65px;
