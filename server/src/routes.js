@@ -3,7 +3,7 @@ const {
   saveResult,
   fetchResults,
   fetchPlayerResults,
-} = require("./controllers.js");
+} = require("./controllers");
 
 const router = express.Router();
 

@@ -1,4 +1,4 @@
-const Result = require("./result.model");
+const Result = require("./models");
 
 async function saveResult(req, res) {
   const result = new Result(req.body);
