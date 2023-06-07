@@ -187,7 +187,7 @@ const BattlePlayer = () => {
       </div>
       {winner &&
         (axiosError ? (
-          <ErrorMessage className="not-found" text={axiosError} />
+          <ErrorMessage className="error-message" text={axiosError} />
         ) : (
           <Saving saveCompleted={saveCompleted} />
         ))}

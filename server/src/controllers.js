@@ -1,10 +1,10 @@
 const Result = require("./result.model");
 
 async function saveResult(req, res) {
-  const resultModel = new Result(req.body);
+  const result = new Result(req.body);
   try {
-    await resultModel.save();
-    res.status(200).json(resultModel);
+    await result.save();
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

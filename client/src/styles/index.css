@@ -9,6 +9,7 @@
   --fs-medium: 2rem;
   --fs-large: 2.25rem;
   --fs-big: 2.75rem;
+  --fs-very-big: 3rem;
   --fs-huge: 5rem;
 
   --bg-gray-light: hsl(0, 0%, 85%);
@@ -75,9 +76,9 @@ p {
 }
 
 .not-found {
-  font-size: var(--fs-big);
+  font-size: var(--fs-very-big);
   opacity: 0.7;
-  margin-top: 30px;
+  margin: 30px 1rem;
 }
 .error-message {
   color: hsl(350, 100%, 60%);
@@ -89,9 +90,16 @@ p {
   color: hsl(350, 100%, 70%);
 }
 
+.light {
+  background-color: white;
+  color: black;
+}
 .dark {
   background-color: var(--bg-gray-very-dark);
   color: white;
+}
+.dark-mode-switched {
+  transition: all 250ms ease-in-out;
 }
 
 .loading-wrapper {
@@ -196,6 +204,7 @@ p {
     --fs-medium: 1.75rem;
     --fs-large: 2rem;
     --fs-big: 2.25rem;
+    --fs-very-big: 2.5rem;
     --fs-huge: 4.25rem;
   }
   .button {

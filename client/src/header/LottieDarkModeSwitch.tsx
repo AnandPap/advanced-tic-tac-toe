@@ -1,86 +1,73 @@
 import { useEffect, useRef, useState } from "react";
 import Lottie from "lottie-react";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
-import { setTheme } from "../redux/tictactoe";
+import { setDarkMode, setAdditionalDarkModeClass } from "../redux/tictactoe";
 import darkModeButton from "../assets/dark-mode-button1.json";
 import switchSound from "../assets/switch-sound.mp3";
 
 const LottieDarkModeSwitch = () => {
   const [timerID, setTimerID] = useState(-1);
   const lottieRef = useRef<any>();
-  const theme = useAppSelector((state) => state.tictactoe.theme);
+  const darkMode = useAppSelector((state) => state.tictactoe.darkMode);
   const dispatch = useAppDispatch();
   const switchAudio = new Audio(switchSound);
-  const animationSpeed = 10;
+  const animationSpeed = 8;
   const sunFrame = 30;
   const moonFrame = 180;
+  const durationInFrames = moonFrame - sunFrame;
 
   useEffect(() => {
-    let item = localStorage.getItem("theme");
-    if (item !== null) {
-      if (item === "dark") {
+    let isDarkMode = sessionStorage.getItem("darkMode");
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => switchDarkMode(e.matches));
+    if (isDarkMode) {
+      if (isDarkMode === "true") {
         lottieRef.current.goToAndStop(moonFrame, true);
-        dispatch(setTheme("dark"));
+        dispatch(setDarkMode(true));
       } else {
         lottieRef.current.goToAndStop(sunFrame, true);
-        dispatch(setTheme("light"));
+        dispatch(setDarkMode(false));
       }
     } else {
-      if (
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-      ) {
-        lottieRef.current.goToAndStop(moonFrame, true);
-        dispatch(setTheme("dark"));
-        localStorage.setItem("theme", "dark");
-      } else if (
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: light)").matches
-      ) {
-        lottieRef.current.goToAndStop(sunFrame, true);
-        dispatch(setTheme("light"));
-        localStorage.setItem("theme", "light");
-      } else {
-        lottieRef.current.goToAndStop(moonFrame, true);
-        dispatch(setTheme("dark"));
-        localStorage.setItem("theme", "dark");
-      }
+      const isDarkMode = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      handleInitialColorScheme(isDarkMode);
     }
+    return () => {
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .removeEventListener("change", (e) => switchDarkMode(e.matches));
+    };
   }, []);
 
-  const switchDarkMode = (
-    animationSpeed: number,
-    sunFrame: number,
-    moonFrame: number,
-    frameMultiplier: number,
-    currentFrame: number,
-    timerID: number,
-    switchAudio: HTMLAudioElement
-  ) => {
-    const durationInFrames = moonFrame - sunFrame;
+  function handleInitialColorScheme(isDarkMode: boolean) {
+    dispatch(setDarkMode(isDarkMode));
+    lottieRef.current.goToAndStop(isDarkMode ? moonFrame : sunFrame, true);
+    sessionStorage.setItem("darkMode", JSON.stringify(isDarkMode));
+  }
+
+  function handleLottieThemeAnimation(isDarkMode: boolean) {
     lottieRef.current.setSpeed(animationSpeed);
+    lottieRef.current.setDirection(isDarkMode ? 1 : -1);
+    lottieRef.current.goToAndPlay(
+      lottieRef.current.animationItem.currentFrame,
+      true
+    );
+    const tempTimerID = setTimeout(() => {
+      lottieRef.current.goToAndStop(isDarkMode ? moonFrame : sunFrame, true);
+    }, durationInFrames / lottieRef.current.animationItem.frameMult / animationSpeed);
+    setTimerID(tempTimerID);
+  }
+
+  const switchDarkMode = (isDarkMode: boolean) => {
     switchAudio.play();
     clearTimeout(timerID);
-
-    if (theme === "dark") {
-      localStorage.setItem("theme", "light");
-      lottieRef.current.setDirection(-1);
-      lottieRef.current.goToAndPlay(currentFrame, true);
-      const tempTimerID = setTimeout(() => {
-        lottieRef.current.goToAndStop(sunFrame, true);
-      }, durationInFrames / frameMultiplier / animationSpeed);
-      setTimerID(tempTimerID);
-      dispatch(setTheme("light"));
-    } else {
-      localStorage.setItem("theme", "dark");
-      lottieRef.current.setDirection(1);
-      lottieRef.current.goToAndPlay(currentFrame, true);
-      const tempTimerID = setTimeout(() => {
-        lottieRef.current.goToAndStop(moonFrame, true);
-      }, durationInFrames / frameMultiplier / animationSpeed);
-      setTimerID(tempTimerID);
-      dispatch(setTheme("dark"));
-    }
+    dispatch(setDarkMode(isDarkMode));
+    dispatch(setAdditionalDarkModeClass(true));
+    sessionStorage.setItem("darkMode", JSON.stringify(isDarkMode));
+    handleLottieThemeAnimation(isDarkMode);
   };
 
   return (
@@ -89,30 +76,10 @@ const LottieDarkModeSwitch = () => {
         lottieRef={lottieRef}
         animationData={darkModeButton}
         autoplay={false}
-        className={`dark-mode-button`}
-        onClick={() =>
-          switchDarkMode(
-            animationSpeed,
-            sunFrame,
-            moonFrame,
-            lottieRef.current.animationItem.frameMult,
-            lottieRef.current.animationItem.currentFrame,
-            timerID,
-            switchAudio
-          )
-        }
+        className="dark-mode-button"
+        onClick={() => switchDarkMode(!darkMode)}
         onKeyDown={(e) =>
-          e.key.match(/(Enter)/g)
-            ? switchDarkMode(
-                animationSpeed,
-                sunFrame,
-                moonFrame,
-                lottieRef.current.animationItem.frameMult,
-                lottieRef.current.animationItem.currentFrame,
-                timerID,
-                switchAudio
-              )
-            : null
+          e.key.match(/(Enter)/g) ? switchDarkMode(!darkMode) : null
         }
         tabIndex={0}
       />

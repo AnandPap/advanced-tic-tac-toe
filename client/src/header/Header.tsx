@@ -28,7 +28,7 @@ const Header = () => {
           displayContent && "hamburger-open"
         }`}
       >
-        {location.pathname !== "/" && (
+        {location.pathname !== "/home" && (
           <BackButton
             className="back-button"
             text="Back"
