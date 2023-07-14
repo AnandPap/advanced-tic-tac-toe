@@ -24,7 +24,7 @@ export async function saveResult(result: Result) {
     });
 }
 
-export async function getResults() {
+export async function fetchResults() {
   try {
     const res = await axios.get<Result[]>(`${ORIGIN}/api/results`);
     return res.data;
@@ -33,7 +33,7 @@ export async function getResults() {
   }
 }
 
-export async function getPlayerResults(playerName: string) {
+export async function fetchPlayerResults(playerName: string) {
   try {
     const res = await axios.get<Result[]>(
       `${ORIGIN}/api/player-results/${playerName}`

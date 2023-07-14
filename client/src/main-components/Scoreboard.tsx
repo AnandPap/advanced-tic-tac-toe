@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getResults } from "../helpers/fetch-functions";
+import { fetchResults } from "../helpers/fetch-functions";
 import TableHeaderCell from "./TableHeaderCell";
 import ErrorMessage from "./ErrorMessage";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ const Scoreboard = () => {
   const tableHeaderTitles = ["Player name", "Games played", "Wins", "Win rate"];
 
   useEffect(() => {
-    getScores();
+    getResults();
   }, []);
 
   useEffect(() => {
@@ -52,34 +52,40 @@ const Scoreboard = () => {
     setScores(clonedScores);
   }
 
-  async function getScores() {
+  async function getResults() {
     setLoading(true);
-    const res = await getResults();
+    const res = await fetchResults();
     if (res && !("code" in res)) {
-      const playerNamesSet: Set<string> = new Set();
-      const unsortedScores: Score[] = [];
-      for (let i = 0; i < res.length; i++) {
-        playerNamesSet.add(res[i].player1);
-        playerNamesSet.add(res[i].player2);
-      }
-      for (const playerName of playerNamesSet.values()) {
-        const playerScoreObject = { gamesPlayed: 0, wins: 0 };
+      if (res.length === 0) setError("No results");
+      else {
+        const playerNamesSet: Set<string> = new Set();
+        const unsortedScores: Score[] = [];
         for (let i = 0; i < res.length; i++) {
-          if (res[i].player1 === playerName || res[i].player2 === playerName) {
-            playerScoreObject.gamesPlayed += 1;
-            if (res[i][res[i].winner] === playerName)
-              playerScoreObject.wins += 1;
-          }
+          playerNamesSet.add(res[i].player1);
+          playerNamesSet.add(res[i].player2);
         }
-        unsortedScores.push({
-          playerName: playerName,
-          ...playerScoreObject,
-          winRate: Math.round(
-            (playerScoreObject.wins / playerScoreObject.gamesPlayed) * 100
-          ),
-        });
+        for (const playerName of playerNamesSet.values()) {
+          const playerScoreObject = { gamesPlayed: 0, wins: 0 };
+          for (let i = 0; i < res.length; i++) {
+            if (
+              res[i].player1 === playerName ||
+              res[i].player2 === playerName
+            ) {
+              playerScoreObject.gamesPlayed += 1;
+              if (res[i][res[i].winner] === playerName)
+                playerScoreObject.wins += 1;
+            }
+          }
+          unsortedScores.push({
+            playerName: playerName,
+            ...playerScoreObject,
+            winRate: Math.round(
+              (playerScoreObject.wins / playerScoreObject.gamesPlayed) * 100
+            ),
+          });
+        }
+        sortScores(unsortedScores, "playerName", "down");
       }
-      sortScores(unsortedScores, "playerName", "down");
     } else {
       setError(errorHandler(res));
     }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPlayerResults } from "../helpers/fetch-functions";
+import { fetchPlayerResults } from "../helpers/fetch-functions";
 import { errorHandler } from "../helpers/error-functions";
 import OpponentInfo from "./OpponentInfo";
 import ErrorMessage from "./ErrorMessage";
@@ -26,13 +26,13 @@ const PlayerProfile = () => {
   const { playerName } = useParams();
 
   useEffect(() => {
-    getPlayerGames(playerName);
+    getPlayerResults(playerName);
     setTimeout(() => setLoading(false), 500);
   }, []);
 
-  async function getPlayerGames(playerName: string | undefined) {
+  async function getPlayerResults(playerName: string | undefined) {
     if (playerName) {
-      const res = await getPlayerResults(playerName);
+      const res = await fetchPlayerResults(playerName);
       if (res && !("code" in res)) {
         const playerNameSet: Set<string> = new Set();
         const overallInfoTemp: OverallInfo[] = [];
