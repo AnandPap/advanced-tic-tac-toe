@@ -9,7 +9,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: "https://advanced-tic-tac-toe-anandpap.vercel.app" }));
+app.use(cors());
 
 app.use(router);
 
