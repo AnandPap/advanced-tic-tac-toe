@@ -15,6 +15,8 @@ const ChoosePlayers = () => {
       setErrorMessage("Please enter player1 name.");
     else if (players.player2.length < 2)
       setErrorMessage("Please enter player2 name.");
+    else if (players.player1 === players.player2)
+      setErrorMessage("Players must have different names");
     else
       navigate(`battle?player1=${players.player1}&player2=${players.player2}`);
   };

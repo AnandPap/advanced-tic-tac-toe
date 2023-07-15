@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-interface InitialState {
+export interface InitialState {
   darkMode: boolean;
   additionalDarkModeClass: boolean;
   playAs: string;
