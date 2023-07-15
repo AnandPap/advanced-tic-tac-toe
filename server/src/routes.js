@@ -8,6 +8,6 @@ const {
 const router = express.Router();
 
 router.route("/api/results").post(saveResult).get(fetchResults);
-router.route("/api/player-results/:ids").get(fetchPlayerResults);
+router.route("/api/player-results/:id").get(fetchPlayerResults);
 
 module.exports = router;

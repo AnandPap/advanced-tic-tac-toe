@@ -24,7 +24,7 @@ async function fetchResults(req, res) {
 async function fetchPlayerResults(req, res) {
   try {
     const playerResults = await Result.find({
-      $or: [{ player1: req.params.ids }, { player2: req.params.ids }],
+      $or: [{ player1: req.params.id }, { player2: req.params.id }],
     });
     if (playerResults.length < 1) res.status(404).json("User not found.");
     else res.status(200).json(playerResults);

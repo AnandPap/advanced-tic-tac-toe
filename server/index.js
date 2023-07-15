@@ -13,9 +13,8 @@ app.use(cors());
 
 app.use(router);
 
-app.listen(config.port, (err) => {
-  if (err) console.log(err);
-  console.log("Server started.");
+app.listen(config.port, () => {
+  console.log(`Server started on port: ${config.port}`);
 });
 
 mongoose
