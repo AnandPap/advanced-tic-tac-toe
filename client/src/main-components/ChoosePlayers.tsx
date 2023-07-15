@@ -44,11 +44,7 @@ const ChoosePlayers = () => {
           setErrorMessage("");
         }}
       />
-      <button
-        //   disabled={players.player1.length < 2 || players.player2.length < 2}
-        type="submit"
-        className="button"
-      >
+      <button type="submit" className="button">
         Start battle
       </button>
       {errorMessage && (

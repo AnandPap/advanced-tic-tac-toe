@@ -53,7 +53,6 @@ const Scoreboard = () => {
   }
 
   async function getResults() {
-    setLoading(true);
     const res = await fetchResults();
     if (res && !("code" in res)) {
       if (res.length === 0) setError("No results");

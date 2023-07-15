@@ -80,6 +80,11 @@ p {
   opacity: 0.7;
   margin: 30px 1rem;
 }
+.error-boundary {
+  margin: 30px;
+  white-space: pre-line;
+  text-align: center;
+}
 .error-message {
   color: hsl(350, 100%, 60%);
   margin: 30px auto 0;

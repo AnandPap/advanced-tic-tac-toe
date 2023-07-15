@@ -1,5 +1,5 @@
 type ErrorMessageProps = {
-  className?: "error-message" | "not-found";
+  className?: "error-message" | "not-found" | string;
   text: string;
 };
 
