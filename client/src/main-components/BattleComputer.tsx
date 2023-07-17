@@ -24,10 +24,12 @@ const BattleComputer = () => {
     [winner]
   );
   const playAs = useAppSelector((s) => s.tictactoe.playAs);
-  const navigate = useNavigate();
   const { difficulty } = useParams();
+  const moveTime =
+    difficulty === "easy" ? 800 : difficulty === "medium" ? 1150 : 1500;
   const [searchParams, setSearchParams] = useSearchParams();
   const player = searchParams.get("player");
+  const navigate = useNavigate();
 
   const {
     checkWinner,
@@ -156,7 +158,7 @@ const BattleComputer = () => {
       else moveToMake = hardMove();
       handleMoveMade("computer", moveToMake);
       setComputerThinking(false);
-    }, 1000);
+    }, moveTime);
   }
 
   function handleCellClick(cellInput: string | null, i: number) {

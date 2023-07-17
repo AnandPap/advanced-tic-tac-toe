@@ -129,7 +129,6 @@ const BattlePlayer = () => {
         winningPattern.every((value) => playerXMoves.includes(value)) ||
         winningPattern.every((value) => playerOMoves.includes(value))
       ) {
-        window.scrollTo(0, document.body.scrollHeight);
         return checkCurrentTurn();
       }
     }
@@ -165,12 +164,15 @@ const BattlePlayer = () => {
   }
 
   function handleGameReset() {
-    setPlayerXMoves([]);
-    setPlayerOMoves([]);
-    setWinner(null);
-    setSaveCompleted(false);
-    setAxiosError("");
-    setGameId((s) => s + 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => {
+      setPlayerXMoves([]);
+      setPlayerOMoves([]);
+      setWinner(null);
+      setSaveCompleted(false);
+      setAxiosError("");
+      setGameId((s) => s + 1);
+    }, 400);
   }
 
   function handlePlayerReset() {
