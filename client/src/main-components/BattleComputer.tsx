@@ -217,8 +217,8 @@ const BattleComputer = () => {
               i={i + 1}
               winner={winner}
               currentSymbol={currentSymbol}
-              playerXMoves={humanMoves}
-              playerOMoves={computerMoves}
+              humanMoves={humanMoves}
+              computerMoves={computerMoves}
               handleCellClick={handleCellClick}
               computerThinking={computerThinking}
             />

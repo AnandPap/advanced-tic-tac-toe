@@ -4,8 +4,10 @@ type CellType = {
   i: number;
   winner: string | null;
   currentSymbol: string;
-  playerXMoves: number[];
-  playerOMoves: number[];
+  playerXMoves?: number[];
+  playerOMoves?: number[];
+  humanMoves?: number[];
+  computerMoves?: number[];
   handleCellClick: (cellInput: string | null, i: number) => void;
   computerThinking?: boolean;
 };
@@ -14,8 +16,10 @@ const Cell: FC<CellType> = ({
   i,
   winner,
   currentSymbol,
-  playerXMoves,
-  playerOMoves,
+  playerXMoves = null,
+  playerOMoves = null,
+  humanMoves = null,
+  computerMoves = null,
   handleCellClick,
   computerThinking = false,
 }) => {
@@ -34,13 +38,25 @@ const Cell: FC<CellType> = ({
       : "";
 
   useEffect(() => {
-    if (playerOMoves.includes(i) && !cellInput)
+    if (computerMoves && computerMoves.includes(i))
       setCellInput(currentSymbol === "X" ? "O" : "X");
-    if (!playerXMoves.includes(i) && !playerOMoves.includes(i)) {
+  }, [computerMoves]);
+
+  useEffect(() => {
+    if (
+      checkCellReset(playerXMoves, playerOMoves) ||
+      checkCellReset(humanMoves, computerMoves)
+    ) {
       setCellInput(null);
       setTempCellInput(null);
     }
-  }, [playerXMoves, playerOMoves]);
+  }, [playerXMoves, playerOMoves, humanMoves, computerMoves]);
+
+  function checkCellReset(player1: number[] | null, player2: number[] | null) {
+    if (player1 && player2 && !player1.includes(i) && !player2.includes(i)) {
+      return true;
+    } else return false;
+  }
 
   function handleSettingTempCellInput() {
     if (!cellInput && !winner && !computerThinking) {
