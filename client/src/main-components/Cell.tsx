@@ -34,9 +34,9 @@ const Cell: FC<CellType> = ({
       : "";
 
   useEffect(() => {
-    if ((playerXMoves.includes(i) || playerOMoves.includes(i)) && !cellInput)
-      setCellInput(currentSymbol);
-    else if (!playerXMoves.includes(i) && !playerOMoves.includes(i)) {
+    if (playerOMoves.includes(i) && !cellInput)
+      setCellInput(currentSymbol === "X" ? "O" : "X");
+    if (!playerXMoves.includes(i) && !playerOMoves.includes(i)) {
       setCellInput(null);
       setTempCellInput(null);
     }
@@ -59,7 +59,11 @@ const Cell: FC<CellType> = ({
   return (
     <div
       className={`board-cell-wrapper ${border}`}
-      onClick={() => handleCellClick(cellInput, i)}
+      onClick={() => {
+        if (!cellInput && !computerThinking && !winner)
+          setCellInput(currentSymbol);
+        handleCellClick(cellInput, i);
+      }}
     >
       <button
         onMouseEnter={handleSettingTempCellInput}

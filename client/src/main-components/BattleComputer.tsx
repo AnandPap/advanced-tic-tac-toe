@@ -1,28 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  useNavigate,
-  useParams,
-  useSearchParams,
-  // Navigate,
-} from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
-import UndoButton from "../header/BackButton";
+import BackButton from "../header/BackButton";
 import Cell from "./Cell";
 import ErrorMessage from "./ErrorMessage";
 import helperFunctions from "../helpers/helper-functions";
 
+type Winner = "human" | "computer" | "tie" | null;
+
 const BattleComputer = () => {
-  const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
-  const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
+  const [humanMoves, setHumanMoves] = useState<number[]>([]);
+  const [computerMoves, setComputerMoves] = useState<number[]>([]);
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
   const [score, setScore] = useState({ human: 0, computer: 0, tie: 0 });
-  const [undoPressed, setUndoPressed] = useState(false);
   const [computerThinking, setComputerThinking] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [winner, setWinner] = useState<"human" | "computer" | "tie" | null>(
-    null
-  );
-  const [firstMove, setFirstMove] = useState<"human" | "computer">("computer");
+  const [winner, setWinner] = useState<Winner>(null);
   const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
     undefined
   );
@@ -38,77 +31,29 @@ const BattleComputer = () => {
 
   const {
     checkWinner,
-    checkCurrentTurn,
-    makeRandomMove,
+    randomMove,
     checkBestMove,
-    checkIfAdjacent,
+    checkIfFirstAdjacent,
     responseToAdjacentMove,
     makeCornerMove,
     makeAdjacentMove,
-  } = helperFunctions(playerXMoves, playerOMoves, currentSymbol);
+  } = helperFunctions(humanMoves, computerMoves);
 
   useEffect(() => {
     if (!player || player.length < 2)
       navigate("/vs-computer", { replace: true });
+    else handleNewGame();
   }, []);
 
   useEffect(() => {
-    if (!winner) {
-      if ((playAs === "Random" && randomNumber % 2 === 0) || playAs === "X") {
-        setFirstMove("human");
-        setComputerThinking(false);
-      } else {
-        setFirstMove("computer");
-        setComputerThinking(true);
-      }
-
-      setPlayerXMoves([]);
-      setPlayerOMoves([]);
-    }
-  }, [winner]);
-
-  useEffect(() => {
-    const winner = checkWinner(firstMove);
-    if (winner) {
-      setWinner(winner);
-      setScore((s) => ({ ...s, [winner]: s[winner] + 1 }));
-    } else {
-      if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
-        setCurrentSymbol("X");
-      else setCurrentSymbol("O");
-      if (
-        checkCurrentTurn(firstMove) === "human" &&
-        playerXMoves.length > 0 &&
-        !undoPressed
-      )
-        setComputerThinking(true);
-    }
-  }, [playerXMoves, playerOMoves]);
-
-  useEffect(() => {
-    if (computerThinking && !winner) {
-      setTimeout(() => {
-        let moveToMake: number;
-        if (difficulty === "easy") moveToMake = easyMove();
-        else if (difficulty === "medium") moveToMake = mediumMove();
-        else moveToMake = hardMove();
-        if (currentSymbol === "X") setPlayerXMoves((s) => [...s, moveToMake]);
-        else setPlayerOMoves((s) => [...s, moveToMake]);
-        setComputerThinking(false);
-        setErrorMessage("");
-      }, 1500);
-    }
+    if (computerThinking) makeComputerMove();
   }, [computerThinking]);
-
-  function easyMove() {
-    return makeRandomMove();
-  }
 
   function mediumMove() {
     let moveToMake = checkBestMove("winning");
     if (!moveToMake) moveToMake = checkBestMove("blocking");
     if (moveToMake) return moveToMake;
-    return makeRandomMove();
+    return randomMove();
   }
 
   function hardMove() {
@@ -116,126 +61,154 @@ const BattleComputer = () => {
     if (!moveToMake) moveToMake = checkBestMove("blocking");
     if (moveToMake) return moveToMake;
     else {
-      const madeMoves = [...playerXMoves, ...playerOMoves];
+      const madeMoves = [...humanMoves, ...computerMoves];
       if (currentSymbol === "X") {
         if (madeMoves.length === 0) {
           return makeCornerMove();
         } else if (madeMoves.length === 2) {
           // moze lukaviji potez
-          if (playerOMoves[0] === 5) return 10 - playerXMoves[0];
-          else if (playerOMoves[0] + playerXMoves[0] === 10)
+          if (humanMoves[0] === 5) return 10 - computerMoves[0];
+          else if (computerMoves[0] + humanMoves[0] === 10)
             return makeCornerMove();
-          else if (checkIfAdjacent()) return responseToAdjacentMove();
-          else if (/^1|3|7|9$/.test(playerOMoves[0].toString()))
-            return makeCornerMove("adjacent");
+          else if (checkIfFirstAdjacent()) return responseToAdjacentMove();
+          else if (/^1|3|7|9$/.test(humanMoves[0].toString()))
+            return makeCornerMove("adjacentCorner");
           else return 5;
         } else if (madeMoves.length === 4) {
-          if (playerOMoves[0] + playerXMoves[0] === 10) return makeCornerMove();
-          else if (checkIfAdjacent()) return 5;
-          else if (/^1|3|7|9$/.test(playerOMoves[0].toString()))
-            return makeCornerMove();
+          if (checkIfFirstAdjacent()) return 5;
+          else return makeCornerMove();
         }
       } else if (currentSymbol === "O") {
         if (madeMoves.length === 1) {
-          if (playerXMoves[0] === 5) return makeCornerMove();
-          else if (/^1|3|7|9$/.test(playerXMoves[0].toString())) return 5;
+          if (humanMoves[0] === 5) return makeCornerMove();
+          else if (/^1|3|7|9$/.test(humanMoves[0].toString())) return 5;
           else return makeAdjacentMove();
         }
         if (madeMoves.length === 3) {
-          if (playerXMoves[0] === 5) return makeCornerMove();
-          else if (playerXMoves[0] + playerXMoves[1] === 10)
+          if (humanMoves[0] === 5) return makeCornerMove();
+          else if (humanMoves[0] + humanMoves[1] === 10)
             return [2, 4, 6, 8][Math.floor(Math.random() * 4)];
-          else if (playerOMoves[0] !== 5) return 5;
-          return 10 - playerXMoves[0];
+          else if (computerMoves[0] !== 5) return 5;
+          return 10 - humanMoves[0];
         }
       }
-      return makeRandomMove();
+      return randomMove();
     }
   }
 
-  function removeElementFromPlayer1() {
-    let tempArray = [...playerXMoves];
-    tempArray.pop();
-    setPlayerXMoves(tempArray);
-  }
-
-  function removeElementFromPlayer2() {
-    let tempArray = [...playerOMoves];
-    tempArray.pop();
-    setPlayerOMoves(tempArray);
-  }
-
   function undoHandler() {
-    setUndoPressed(true);
     setErrorMessage("");
-    removeElementFromPlayer1();
-    removeElementFromPlayer2();
+    setHumanMoves((s) => s.slice(0, s.length - 1));
+    setComputerMoves((s) => s.slice(0, s.length - 1));
   }
 
-  function handleGameReset() {
+  function handleNewGame() {
     setWinner(null);
+    setCurrentSymbol("X");
+    setHumanMoves([]);
+    setComputerMoves([]);
+    if ((playAs === "Random" && randomNumber % 2 === 0) || playAs === "X")
+      setComputerThinking(false);
+    else setComputerThinking(true);
   }
 
   function handlePlayerReset() {
     navigate("/vs-computer", { replace: true });
   }
 
+  function handleWinner(winner: Winner) {
+    if (winner) {
+      setErrorMessage("");
+      setWinner(winner);
+      setScore((s) => ({ ...s, [winner]: s[winner] + 1 }));
+    }
+  }
+
+  function switchTurn() {
+    setComputerThinking((s) => !s);
+    setErrorMessage("");
+  }
+
+  function handleErrorMessage(errorMessage: string) {
+    setErrorMessage(errorMessage);
+    const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
+    setErrorTimeoutId(timeoutId);
+  }
+
+  function handleMoveMade(player: "human" | "computer", cellNumber: number) {
+    setCurrentSymbol((s) => (s === "X" ? "O" : "X"));
+    const playerMoves = player === "human" ? humanMoves : computerMoves;
+    const tempMoves = [...playerMoves, cellNumber];
+    player === "human" ? setHumanMoves(tempMoves) : setComputerMoves(tempMoves);
+    const winner = checkWinner(tempMoves);
+    if (winner) handleWinner(player);
+    else if (tempMoves.length + playerMoves.length === 9) handleWinner("tie");
+    else {
+      switchTurn();
+    }
+  }
+
+  function makeComputerMove() {
+    setTimeout(() => {
+      let moveToMake: number;
+      if (difficulty === "easy") moveToMake = randomMove();
+      else if (difficulty === "medium") moveToMake = mediumMove();
+      else moveToMake = hardMove();
+      handleMoveMade("computer", moveToMake);
+      setComputerThinking(false);
+    }, 1000);
+  }
+
   function handleCellClick(cellInput: string | null, i: number) {
     clearTimeout(errorTimeoutId);
     if (!cellInput && !winner && !computerThinking) {
-      if (currentSymbol === "X") setPlayerXMoves((s) => [...s, i]);
-      else if (currentSymbol === "O") setPlayerOMoves((s) => [...s, i]);
-      setUndoPressed(false);
-      setErrorMessage("");
-    } else if (!winner && !computerThinking) {
-      setErrorMessage("Choose unoccupied cell!");
-      const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
-      setErrorTimeoutId(timeoutId);
-    } else if (!winner && computerThinking) {
-      setErrorMessage("Computer is thinking!");
-      const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
-      setErrorTimeoutId(timeoutId);
-    }
+      handleMoveMade("human", i);
+    } else if (!winner && !computerThinking)
+      handleErrorMessage("Choose unoccupied cell!");
+    else if (!winner && computerThinking)
+      handleErrorMessage("Computer is thinking!");
+  }
+
+  function checkDisabled() {
+    if (humanMoves.length > 0) return false;
+    return true;
   }
 
   return difficulty === "easy" ||
     difficulty === "medium" ||
     difficulty === "hard" ? (
     <div className="battle-screen">
-      {!winner ? (
-        <div className="battle-status-bar">
-          {computerThinking ? (
+      <div className="battle-status-bar">
+        {!winner ? (
+          computerThinking ? (
             <div className="computer-is-thinking-wrapper">
               <span className="thinking-large">Computer is thinking</span>
               <span className="thinking-small">AI thinking</span>
               <div className="dot-elastic"></div>
             </div>
           ) : (
-            <p className="players-turn">It's {player}'s turn.</p>
-          )}
-          {((firstMove === "human" &&
-            playerXMoves.length + playerOMoves.length > 0) ||
-            (firstMove === "computer" &&
-              playerXMoves.length + playerOMoves.length > 2)) &&
-            !computerThinking && (
+            <>
+              <p className="players-turn">It's {player}'s turn.</p>
               <div className="undo-button-wrapper">
-                <UndoButton
+                <BackButton
                   className="undo-button"
                   text="Undo"
                   onClick={undoHandler}
+                  disabled={checkDisabled()}
                 />
               </div>
-            )}
-        </div>
-      ) : (
-        <p className="winner-text">
-          {winner === "tie"
-            ? "It's a Tie!"
-            : winner === "human"
-            ? `${player} wins!`
-            : "Computer wins!"}
-        </p>
-      )}
+            </>
+          )
+        ) : (
+          <p className="computer-winner-text">
+            {winner === "tie"
+              ? "It's a Tie!"
+              : winner === "human"
+              ? `${player} wins!`
+              : "Computer wins!"}
+          </p>
+        )}
+      </div>
       <div className="board-wrapper">
         <div className="board-container">
           {[...Array(9)].map((item, i) => (
@@ -244,8 +217,8 @@ const BattleComputer = () => {
               i={i + 1}
               winner={winner}
               currentSymbol={currentSymbol}
-              playerXMoves={playerXMoves}
-              playerOMoves={playerOMoves}
+              playerXMoves={humanMoves}
+              playerOMoves={computerMoves}
               handleCellClick={handleCellClick}
               computerThinking={computerThinking}
             />
@@ -255,7 +228,7 @@ const BattleComputer = () => {
       {winner && (
         <div className="endgame">
           <div className="endgame-buttons-wrapper">
-            <button className="button" onClick={handleGameReset}>
+            <button className="button" onClick={handleNewGame}>
               New Round
             </button>
             <button className="button" onClick={handlePlayerReset}>
@@ -269,7 +242,6 @@ const BattleComputer = () => {
       )}
     </div>
   ) : (
-    // <Navigate to={"/vs-computer"} replace={true} />
     <ErrorMessage className="not-found" text="Page not found" />
   );
 };

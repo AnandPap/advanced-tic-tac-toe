@@ -1,8 +1,4 @@
-function helperFunctions(
-  playerXMoves: number[],
-  playerOMoves: number[],
-  currentSymbol: "X" | "O"
-) {
+function helperFunctions(humanMoves: number[], computerMoves: number[]) {
   const winningPatterns = [
     [1, 4, 7],
     [2, 5, 8],
@@ -14,38 +10,25 @@ function helperFunctions(
     [3, 5, 7],
   ];
 
-  function checkWinner(firstMove: "human" | "computer") {
+  function checkWinner(movesArray: number[]) {
     for (let i = 0; i < winningPatterns.length; i++) {
       let winningPattern = winningPatterns[i];
-      if (
-        winningPattern.every((value) => playerXMoves.includes(value)) ||
-        winningPattern.every((value) => playerOMoves.includes(value))
-      )
-        return checkCurrentTurn(firstMove);
+      if (winningPattern.every((value) => movesArray.includes(value)))
+        return true;
     }
-    if (playerXMoves.length + playerOMoves.length === 9) return "tie";
-    return null;
-  }
-
-  function checkCurrentTurn(firstMove: "human" | "computer" | null) {
-    if (
-      (firstMove === "human" && currentSymbol === "X") ||
-      (firstMove === "computer" && currentSymbol === "O")
-    )
-      return "human";
-    else return "computer";
+    return false;
   }
 
   function getAvailableMoves() {
     const availableMoves: number[] = [];
-    const madeMoves = [...playerXMoves, ...playerOMoves];
+    const madeMoves = [...humanMoves, ...computerMoves];
     for (let i = 1; i < 10; i++) {
       if (!madeMoves.includes(i)) availableMoves.push(i);
     }
     return availableMoves;
   }
 
-  function makeRandomMove() {
+  function randomMove() {
     const availableMoves = getAvailableMoves();
     const randomNumber = Math.floor(Math.random() * availableMoves.length);
     return availableMoves[randomNumber];
@@ -54,13 +37,8 @@ function helperFunctions(
   function checkBestMove(type: "winning" | "blocking") {
     const availableMoves = getAvailableMoves();
     const tempMoves: number[] = [];
-    if (
-      (currentSymbol === "X" && type === "winning") ||
-      (currentSymbol === "O" && type === "blocking")
-    )
-      tempMoves.push(...playerXMoves);
-    else tempMoves.push(...playerOMoves);
-
+    if (type === "winning") tempMoves.push(...computerMoves);
+    else tempMoves.push(...humanMoves);
     for (let i = 0; i < availableMoves.length; i++) {
       tempMoves.push(availableMoves[i]);
       for (let j = 0; j < winningPatterns.length; j++) {
@@ -73,16 +51,15 @@ function helperFunctions(
     return null;
   }
 
-  function checkIfAdjacent() {
+  function checkIfFirstAdjacent() {
     if (
-      (playerXMoves[0] === 1 &&
-        (playerOMoves[0] === 2 || playerOMoves[0] === 4)) ||
-      (playerXMoves[0] === 3 &&
-        (playerOMoves[0] === 2 || playerOMoves[0] === 6)) ||
-      (playerXMoves[0] === 7 &&
-        (playerOMoves[0] === 4 || playerOMoves[0] === 8)) ||
-      (playerXMoves[0] === 9 &&
-        (playerOMoves[0] === 6 || playerOMoves[0] === 8))
+      (computerMoves[0] === 1 &&
+        (humanMoves[0] === 2 || humanMoves[0] === 4)) ||
+      (computerMoves[0] === 3 &&
+        (humanMoves[0] === 2 || humanMoves[0] === 6)) ||
+      (computerMoves[0] === 7 &&
+        (humanMoves[0] === 4 || humanMoves[0] === 8)) ||
+      (computerMoves[0] === 9 && (humanMoves[0] === 6 || humanMoves[0] === 8))
     )
       return true;
     else return false;
@@ -90,55 +67,59 @@ function helperFunctions(
 
   function responseToAdjacentMove() {
     if (
-      (playerXMoves[0] === 1 && playerOMoves[0] === 2) ||
-      (playerXMoves[0] === 9 && playerOMoves[0] === 6)
+      (computerMoves[0] === 1 && humanMoves[0] === 2) ||
+      (computerMoves[0] === 9 && humanMoves[0] === 6)
     )
       return 7;
     else if (
-      (playerXMoves[0] === 3 && playerOMoves[0] === 2) ||
-      (playerXMoves[0] === 7 && playerOMoves[0] === 4)
+      (computerMoves[0] === 3 && humanMoves[0] === 2) ||
+      (computerMoves[0] === 7 && humanMoves[0] === 4)
     )
       return 9;
     else if (
-      (playerXMoves[0] === 3 && playerOMoves[0] === 6) ||
-      (playerXMoves[0] === 7 && playerOMoves[0] === 8)
+      (computerMoves[0] === 3 && humanMoves[0] === 6) ||
+      (computerMoves[0] === 7 && humanMoves[0] === 8)
     )
       return 1;
     else if (
-      (playerXMoves[0] === 1 && playerOMoves[0] === 4) ||
-      (playerXMoves[0] === 9 && playerOMoves[0] === 8)
+      (computerMoves[0] === 1 && humanMoves[0] === 4) ||
+      (computerMoves[0] === 9 && humanMoves[0] === 8)
     )
       return 3;
-    return makeRandomMove();
+    return randomMove();
   }
 
   function makeCornerMove(type?: string) {
     const availableMoves = getAvailableMoves();
-    const bestMoves = [1, 3, 7, 9];
-    const availableBestMoves = bestMoves.filter(
-      (element) =>
-        availableMoves.includes(element) &&
-        (type === "adjacent" ? element + playerXMoves[0] !== 10 : true)
-    );
-    return availableBestMoves[
-      Math.floor(Math.random() * availableBestMoves.length)
-    ];
+    const cornerMoves = [1, 3, 7, 9];
+    if (type === "adjacentCorner") {
+      for (let i = 0; i < cornerMoves.length; i++) {
+        if (cornerMoves[i] + humanMoves[0] === 10) return cornerMoves[i];
+      }
+    } else {
+      const availableBestMoves = cornerMoves.filter((element) =>
+        availableMoves.includes(element)
+      );
+      return availableBestMoves[
+        Math.floor(Math.random() * availableBestMoves.length)
+      ];
+    }
+    return randomMove();
   }
 
   function makeAdjacentMove() {
-    if (playerXMoves[0] === 2) return [1, 3][Math.floor(Math.random() * 2)];
-    if (playerXMoves[0] === 4) return [1, 7][Math.floor(Math.random() * 2)];
-    if (playerXMoves[0] === 6) return [3, 9][Math.floor(Math.random() * 2)];
-    if (playerXMoves[0] === 8) return [7, 9][Math.floor(Math.random() * 2)];
-    return makeRandomMove();
+    if (humanMoves[0] === 2) return [1, 3][Math.floor(Math.random() * 2)];
+    if (humanMoves[0] === 4) return [1, 7][Math.floor(Math.random() * 2)];
+    if (humanMoves[0] === 6) return [3, 9][Math.floor(Math.random() * 2)];
+    if (humanMoves[0] === 8) return [7, 9][Math.floor(Math.random() * 2)];
+    return randomMove();
   }
 
   return {
     checkWinner,
-    checkCurrentTurn,
-    makeRandomMove,
+    randomMove,
     checkBestMove,
-    checkIfAdjacent,
+    checkIfFirstAdjacent,
     responseToAdjacentMove,
     makeCornerMove,
     makeAdjacentMove,
