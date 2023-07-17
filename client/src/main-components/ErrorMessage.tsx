@@ -1,10 +1,18 @@
-type ErrorMessageProps = {
+import { forwardRef } from "react";
+
+interface ErrorMessageProps {
   className?: "error-message" | "not-found" | string;
   text: string;
-};
+}
 
-const ErrorMessage = ({ className, text }: ErrorMessageProps) => {
-  return <p className={className}>{text}</p>;
-};
+const ErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
+  function ErrorMessage({ className, text }, ref) {
+    return (
+      <p ref={ref} className={className}>
+        {text}
+      </p>
+    );
+  }
+);
 
 export default ErrorMessage;

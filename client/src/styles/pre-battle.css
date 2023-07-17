@@ -35,22 +35,26 @@
 .easy {
   background-color: green;
 }
-.easy.selected-difficulty {
-  box-shadow: 0 0 15px lightgreen, 0 0 15px lightgreen;
+.dark .easy.selected-difficulty {
+  box-shadow: 0 0 15px lightgreen, 0 0 15px lightgreen, 0 0 15px lightgreen;
 }
 .medium {
   background-color: orangered;
 }
-.medium.selected-difficulty {
-  box-shadow: 0 0 15px lightsalmon, 0 0 15px lightsalmon;
+.dark .medium.selected-difficulty {
+  box-shadow: 0 0 15px lightsalmon, 0 0 15px lightsalmon, 0 0 15px lightsalmon;
 }
 .hard {
   background-color: red;
 }
-.hard.selected-difficulty {
-  box-shadow: 0 0 15px hsl(0, 100%, 70%), 0 0 15px hsl(0, 100%, 70%);
+.dark .hard.selected-difficulty {
+  box-shadow: 0 0 15px hsl(0, 100%, 70%), 0 0 15px hsl(0, 100%, 70%),
+    0 0 15px hsl(0, 100%, 70%);
 }
 .selected-difficulty {
+  outline: 3.5px groove black;
+}
+.dark .selected-difficulty {
   outline: 1px groove black;
 }
 .easy:hover,

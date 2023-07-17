@@ -104,7 +104,7 @@ p {
   color: white;
 }
 .dark-mode-switched {
-  transition: all 250ms ease-in-out;
+  transition: all 0.2s ease 0.03s;
 }
 
 .loading-wrapper {

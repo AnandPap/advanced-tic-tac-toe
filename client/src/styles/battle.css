@@ -1,10 +1,65 @@
 .battle-screen {
-  width: fit-content;
+  width: 350px;
   max-width: 90%;
   margin: 0 auto;
 }
 .battle-status-bar {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 85px;
+}
+.players-turn {
+  overflow-wrap: break-word;
+  width: 50%;
+  flex-grow: 1000;
+}
+
+.battle-screen-top {
+  margin: 0 auto;
+}
+.battle-screen-score-wrapper {
+  display: flex;
+  margin-bottom: 30px;
+}
+.battle-screen-score {
+  font-size: var(--fs-medium);
+}
+.player-status-bar {
+  width: fit-content;
+  position: relative;
+  color: rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+}
+.players-turn-name {
+  word-break: break-all;
+}
+.dark .player-status-bar {
+  color: rgba(255, 255, 255, 0.5);
+}
+.player-status-bar.active {
+  color: black;
+}
+.dark .player-status-bar.active {
+  color: white;
+}
+.player-status-bar > p {
+  margin-left: 20px;
+}
+.player-dot {
+  border-radius: 50%;
+  width: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 10px;
+  position: absolute;
+  top: calc(50% - 2px);
+}
+.player-dot.active {
+  background-color: red;
+  box-shadow: 0 0 7px 1px red;
+}
+.dark .player-dot.active {
+  box-shadow: 0 0 10px 1px red, 0 0 10px 1px red, 0 0 10px 1px red;
 }
 
 .computer-is-thinking-wrapper {
@@ -58,6 +113,10 @@
   border: 3px solid black;
 }
 
+.player-winner-text {
+  margin: 30px 0;
+  word-break: break-all;
+}
 .endgame {
   margin-top: 30px;
 }
@@ -70,8 +129,11 @@
 }
 
 @media only screen and (max-width: 425px) {
-  .battle-status-bar > :first-child {
-    word-break: break-all;
+  .battle-screen {
+    width: 300px;
+  }
+  .battle-status-bar {
+    min-height: 75px;
   }
   .thinking-large {
     display: none;

@@ -23,12 +23,6 @@
   display: flex;
   flex-grow: 1;
 }
-.undo-button-wrapper {
-  display: flex;
-  flex-grow: 1;
-  justify-content: flex-end;
-  align-items: center;
-}
 .back-button,
 .undo-button {
   display: flex;
@@ -44,28 +38,9 @@
   cursor: pointer;
   align-self: center;
   margin-left: 10px;
-  transition: all 0.2s ease 0.03s;
+  transition: background-color 0.2s ease 0.03s;
 }
 .back-button:hover {
-  background-color: var(--bg-gray-slightly-dark);
-}
-.undo-button {
-  margin-left: 0;
-  padding: 0 1rem;
-  height: 100%;
-  background-color: white;
-  transition: none;
-}
-.dark .undo-button {
-  color: white;
-  background-color: var(--bg-gray-very-dark);
-}
-.undo-button:hover {
-  background-color: var(--bg-gray-slightly-light);
-}
-.dark .undo-button:hover,
-.dark .undo-button:hover > .undo-button-arrow,
-.dark .undo-button:hover > .undo-button-text {
   background-color: var(--bg-gray-slightly-dark);
 }
 .back-button-arrow,
@@ -78,13 +53,50 @@
   transform: rotate(45deg);
   -webkit-transform: rotate(135deg);
 }
-.dark .undo-button-arrow {
-  border-color: white;
-}
 .back-button-text,
 .undo-button-text {
   margin: 0 5px;
 }
+
+.undo-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+.undo-button {
+  margin-top: auto;
+  background-color: white;
+}
+.dark .undo-button {
+  color: white;
+  background-color: var(--bg-gray-very-dark);
+}
+.undo-button:hover {
+  background-color: var(--bg-gray-light);
+}
+.dark .undo-button:hover {
+  background-color: var(--bg-gray-slightly-dark);
+  transition: none;
+}
+.undo-button:disabled:hover {
+  background-color: hsl(0, 0%, 90%);
+}
+.dark .undo-button:disabled:hover {
+  background-color: rgba(16, 16, 16, 0.3);
+}
+.dark .undo-button-arrow {
+  border-color: white;
+}
+.undo-button:disabled .undo-button-arrow {
+  border-color: rgba(16, 16, 16, 0.3);
+}
+.dark .undo-button:disabled .undo-button-arrow {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.dark .undo-button:disabled .undo-button-text {
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .dark-mode-button-wrapper {
   display: flex;
   flex-grow: 1;
@@ -96,6 +108,7 @@
   height: 50px;
   cursor: pointer;
 }
+
 .hamburger-menu-wrapper {
   position: relative;
   z-index: 2;
@@ -165,6 +178,7 @@
     height: 65px;
     align-self: center;
   }
+
   .hamburger-menu-content {
     width: fit-content;
     display: none;

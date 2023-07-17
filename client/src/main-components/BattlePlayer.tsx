@@ -1,11 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { fetchScores, saveResult } from "../helpers/fetch-functions";
+import { errorHandler } from "../helpers/error-functions";
 import Cell from "./Cell";
 import BackButton from "../header/BackButton";
 import ErrorMessage from "./ErrorMessage";
-import { saveResult } from "../helpers/fetch-functions";
 import Saving from "./Saving";
-import { errorHandler } from "../helpers/error-functions";
+
+interface Score {
+  [key: string]: number;
+  player1: 0;
+  player2: 0;
+  tie: 0;
+}
 
 const BattlePlayer = () => {
   const [players, setPlayers] = useState({ player1: "", player2: "" });
@@ -13,7 +20,7 @@ const BattlePlayer = () => {
   const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
   const [gameId, setGameId] = useState(1);
-  const [score, setScore] = useState({ player1: 0, player2: 0, tie: 0 });
+  const [score, setScore] = useState<Score>({ player1: 0, player2: 0, tie: 0 });
   const [errorMessage, setErrorMessage] = useState("");
   const [axiosError, setAxiosError] = useState("");
   const [winner, setWinner] = useState<"player1" | "player2" | "tie" | null>(
@@ -28,6 +35,8 @@ const BattlePlayer = () => {
     player1: "",
     player2: "",
   });
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
   const player1Name = searchParams.get("player1");
   const player2Name = searchParams.get("player2");
 
@@ -50,6 +59,26 @@ const BattlePlayer = () => {
       player2Name.length > 1
     ) {
       setPlayers({ player1: player1Name, player2: player2Name });
+      fetchScores(player1Name, player2Name)
+        .then((res) => {
+          if (res && !("code" in res)) {
+            let tempScore: Score = { player1: 0, player2: 0, tie: 0 };
+            for (let i = 0; i < res.length; i++) {
+              const element = res[i];
+              for (const key in element) {
+                if (key === "winner") {
+                  tempScore = {
+                    ...tempScore,
+                    [element[key]]: tempScore[element[key]] + 1,
+                  };
+                }
+              }
+            }
+            setScore(tempScore);
+          } else {
+          }
+        })
+        .catch((err) => console.log(err));
     } else {
       navigate("/vs-player", { replace: true });
     }
@@ -59,21 +88,23 @@ const BattlePlayer = () => {
     const winner = checkWinner();
     if (winner) {
       const saveData = async () => {
-        const res = await saveResult({
-          player1: players.player1,
-          player2: players.player2,
-          winner: winner,
-          date: Date.now(),
-        });
-        if (!res || !("winner" in res))
-          setTimeout(() => setAxiosError(errorHandler(res)), 1000);
-        else console.log(res);
-        setTimeout(() => setSaveCompleted(true), 1000);
+        try {
+          const res = await saveResult({
+            player1: players.player1,
+            player2: players.player2,
+            winner: winner,
+            date: Date.now(),
+          });
+          if (!res || !("winner" in res))
+            setTimeout(() => setAxiosError(errorHandler(res)), 1000);
+          else setTimeout(() => setSaveCompleted(true), 1000);
+        } catch (err) {
+          console.log(err);
+        }
       };
       saveData();
       setWinner(winner);
-      setScore((s) => ({ ...s, [winner]: s[winner] + 1 }));
-      setGameId((s) => s + 1);
+      setScore((s) => ({ ...s, [winner]: s[winner]++ }));
     } else {
       if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
         setCurrentSymbol("X");
@@ -81,14 +112,26 @@ const BattlePlayer = () => {
     }
   }, [playerXMoves, playerOMoves]);
 
+  useEffect(() => {
+    if (winner) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [winner]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      errorRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [errorMessage]);
+
   function checkWinner() {
     for (let i = 0; i < winningPatterns.length; i++) {
       let winningPattern = winningPatterns[i];
       if (
         winningPattern.every((value) => playerXMoves.includes(value)) ||
         winningPattern.every((value) => playerOMoves.includes(value))
-      )
+      ) {
+        window.scrollTo(0, document.body.scrollHeight);
         return checkCurrentTurn();
+      }
     }
     if (playerXMoves.length + playerOMoves.length === 9) return "tie";
     return null;
@@ -127,6 +170,7 @@ const BattlePlayer = () => {
     setWinner(null);
     setSaveCompleted(false);
     setAxiosError("");
+    setGameId((s) => s + 1);
   }
 
   function handlePlayerReset() {
@@ -148,66 +192,107 @@ const BattlePlayer = () => {
 
   return (
     <div className="battle-screen">
-      {!winner ? (
-        <div className="battle-status-bar">
-          <p className="players-turn">
-            It's
-            {` ${players[checkCurrentTurn()]}`}
-            's turn.
-          </p>
-          {playerXMoves.length + playerOMoves.length > 0 && (
-            <div className="undo-button-wrapper">
-              <BackButton
-                className="undo-button"
-                text="Undo"
-                onClick={undoHandler}
-              />
-            </div>
-          )}
-        </div>
-      ) : (
-        <p className="winner-text">
-          {winner === "tie" ? "It's a tie!" : `${players[winner]} wins!`}
-        </p>
-      )}
-      <div className="board-wrapper">
-        <div className="board-container">
-          {[...Array(9)].map((item, i) => (
-            <Cell
-              key={i}
-              i={i + 1}
-              winner={winner}
-              currentSymbol={currentSymbol}
-              playerXMoves={playerXMoves}
-              playerOMoves={playerOMoves}
-              handleCellClick={handleCellClick}
+      <div className="battle-screen-top">
+        <div className="battle-screen-score-wrapper">
+          <div className="battle-screen-score">
+            <p>Score:</p>
+            <p>Player 1: {score.player1}</p>
+            <p>Player 2: {score.player2}</p>
+          </div>
+          <div className="undo-button-wrapper">
+            <BackButton
+              className="undo-button"
+              text="Undo"
+              onClick={undoHandler}
+              disabled={
+                winner != null ||
+                playerXMoves.length + playerOMoves.length === 0
+              }
             />
-          ))}
-        </div>
-      </div>
-      {winner &&
-        (axiosError ? (
-          <ErrorMessage className="error-message" text={axiosError} />
-        ) : (
-          <Saving saveCompleted={saveCompleted} />
-        ))}
-      {winner && (
-        <div className="endgame">
-          <div className="endgame-buttons-wrapper">
-            <button className="button" onClick={handleGameReset}>
-              New Round
-            </button>
-            <button className="button" onClick={handlePlayerReset}>
-              Reset Players
-            </button>
-            <button className="button" onClick={() => navigate("/scoreboard")}>
-              Scoreboard
-            </button>
           </div>
         </div>
+        {
+          <div
+            className={`player-status-bar ${
+              checkCurrentTurn() === "player1" ? "active" : ""
+            }`}
+          >
+            <div
+              className={`player-dot ${
+                checkCurrentTurn() === "player1" ? "active" : ""
+              }`}
+            />
+            <p>
+              <span className="players-turn-name">{player1Name}</span> as (
+              {gameId % 2 === 1 ? "X" : "O"})
+            </p>
+          </div>
+        }
+        <div className="board-wrapper">
+          <div className="board-container">
+            {[...Array(9)].map((item, i) => (
+              <Cell
+                key={i}
+                i={i + 1}
+                winner={winner}
+                currentSymbol={currentSymbol}
+                playerXMoves={playerXMoves}
+                playerOMoves={playerOMoves}
+                handleCellClick={handleCellClick}
+              />
+            ))}
+          </div>
+        </div>
+        <div
+          className={`player-status-bar ${
+            checkCurrentTurn() === "player2" ? "active" : ""
+          }`}
+        >
+          <div
+            className={`player-dot ${
+              checkCurrentTurn() === "player2" ? "active" : ""
+            }`}
+          />
+          <p>
+            <span className="players-turn-name">{player2Name}</span> as (
+            {gameId % 2 === 1 ? "O" : "X"})
+          </p>
+        </div>
+      </div>
+      {winner && (
+        <>
+          <p className="player-winner-text">
+            {winner === "tie" ? "It's a tie!" : `${players[winner]} wins!`}
+          </p>
+          {axiosError ? (
+            <ErrorMessage className="error-message" text={axiosError} />
+          ) : (
+            <Saving saveCompleted={saveCompleted} />
+          )}
+          <div ref={bottomRef} className="endgame">
+            <div className="endgame-buttons-wrapper">
+              <button className="button" onClick={handleGameReset}>
+                New Round
+              </button>
+              <button className="button" onClick={handlePlayerReset}>
+                Reset Players
+              </button>
+              <button
+                className="button"
+                onClick={() => navigate("/scoreboard")}
+              >
+                Scoreboard
+              </button>
+            </div>
+          </div>
+        </>
       )}
       {errorMessage && (
-        <ErrorMessage className="error-message" text={errorMessage} />
+        <ErrorMessage
+          ref={errorRef}
+          className={"error-message"}
+          text={errorMessage}
+        />
       )}
     </div>
   );
