@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  fetchScores,
   saveResult,
   fetchResults,
   fetchPlayerResults,
@@ -7,7 +8,8 @@ const {
 
 const router = express.Router();
 
+router.route("/api/scores").get(fetchScores);
 router.route("/api/results").post(saveResult).get(fetchResults);
-router.route("/api/player-results/:id").get(fetchPlayerResults);
+router.route("/api/player-results/:name").get(fetchPlayerResults);
 
 module.exports = router;
