@@ -3,9 +3,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { fetchScores, saveResult } from "../helpers/fetch-functions";
 import { errorHandler } from "../helpers/error-functions";
 import Cell from "./Cell";
-import BackButton from "../header/BackButton";
-import ErrorMessage from "./ErrorMessage";
-import Saving from "./Saving";
+import BackButton from "../reusable/BackButton";
+import ErrorMessage from "../reusable/ErrorMessage";
+import Saving from "../reusable/Saving";
 
 interface Score {
   [key: string]: number;

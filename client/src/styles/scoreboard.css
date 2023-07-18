@@ -61,7 +61,7 @@ table,
 .player-profile-heading {
   margin: 30px 0;
 }
-.opponent-info-wrapper {
+.opponents-info-wrapper {
   display: flex;
   flex-direction: column;
   width: fit-content;
@@ -69,7 +69,7 @@ table,
   gap: 1rem;
   max-width: 95%;
 }
-.opponent-info {
+.opponent-info-bar {
   box-shadow: 0px 0px 1px black;
   border-radius: 2rem;
   padding: 0.25rem 1rem;
@@ -77,17 +77,15 @@ table,
   background-color: rgb(250, 250, 250);
   position: relative;
 }
-.dark .opponent-info {
+.dark .opponent-info-bar {
   background-color: var(--bg-gray-dark);
 }
 .opponent-info-elements {
   display: flex;
 }
-.opponent-info-elements div {
+.opponent-info-elements > * {
   display: flex;
   align-items: center;
-}
-.opponent-info-elements > * {
   border-right: 1px solid black;
   padding-inline: 1rem;
 }
@@ -102,13 +100,15 @@ table,
 }
 .accordion-content {
   display: grid;
-  grid-template-rows: 0fr;
   transition: grid-template-rows 500ms;
 }
 .opened-accordion {
   grid-template-rows: 1fr;
 }
-.game-info-wrapper {
+.closed-accordion {
+  grid-template-rows: 0fr;
+}
+.games-info-wrapper {
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -117,80 +117,32 @@ table,
   padding: 0 1rem;
   margin: 0 auto;
 }
-.dark .game-info-wrapper {
+.dark .games-info-wrapper {
   background-color: gray;
 }
-.game-info-wrapper > * {
+.games-info-wrapper > :last-child {
+  border: none;
+}
+.game-info {
   display: flex;
   flex-wrap: wrap;
   border-bottom: 1px solid black;
   padding: 5px 0;
 }
-.game-info-wrapper > :last-child {
-  border: none;
+.game-info-winner {
+  word-wrap: break-word;
 }
-
-.arrow-down,
-.arrow-up {
-  visibility: hidden;
-  position: relative;
-  left: 5px;
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
+.red {
+  color: red;
 }
-.arrow-down {
-  border-top: 8px solid black;
+.dark .red {
+  color: red;
 }
-.arrow-up {
-  border-bottom: 8px solid black;
+.green {
+  color: green;
 }
-.dark .arrow-down {
-  border-top: 8px solid white;
-}
-.dark .arrow-up {
-  border-bottom: 8px solid white;
-}
-.arrow-down.show,
-.arrow-up.show {
-  visibility: visible;
-}
-.arrow-right {
-  left: 15px;
-  top: calc(50% - 6px);
-  position: absolute;
-  border: solid black;
-  border-width: 0px 3px 3px 0px;
-  padding: 3.5px;
-  border-color: black;
-  transform: rotate(-45deg);
-}
-.dark .arrow-right {
-  border-color: white;
-}
-.arrow-right.opened {
-  animation: show-accordion 0.25s forwards;
-}
-.arrow-right.closed {
-  animation: hide-accordion 0.25s forwards;
-}
-
-@keyframes show-accordion {
-  0% {
-    transform: rotate(-45deg);
-  }
-  100% {
-    transform: rotate(45deg);
-  }
-}
-@keyframes hide-accordion {
-  0% {
-    transform: rotate(45deg);
-  }
-  100% {
-    transform: rotate(-45deg);
-  }
+.dark .green {
+  color: lightgreen;
 }
 
 @media only screen and (max-width: 600px) {
@@ -203,13 +155,13 @@ table,
   td {
     padding: 0;
   }
-  .opponent-info-wrapper {
+  .opponents-info-wrapper {
     font-size: var(--fs-medium);
   }
   .opponent-info-elements {
     display: block;
   }
-  .opponent-info-elements div,
+  .opponent-info-elements > *,
   .opponent-info-elements > :first-child {
     padding: 1rem 0;
     border-right: none;
@@ -224,22 +176,10 @@ table,
   td {
     padding: 2px;
   }
-  .opponent-info-wrapper {
+  .opponents-info-wrapper {
     font-size: var(--fs-small);
   }
-  .game-info-wrapper > * {
+  .games-info-wrapper > * {
     justify-content: center;
-  }
-  .arrow-down,
-  .arrow-up {
-    left: 0px;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-  }
-  .arrow-down {
-    border-top: 7px solid black;
-  }
-  .arrow-up {
-    border-bottom: 7px solid black;
   }
 }

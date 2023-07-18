@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
-import BackButton from "../header/BackButton";
+import BackButton from "../reusable/BackButton";
 import Cell from "./Cell";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../reusable/ErrorMessage";
 import helperFunctions from "../helpers/helper-functions";
 
 type Winner = "human" | "computer" | "tie" | null;

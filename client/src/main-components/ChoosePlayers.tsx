@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../reusable/ErrorMessage";
 
 const ChoosePlayers = () => {
   const [players, setPlayers] = useState({ player1: "", player2: "" });

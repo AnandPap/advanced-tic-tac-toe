@@ -23,7 +23,7 @@
   border-radius: 5px;
   box-shadow: 0px 0px 4px -1px black;
   font-size: var(--fs-very-small);
-  transition: all 0.2s ease 0.03s;
+  transition: all var(--transition-ease);
 }
 .play-as-buttons-wrapper > * {
   background-color: gray;

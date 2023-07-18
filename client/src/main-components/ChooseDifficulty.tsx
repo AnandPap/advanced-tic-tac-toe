@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { setPlayAs } from "../redux/tictactoe";
 import { useEffect, useState } from "react";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../reusable/ErrorMessage";
 
 const ChooseDifficulty = () => {
   const [errorMessage, setErrorMessage] = useState("");

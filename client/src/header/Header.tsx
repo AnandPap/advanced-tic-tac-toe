@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import tictactoePng from "../assets/tic-tac-toe.png";
-import BackButton from "./BackButton";
+import BackButton from "../reusable/BackButton";
 import LottieDarkModeSwitch from "./LottieDarkModeSwitch";
 import ModalCover from "./ModalCover";
 import { useRef, useState } from "react";

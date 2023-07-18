@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
+import Loading from "../reusable/Loading";
+import ErrorMessage from "../reusable/ErrorMessage";
 import { fetchResults } from "../helpers/fetch-functions";
-import TableHeaderCell from "./TableHeaderCell";
-import ErrorMessage from "./ErrorMessage";
-import { useNavigate } from "react-router-dom";
 import { errorHandler } from "../helpers/error-functions";
-import Loading from "./Loading";
+import { useNavigate } from "react-router-dom";
 
 export interface Score {
   [key: string]: string | number;
@@ -91,6 +90,17 @@ const Scoreboard = () => {
     setTimeout(() => setLoading(false), 500);
   }
 
+  function sortHandler(title: string) {
+    let direction = "";
+    if (sortType.type === title && sortType.direction === "down")
+      direction = "up";
+    else direction = "down";
+    setSortType({
+      direction: direction,
+      type: title,
+    });
+  }
+
   return loading ? (
     <Loading />
   ) : error ? (
@@ -103,25 +113,16 @@ const Scoreboard = () => {
       <thead>
         <tr>
           {tableHeaderTitles.map((title, i) => (
-            <TableHeaderCell
-              key={i}
-              title={title}
-              className={`arrow-${sortType.direction} ${
-                sortType.type === title ? "show" : ""
-              }`}
-              onClick={() =>
-                setSortType((s) => {
-                  let direction = "";
-                  if (s.type === title && s.direction === "down")
-                    direction = "up";
-                  else direction = "down";
-                  return {
-                    direction: direction,
-                    type: title,
-                  };
-                })
-              }
-            />
+            <th onClick={() => sortHandler(title)}>
+              <div>
+                <h4 className="header-cell-title">{title}</h4>
+                <div
+                  className={`arrow-${sortType.direction} ${
+                    sortType.type === title ? "show" : ""
+                  }`}
+                ></div>
+              </div>
+            </th>
           ))}
         </tr>
       </thead>

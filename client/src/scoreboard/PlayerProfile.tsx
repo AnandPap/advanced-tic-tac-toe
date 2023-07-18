@@ -2,25 +2,25 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchPlayerResults } from "../helpers/fetch-functions";
 import { errorHandler } from "../helpers/error-functions";
-import OpponentInfo from "./OpponentInfo";
-import ErrorMessage from "./ErrorMessage";
-import Loading from "./Loading";
+import PlayerGames from "./PlayerGames";
+import ErrorMessage from "../reusable/ErrorMessage";
+import Loading from "../reusable/Loading";
 
-export type OverallInfo = {
+export type OpponentInfo = {
   opponentName: string;
   gamesPlayed: number;
   wins: number;
   winRate: number;
 };
 
-export type GamesInfo = {
+export type GameInfo = {
   datePlayed: Date;
   winner: string;
 };
 
 const PlayerProfile = () => {
-  const [overallInfo, setOverallInfo] = useState<OverallInfo[]>([]);
-  const [gamesInfo, setGamesInfo] = useState<GamesInfo[][]>([]);
+  const [opponentsInfo, setOpponentsInfo] = useState<OpponentInfo[]>([]);
+  const [gamesInfo, setGamesInfo] = useState<GameInfo[][]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { playerName } = useParams();
@@ -35,8 +35,8 @@ const PlayerProfile = () => {
       const res = await fetchPlayerResults(playerName);
       if (res && !("code" in res)) {
         const playerNameSet: Set<string> = new Set();
-        const overallInfoTemp: OverallInfo[] = [];
-        const gamesInfoTemp: GamesInfo[][] = [];
+        const overallInfoTemp: OpponentInfo[] = [];
+        const gamesInfoTemp: GameInfo[][] = [];
         for (let i = 0; i < res.length; i++) {
           if (res[i].player1 !== playerName) playerNameSet.add(res[i].player1);
           else playerNameSet.add(res[i].player2);
@@ -81,7 +81,7 @@ const PlayerProfile = () => {
           );
         }
         setGamesInfo(gamesInfoTemp);
-        setOverallInfo(overallInfoTemp);
+        setOpponentsInfo(overallInfoTemp);
       } else setError(errorHandler(res));
     }
   }
@@ -92,10 +92,15 @@ const PlayerProfile = () => {
     <ErrorMessage className="not-found" text={error} />
   ) : (
     <>
-      <h4 className="player-profile-heading">{playerName}'s profile</h4>
-      <div className="opponent-info-wrapper">
-        {overallInfo.map((result, i) => (
-          <OpponentInfo gamesInfo={gamesInfo} result={result} key={i} i={i} />
+      <h4 className="player-profile-heading">{playerName}'s games</h4>
+      <div className="opponents-info-wrapper">
+        {opponentsInfo.map((opponentInfo, i) => (
+          <PlayerGames
+            key={i}
+            opponentInfo={opponentInfo}
+            gamesInfo={gamesInfo}
+            i={i}
+          />
         ))}
       </div>
     </>

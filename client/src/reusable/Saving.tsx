@@ -1,9 +1,11 @@
 const Saving = (props: { saveCompleted: boolean }) => {
   return (
-    <div className="circle-loader-wrapper">
+    <div className="saving-wrapper">
       <p>{props.saveCompleted ? "Saved" : "Saving"}</p>
       <div
-        className={`circle-loader ${props.saveCompleted && "load-completed"}`}
+        className={`saving-loader ${
+          props.saveCompleted ? "save-completed" : ""
+        }`}
       >
         {props.saveCompleted && <div className="checkmark"></div>}
       </div>
