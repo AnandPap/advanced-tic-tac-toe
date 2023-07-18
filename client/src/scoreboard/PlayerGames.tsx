@@ -4,10 +4,16 @@ import { GameInfo, OpponentInfo } from "./PlayerProfile";
 type OpponentInfoProps = {
   opponentInfo: OpponentInfo;
   gamesInfo: GameInfo[][];
+  playerName: string | undefined;
   i: number;
 };
 
-const PlayerGames = ({ opponentInfo, gamesInfo, i }: OpponentInfoProps) => {
+const PlayerGames = ({
+  opponentInfo,
+  gamesInfo,
+  playerName,
+  i,
+}: OpponentInfoProps) => {
   const [className, setClassName] = useState("closed");
 
   function handleClassName() {
@@ -44,10 +50,13 @@ const PlayerGames = ({ opponentInfo, gamesInfo, i }: OpponentInfoProps) => {
               <div>
                 <span>winner:&nbsp;</span>
                 <span
+                  onClick={() => console.log(gameInfo.winner)}
                   className={`game-info-winner ${
                     gameInfo.winner === opponentInfo.opponentName
                       ? "red"
-                      : "green"
+                      : gameInfo.winner === playerName
+                      ? "green"
+                      : ""
                   }`}
                 >
                   {gameInfo.winner}

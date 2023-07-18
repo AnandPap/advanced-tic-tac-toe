@@ -55,7 +55,9 @@ const PlayerProfile = () => {
               const winner =
                 res[i][res[i].winner] === res[i].player1
                   ? res[i].player1
-                  : res[i].player2;
+                  : res[i][res[i].winner] === res[i].player2
+                  ? res[i].player2
+                  : "tie";
               // const dateFormat = Intl.DateTimeFormat()
               gamesInfoTemp[gamesInfoTemp.length - 1].push({
                 datePlayed: new Date(res[i].date),
@@ -99,6 +101,7 @@ const PlayerProfile = () => {
             key={i}
             opponentInfo={opponentInfo}
             gamesInfo={gamesInfo}
+            playerName={playerName}
             i={i}
           />
         ))}
