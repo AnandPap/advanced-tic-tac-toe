@@ -6,6 +6,7 @@ import Cell from "./Cell";
 import BackButton from "../reusable/BackButton";
 import ErrorMessage from "../reusable/ErrorMessage";
 import Saving from "../reusable/Saving";
+import PlayerStatusBar from "./PlayerStatusBar";
 
 interface Score {
   [key: string]: number;
@@ -213,23 +214,12 @@ const BattlePlayer = () => {
             />
           </div>
         </div>
-        {
-          <div
-            className={`player-status-bar ${
-              checkCurrentTurn() === "player1" ? "active" : ""
-            }`}
-          >
-            <div
-              className={`player-dot ${
-                checkCurrentTurn() === "player1" ? "active" : ""
-              }`}
-            />
-            <p>
-              <span className="players-turn-name">{player1Name}</span> as (
-              {gameId % 2 === 1 ? "X" : "O"})
-            </p>
-          </div>
-        }
+        <PlayerStatusBar
+          currentTurn={players[checkCurrentTurn()]}
+          playerNumber="player1"
+          playerName={player1Name}
+          gameId={gameId}
+        />
         <div className="board-wrapper">
           <div className="board-container">
             {[...Array(9)].map((item, i) => (
@@ -245,21 +235,12 @@ const BattlePlayer = () => {
             ))}
           </div>
         </div>
-        <div
-          className={`player-status-bar ${
-            checkCurrentTurn() === "player2" ? "active" : ""
-          }`}
-        >
-          <div
-            className={`player-dot ${
-              checkCurrentTurn() === "player2" ? "active" : ""
-            }`}
-          />
-          <p>
-            <span className="players-turn-name">{player2Name}</span> as (
-            {gameId % 2 === 1 ? "O" : "X"})
-          </p>
-        </div>
+        <PlayerStatusBar
+          currentTurn={players[checkCurrentTurn()]}
+          playerNumber="player2"
+          playerName={player2Name}
+          gameId={gameId}
+        />
       </div>
       {winner && (
         <>
