@@ -42,7 +42,7 @@ const PlayerGames = ({
       <div className={`accordion-content ${className}-accordion`}>
         <div className="games-info-wrapper">
           {gamesInfo[i].map((gameInfo, i) => (
-            <div className="game-info" key={i}>
+            <div key={i} className="game-info">
               <div>
                 {i + 1}. played at:{" "}
                 {gameInfo.datePlayed.toLocaleDateString("es-sp")},&nbsp;

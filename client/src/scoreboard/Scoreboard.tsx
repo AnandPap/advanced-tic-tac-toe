@@ -113,7 +113,7 @@ const Scoreboard = () => {
       <thead>
         <tr>
           {tableHeaderTitles.map((title, i) => (
-            <th onClick={() => sortHandler(title)}>
+            <th key={i} onClick={() => sortHandler(title)}>
               <div>
                 <h4 className="header-cell-title">{title}</h4>
                 <div
@@ -134,14 +134,12 @@ const Scoreboard = () => {
               navigate(`/scoreboard/player-profile/${score.playerName}`)
             }
           >
-            {Object.keys(score).map((key, i) => {
-              return (
-                <td key={i}>
-                  {score[key]}
-                  {key === "winRate" && "%"}
-                </td>
-              );
-            })}
+            {Object.keys(score).map((key, i) => (
+              <td key={i}>
+                {score[key]}
+                {key === "winRate" && "%"}
+              </td>
+            ))}
           </tr>
         ))}
       </tbody>

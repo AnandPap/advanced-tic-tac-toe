@@ -31,38 +31,32 @@ const ChooseDifficulty = () => {
       <div className="choose-difficulty">
         <p>Choose difficulty:</p>
         <div className="choose-difficulty-buttons-wrapper">
-          {levelsOfDifficulty.map((difficulty, i) => {
-            return (
-              <button
-                disabled={selectedDifficulty === difficulty}
-                className={`${difficulty} ${
-                  selectedDifficulty === difficulty
-                    ? "selected-difficulty"
-                    : null
-                }`}
-                key={i}
-                onClick={() => setSelectedDifficulty(difficulty)}
-              >
-                {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
-              </button>
-            );
-          })}
+          {levelsOfDifficulty.map((difficulty, i) => (
+            <button
+              key={i}
+              className={`${difficulty} ${
+                selectedDifficulty === difficulty ? "selected-difficulty" : null
+              }`}
+              onClick={() => setSelectedDifficulty(difficulty)}
+              disabled={selectedDifficulty === difficulty}
+            >
+              {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+            </button>
+          ))}
         </div>
       </div>
       <div className="play-as">
         <p>Play as:</p>
         <div className="play-as-buttons-wrapper">
-          {playAsOptions.map((option, i) => {
-            return (
-              <button
-                className={`${option === playAs && playAs}`}
-                key={i}
-                onClick={() => dispatch(setPlayAs(option))}
-              >
-                {option}
-              </button>
-            );
-          })}
+          {playAsOptions.map((option, i) => (
+            <button
+              key={i}
+              className={`${option === playAs && playAs}`}
+              onClick={() => dispatch(setPlayAs(option))}
+            >
+              {option}
+            </button>
+          ))}
         </div>
       </div>
       <form className="computer-form" onSubmit={(e) => handleSubmit(e)}>
