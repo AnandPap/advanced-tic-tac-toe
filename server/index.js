@@ -27,7 +27,11 @@ app.get("/*", (req, res) => {
   res.sendFile(join(__dirname, "../client/dist/index.html"));
 });
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   console.log(err);
-  res.sendStatus(404);
+  if (err.status === 504) res.status(504).json({ error: "Gateway Timeout" });
+  else
+    res
+      .status(err.status || 500)
+      .json({ error: err.message || "Internal Server Error" });
 });

@@ -54,7 +54,7 @@ const Scoreboard = () => {
   async function getResults() {
     const res = await fetchResults();
     if (res && !("code" in res)) {
-      if (res.length === 0) setError("No results");
+      if (res.length === 0) setError("No scores to show.");
       else {
         const playerNamesSet: Set<string> = new Set();
         const unsortedScores: Score[] = [];
@@ -105,8 +105,6 @@ const Scoreboard = () => {
     <Loading />
   ) : error ? (
     <ErrorMessage className="not-found" text={error} />
-  ) : scores.length < 1 ? (
-    <div>No scores to show.</div>
   ) : (
     <table className="scoreboard-table">
       <caption>Scoreboard</caption>
