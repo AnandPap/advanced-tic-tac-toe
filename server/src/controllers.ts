@@ -1,6 +1,7 @@
-const Result = require("./models");
+import { Request, Response } from "express";
+import Result from "./models.js";
 
-async function fetchScores(req, res) {
+async function fetchScores(req: Request, res: Response) {
   try {
     const playerBattles = await Result.find({
       $or: [
@@ -24,7 +25,7 @@ async function fetchScores(req, res) {
   }
 }
 
-async function saveResult(req, res) {
+async function saveResult(req: Request, res: Response) {
   const result = new Result(req.body);
   try {
     await result.save();
@@ -34,7 +35,7 @@ async function saveResult(req, res) {
   }
 }
 
-async function fetchResults(req, res) {
+async function fetchResults(req: Request, res: Response) {
   try {
     const results = await Result.find({});
     res.status(200).json(results);
@@ -43,7 +44,7 @@ async function fetchResults(req, res) {
   }
 }
 
-async function fetchPlayerResults(req, res) {
+async function fetchPlayerResults(req: Request, res: Response) {
   try {
     const playerResults = await Result.find({
       $or: [{ player1: req.params.name }, { player2: req.params.name }],
@@ -55,4 +56,4 @@ async function fetchPlayerResults(req, res) {
   }
 }
 
-module.exports = { fetchScores, saveResult, fetchResults, fetchPlayerResults };
+export { fetchScores, saveResult, fetchResults, fetchPlayerResults };

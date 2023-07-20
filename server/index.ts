@@ -1,9 +1,16 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const config = require("./src/config.js");
-const router = require("./src/routes.js");
-const { join } = require("path");
+import express, { NextFunction, Request, Response } from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import { dirname, join } from "path";
+import config from "./src/config.js";
+import router from "./src/routes.js";
+import { fileURLToPath } from "url";
+
+interface CustomError extends Error {
+  status?: number;
+}
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
@@ -23,11 +30,11 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use(express.static(join(__dirname, "../client", "dist")));
-app.get("/*", (req, res) => {
+app.get("/*", (req: Request, res: Response) => {
   res.sendFile(join(__dirname, "../client/dist/index.html"));
 });
 
-app.use((err, req, res, next) => {
+app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   console.log(err);
   if (err.status === 504) res.status(504).json({ error: "Gateway Timeout" });
   else

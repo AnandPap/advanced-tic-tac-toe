@@ -12,6 +12,8 @@ https://advanced-tic-tac-toe-anandpap.vercel.app/
 
 3.  Review past games with live scoreboard, and inspect specific matchups on each player's profile page
 
+4.  App is responsive
+
 ### Technologies used in this project:
 
 1. **React** with **Typescript** and following packages:

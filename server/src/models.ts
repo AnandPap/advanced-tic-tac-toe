@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const ResultSchema = new mongoose.Schema({
   player1: String,
@@ -7,4 +7,4 @@ const ResultSchema = new mongoose.Schema({
   date: Date,
 });
 
-module.exports = mongoose.model("Result", ResultSchema);
+export default mongoose.model("Result", ResultSchema);
