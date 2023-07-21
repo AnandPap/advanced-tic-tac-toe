@@ -90,7 +90,7 @@
 }
 .players-form > input,
 .computer-form > input {
-  font-size: var(--fs-medium);
+  font-size: var(--fs-small);
   max-width: 400px;
   width: 100%;
   box-shadow: 0px 0px 4px -1px black;
@@ -138,5 +138,9 @@
     margin-top: 20px;
     margin-left: 0;
     flex-direction: column;
+  }
+  .players-form > input,
+  .computer-form > input {
+    font-size: var(--fs-medium);
   }
 }

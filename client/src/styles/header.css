@@ -2,27 +2,23 @@
   display: flex;
   background-color: var(--bg-gray-slightly-light);
   padding-left: 1rem;
+  align-items: center;
 }
-.icon-and-title-wrapper {
+.header-left {
   display: flex;
   cursor: pointer;
-  margin-right: auto;
   color: black;
 }
-.icon-and-title-wrapper > h1 {
+.header-icon {
+  width: 75px;
+}
+.header-title {
   font-weight: 400;
   font-size: var(--fs-large);
   margin: 0;
   align-self: center;
 }
-.app-icon {
-  width: 75px;
-}
 
-.header-buttons-wrapper {
-  display: flex;
-  flex-grow: 1;
-}
 .back-button,
 .undo-button {
   display: flex;
@@ -102,6 +98,7 @@
   flex-grow: 1;
   justify-content: flex-end;
   align-items: center;
+  background-color: var(--bg-gray-slightly-light);
 }
 .dark-mode-button {
   width: 100px;
@@ -110,53 +107,48 @@
 }
 
 .hamburger-menu-wrapper {
-  position: relative;
-  z-index: 2;
-  height: 75px;
-  width: 75px;
-  display: none;
-  cursor: pointer;
+  flex-grow: 1;
 }
-.hamburger-menu-wrapper.hamburger-open {
+.hamburger-menu {
+  display: flex;
+}
+.hamburger-icon-wrapper {
+  display: none;
+  transition: var(--transition-ease);
+}
+.hamburger-icon-wrapper:hover {
   background-color: hsl(0, 0%, 75%);
 }
-.hamburger-menu,
-.hamburger-menu::before,
-.hamburger-menu::after {
+.hamburger-icon,
+.hamburger-icon::before,
+.hamburger-icon::after {
   content: "";
-  display: block;
   background-color: white;
+  position: absolute;
   height: 4px;
   width: 30px;
-  transition: transform 400ms cubic-bezier(0.23, 1, 0.32, 1);
-  border-radius: 5rem;
+  top: 30px;
+  transition: all 0.5s ease;
+  border-radius: 20px;
 }
-.hamburger-menu:before {
-  transform: translateY(10px);
+.hamburger-icon:before {
+  top: -10px;
 }
-.hamburger-menu:after {
-  transform: translateY(-14px);
+.hamburger-icon:after {
+  top: 10px;
 }
-.hamburger-open .hamburger-menu {
-  display: none;
+.open .hamburger-icon {
+  transition: none;
+  background-color: transparent;
 }
-.X-close-button::before,
-.X-close-button::after {
-  content: "";
-  background-color: white;
-  position: relative;
-  height: 30px;
-  width: 5px;
-  border-radius: 5rem;
+.open .hamburger-icon::before {
+  transform: rotateZ(45deg) translate(7px, 7px);
 }
-.X-close-button::before {
-  transform: rotate(45deg) translateX(3px);
-}
-.X-close-button::after {
-  transform: rotate(135deg) translateX(3px);
+.open .hamburger-icon::after {
+  transform: rotateZ(-45deg) translate(7px, -7px);
 }
 
-.modal-cover {
+.open .screen-cover {
   position: fixed;
   overflow: auto;
   top: 0;
@@ -166,45 +158,64 @@
   z-index: 1;
 }
 
-@media only screen and (max-width: 400px) {
-  .icon-and-title-wrapper > h1 {
+@media only screen and (max-width: 380px) {
+  .header-title {
     display: none;
   }
 }
 
 @media only screen and (max-width: 525px) {
-  .app-icon {
+  .header-icon {
     width: 65px;
-    height: 65px;
-    align-self: center;
   }
 
-  .hamburger-menu-content {
-    width: fit-content;
-    display: none;
+  .dark-mode-button-wrapper {
+    justify-content: center;
+  }
+
+  .hamburger-menu-wrapper {
+    width: 125px;
+    overflow: hidden;
     position: absolute;
-    box-shadow: -8px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    top: 75px;
+    top: 0;
+    right: 0;
+    height: 65px;
+    transition: height 0.3s ease;
+  }
+  .hamburger-menu-wrapper.open {
+    transition: height 0.5s ease;
+    height: 200px;
+  }
+  .hamburger-menu {
+    width: 125px;
+    flex-direction: column;
+    position: absolute;
+    top: 65px;
     right: 0;
     z-index: 2;
-    border-radius: 2px;
+    box-shadow: -8px 8px 16px 0px rgba(0, 0, 0, 0.2);
   }
-  .hamburger-menu-content > * {
+  .open .hamburger-menu {
+    opacity: 1;
+  }
+  .hamburger-menu > * {
     height: 4rem;
     border-radius: 0;
     width: 100%;
     margin-left: 0;
-    background-color: var(--bg-gray-slightly-light);
-    justify-content: center;
   }
-  .hamburger-menu-content.hamburger-open {
+  .hamburger-icon-wrapper {
     display: flex;
-    flex-direction: column;
     align-items: center;
-  }
-  .hamburger-menu-wrapper {
-    display: flex;
     justify-content: center;
-    align-items: center;
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    height: 65px;
+    width: 65px;
+    cursor: pointer;
+  }
+  .open .hamburger-icon-wrapper {
+    background-color: hsl(0, 0%, 75%);
   }
 }
