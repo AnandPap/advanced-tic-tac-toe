@@ -186,7 +186,7 @@ const BattleComputer = () => {
             <div className="computer-is-thinking-wrapper">
               <span className="thinking-large">Computer is thinking</span>
               <span className="thinking-small">AI thinking</span>
-              <div className="dot-elastic"></div>
+              <div className="loading-dots"></div>
             </div>
           ) : (
             <>

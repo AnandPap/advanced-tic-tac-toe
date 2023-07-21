@@ -22,6 +22,7 @@
   --btn-dark-blue: hsl(225, 88%, 51%);
 
   --transition-ease: 0.2s ease 0.03s;
+  --header-height: 70px;
 }
 body {
   margin: 0;
@@ -29,7 +30,7 @@ body {
 .body-wrapper {
   font-size: var(--fs-large);
   text-align: center;
-  min-height: calc(100vh - 75px);
+  min-height: calc(100vh - var(--header-height));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,7 +44,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill::first-line,
 input:-webkit-autofill:active {
-  font-size: var(--fs-medium);
+  font-size: var(--fs-small);
   transition: background-color 5000s ease-in-out 0s;
 }
 input::placeholder {
@@ -81,5 +82,8 @@ input::placeholder {
   }
   .home-page-buttons-wrapper {
     flex-direction: column;
+  }
+  input:-webkit-autofill:focus {
+    font-size: var(--fs-medium);
   }
 }

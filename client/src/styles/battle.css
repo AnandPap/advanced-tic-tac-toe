@@ -1,5 +1,4 @@
 .battle-screen {
-  width: 350px;
   max-width: 90%;
   margin: 0 auto;
 }
@@ -17,6 +16,7 @@
 
 .battle-screen-top {
   margin: 0 auto;
+  width: 350px;
 }
 .battle-screen-score-wrapper {
   display: flex;
