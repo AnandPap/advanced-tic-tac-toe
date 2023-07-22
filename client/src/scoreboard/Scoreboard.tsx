@@ -5,7 +5,7 @@ import { fetchResults } from "../helpers/fetch-functions";
 import { errorHandler } from "../helpers/error-functions";
 import { useNavigate } from "react-router-dom";
 
-export interface Score {
+interface Score {
   [key: string]: string | number;
   playerName: string;
   gamesPlayed: number;

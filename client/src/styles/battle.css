@@ -23,6 +23,7 @@
   margin-bottom: 30px;
 }
 .battle-screen-score {
+  text-align: left;
   font-size: var(--fs-medium);
 }
 .player-status-bar {
@@ -54,12 +55,12 @@
   position: absolute;
   top: calc(50% - 2px);
 }
-.player-dot.active {
+.active > .player-dot {
   background-color: red;
-  box-shadow: 0 0 7px 1px red;
+  box-shadow: 0 0 10px 1px red;
 }
-.dark .player-dot.active {
-  box-shadow: 0 0 10px 1px red, 0 0 10px 1px red, 0 0 10px 1px red;
+.dark .active > .player-dot {
+  box-shadow: 0 0 10px 0px red, 0 0 10px 0px red, 0 0 10px 0px red;
 }
 
 .computer-is-thinking-wrapper {

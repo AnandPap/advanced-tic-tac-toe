@@ -7,14 +7,22 @@ async function fetchScores(req: Request, res: Response) {
       $or: [
         {
           $and: [
-            { player1: { $regex: req.query.player1, $options: "i" } },
-            { player2: { $regex: req.query.player2, $options: "i" } },
+            {
+              player1: { $regex: "^" + req.query.player1 + "$", $options: "i" },
+            },
+            {
+              player2: { $regex: "^" + req.query.player2 + "$", $options: "i" },
+            },
           ],
         },
         {
           $and: [
-            { player1: { $regex: req.query.player2, $options: "i" } },
-            { player2: { $regex: req.query.player1, $options: "i" } },
+            {
+              player1: { $regex: "^" + req.query.player2 + "$", $options: "i" },
+            },
+            {
+              player2: { $regex: "^" + req.query.player1 + "$", $options: "i" },
+            },
           ],
         },
       ],

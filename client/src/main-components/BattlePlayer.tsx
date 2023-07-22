@@ -1,35 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { fetchScores, saveResult } from "../helpers/fetch-functions";
-import { errorHandler } from "../helpers/error-functions";
+import PlayerStatusBar from "./PlayerStatusBar";
 import Cell from "./Cell";
 import BackButton from "../reusable/BackButton";
-import ErrorMessage from "../reusable/ErrorMessage";
 import Saving from "../reusable/Saving";
-import PlayerStatusBar from "./PlayerStatusBar";
-
-interface Score {
-  [key: string]: number;
-  player1: 0;
-  player2: 0;
-  tie: 0;
-}
+import ErrorMessage from "../reusable/ErrorMessage";
+import { Result, fetchScores, saveResult } from "../helpers/fetch-functions";
+import { errorHandler } from "../helpers/error-functions";
+import helperFunctionsPlayer, {
+  FirstTurn,
+  Score,
+} from "../helpers/helper-functions-player";
 
 const BattlePlayer = () => {
   const [players, setPlayers] = useState({ player1: "", player2: "" });
   const [playerXMoves, setPlayerXMoves] = useState<number[]>([]);
   const [playerOMoves, setPlayerOMoves] = useState<number[]>([]);
   const [currentSymbol, setCurrentSymbol] = useState<"X" | "O">("X");
-  const [gameId, setGameId] = useState(1);
+  const [firstTurn, setFirstTurn] = useState<FirstTurn>(null);
   const [score, setScore] = useState<Score>({ player1: 0, player2: 0, tie: 0 });
   const [errorMessage, setErrorMessage] = useState("");
   const [axiosError, setAxiosError] = useState("");
   const [winner, setWinner] = useState<"player1" | "player2" | "tie" | null>(
     null
   );
-  const [errorTimeoutId, setErrorTimeoutId] = useState<number | undefined>(
-    undefined
-  );
+  const [timeoutId, setTimeoutId] = useState<number | undefined>(undefined);
   const [saveCompleted, setSaveCompleted] = useState(false);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams({
@@ -40,17 +35,10 @@ const BattlePlayer = () => {
   const errorRef = useRef<HTMLParagraphElement>(null);
   const player1Name = searchParams.get("player1");
   const player2Name = searchParams.get("player2");
-
-  const winningPatterns = [
-    [1, 4, 7],
-    [2, 5, 8],
-    [3, 6, 9],
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [1, 5, 9],
-    [3, 5, 7],
-  ];
+  const { scoreHandler, checkWinner, checkCurrentTurn } = helperFunctionsPlayer(
+    firstTurn,
+    currentSymbol
+  );
 
   useEffect(() => {
     if (
@@ -63,21 +51,9 @@ const BattlePlayer = () => {
       fetchScores(player1Name, player2Name)
         .then((res) => {
           if (res && !("code" in res)) {
-            let tempScore: Score = { player1: 0, player2: 0, tie: 0 };
-            for (let i = 0; i < res.length; i++) {
-              const element = res[i];
-              for (const key in element) {
-                if (key === "winner") {
-                  tempScore = {
-                    ...tempScore,
-                    [element[key]]: tempScore[element[key]] + 1,
-                  };
-                }
-              }
-            }
-            setScore(tempScore);
-          } else {
-          }
+            setScore(scoreHandler(res, player1Name, player2Name));
+            firstTurnHandler(res);
+          } else setErrorMessage(errorHandler(res));
         })
         .catch((err) => console.log(err));
     } else {
@@ -86,7 +62,7 @@ const BattlePlayer = () => {
   }, []);
 
   useEffect(() => {
-    const winner = checkWinner();
+    const winner = checkWinner(playerXMoves, playerOMoves);
     if (winner) {
       const saveData = async () => {
         try {
@@ -105,7 +81,7 @@ const BattlePlayer = () => {
       };
       saveData();
       setWinner(winner);
-      setScore((s) => ({ ...s, [winner]: s[winner]++ }));
+      setScore((s) => ({ ...s, [winner]: s[winner] + 1 }));
     } else {
       if ((playerXMoves.length + playerOMoves.length) % 2 === 0)
         setCurrentSymbol("X");
@@ -123,27 +99,27 @@ const BattlePlayer = () => {
     }
   }, [errorMessage]);
 
-  function checkWinner() {
-    for (let i = 0; i < winningPatterns.length; i++) {
-      let winningPattern = winningPatterns[i];
-      if (
-        winningPattern.every((value) => playerXMoves.includes(value)) ||
-        winningPattern.every((value) => playerOMoves.includes(value))
-      ) {
-        return checkCurrentTurn();
-      }
-    }
-    if (playerXMoves.length + playerOMoves.length === 9) return "tie";
-    return null;
+  function firstTurnHandler(res: Result[]) {
+    if (res.length > 0)
+      if (res[0].player1 === player1Name)
+        if (res.length % 2 === 0) setFirstTurn("player1");
+        else setFirstTurn("player2");
+      else if (res.length % 2 === 0) setFirstTurn("player2");
+      else setFirstTurn("player1");
+    else setFirstTurn("player1");
   }
 
-  function checkCurrentTurn() {
-    if (
-      (gameId % 2 === 1 && currentSymbol === "X") ||
-      (gameId % 2 === 0 && currentSymbol === "O")
-    )
-      return "player1";
-    else return "player2";
+  function handleCellClick(cellInput: string | null, i: number) {
+    clearTimeout(timeoutId);
+    if (!cellInput && !winner) {
+      if (currentSymbol === "X") setPlayerXMoves((s) => [...s, i]);
+      else if (currentSymbol === "O") setPlayerOMoves((s) => [...s, i]);
+      setErrorMessage("");
+    } else if (!winner) {
+      setErrorMessage("Choose unoccupied cell!");
+      const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
+      setTimeoutId(timeoutId);
+    }
   }
 
   function removeElementFromPlayer1() {
@@ -172,25 +148,13 @@ const BattlePlayer = () => {
       setWinner(null);
       setSaveCompleted(false);
       setAxiosError("");
-      setGameId((s) => s + 1);
+      if (firstTurn === "player1") setFirstTurn("player2");
+      else setFirstTurn("player1");
     }, 400);
   }
 
   function handlePlayerReset() {
     navigate("/vs-player", { replace: true });
-  }
-
-  function handleCellClick(cellInput: string | null, i: number) {
-    clearTimeout(errorTimeoutId);
-    if (!cellInput && !winner) {
-      if (currentSymbol === "X") setPlayerXMoves((s) => [...s, i]);
-      else if (currentSymbol === "O") setPlayerOMoves((s) => [...s, i]);
-      setErrorMessage("");
-    } else if (!winner) {
-      setErrorMessage("Choose unoccupied cell!");
-      const timeoutId = setTimeout(() => setErrorMessage(""), 2000);
-      setErrorTimeoutId(timeoutId);
-    }
   }
 
   return (
@@ -215,10 +179,11 @@ const BattlePlayer = () => {
           </div>
         </div>
         <PlayerStatusBar
-          currentTurn={players[checkCurrentTurn()]}
-          playerNumber="player1"
+          currentSymbol={currentSymbol}
+          player="player1"
           playerName={player1Name}
-          gameId={gameId}
+          firstTurn={firstTurn}
+          checkCurrentTurn={checkCurrentTurn}
         />
         <div className="board-wrapper">
           <div className="board-container">
@@ -236,16 +201,19 @@ const BattlePlayer = () => {
           </div>
         </div>
         <PlayerStatusBar
-          currentTurn={players[checkCurrentTurn()]}
-          playerNumber="player2"
+          currentSymbol={currentSymbol}
+          player="player2"
           playerName={player2Name}
-          gameId={gameId}
+          firstTurn={firstTurn}
+          checkCurrentTurn={checkCurrentTurn}
         />
       </div>
       {winner && (
         <>
           <p className="player-winner-text">
-            {winner === "tie" ? "It's a tie!" : `${players[winner]} wins!`}
+            {winner === "tie"
+              ? "It's a tie!"
+              : `${winner === "player1" ? player1Name : player2Name} wins!`}
           </p>
           {axiosError ? (
             <ErrorMessage className="error-message" text={axiosError} />

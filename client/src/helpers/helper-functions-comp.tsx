@@ -1,4 +1,7 @@
-function helperFunctions(humanMoves: number[], computerMoves: number[]) {
+function helperFunctionsComputer(
+  humanMoves: number[],
+  computerMoves: number[]
+) {
   const winningPatterns = [
     [1, 4, 7],
     [2, 5, 8],
@@ -126,4 +129,4 @@ function helperFunctions(humanMoves: number[], computerMoves: number[]) {
   };
 }
 
-export default helperFunctions;
+export default helperFunctionsComputer;

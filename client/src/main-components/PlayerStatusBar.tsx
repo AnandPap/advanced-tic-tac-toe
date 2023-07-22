@@ -1,37 +1,42 @@
+import { useEffect, useState } from "react";
+
 interface PlayerStatusBarProps {
-  currentTurn: string;
-  playerNumber: "player1" | "player2";
+  currentSymbol: "X" | "O";
+  player: "player1" | "player2";
   playerName: string | null;
-  gameId: number;
+  firstTurn: "player1" | "player2" | null;
+  checkCurrentTurn: () => "player1" | "player2" | null;
 }
 
 const PlayerStatusBar = ({
-  currentTurn,
-  playerNumber,
+  currentSymbol,
+  player,
   playerName,
-  gameId,
+  firstTurn,
+  checkCurrentTurn,
 }: PlayerStatusBarProps) => {
+  const [symbol, setSymbol] = useState("");
+  const [currentTurn, setCurrentTurn] = useState<"player1" | "player2" | null>(
+    null
+  );
+
   function symbolHandler() {
-    if (
-      (playerNumber === "player1" && gameId % 2 === 1) ||
-      (playerNumber === "player2" && gameId % 2 === 0)
-    )
-      return "X";
+    if (firstTurn === player) return "X";
     else return "O";
   }
 
+  useEffect(() => {
+    setSymbol(symbolHandler());
+    setCurrentTurn(checkCurrentTurn());
+  }, [firstTurn, currentSymbol]);
+
   return (
     <div
-      className={`player-status-bar ${
-        currentTurn === playerName ? "active" : ""
-      }`}
+      className={`player-status-bar ${currentTurn === player ? "active" : ""}`}
     >
-      <div
-        className={`player-dot ${currentTurn === playerName ? "active" : ""}`}
-      />
+      <div className="player-dot" />
       <p>
-        <span className="players-turn-name">{playerName}</span> as (
-        {symbolHandler()})
+        <span className="players-turn-name">{playerName}</span> as ({symbol})
       </p>
     </div>
   );

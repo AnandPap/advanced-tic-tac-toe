@@ -4,7 +4,7 @@ import { useAppSelector } from "../redux/hooks";
 import BackButton from "../reusable/BackButton";
 import Cell from "./Cell";
 import ErrorMessage from "../reusable/ErrorMessage";
-import helperFunctions from "../helpers/helper-functions";
+import helperFunctionsComputer from "../helpers/helper-functions-comp";
 
 type Winner = "human" | "computer" | "tie" | null;
 
@@ -39,7 +39,7 @@ const BattleComputer = () => {
     responseToAdjacentMove,
     makeCornerMove,
     makeAdjacentMove,
-  } = helperFunctions(humanMoves, computerMoves);
+  } = helperFunctionsComputer(humanMoves, computerMoves);
 
   useEffect(() => {
     if (!player || player.length < 2)
